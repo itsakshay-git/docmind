@@ -30,6 +30,7 @@ public class SecurityConfig {
                                 "/api/v1/auth/login",
                                 "/api/v1/auth/notebooks",
                                 "/api/v1/documents/**",
+                                "/test",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         )

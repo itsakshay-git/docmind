@@ -48,9 +48,15 @@ public class DocumentService {
                 uploadPath.getParent()
         );
 
+//        Files.copy(
+//                file.getInputStream(),
+//                uploadPath
+//        );
+
         Files.copy(
                 file.getInputStream(),
-                uploadPath
+                uploadPath,
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING
         );
 
         Document document =

@@ -10,18 +10,13 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
-@Table(name = "chunks")
-@Getter @Setter
-public class Chunk extends BaseEntity {
+@Table(name = "embeddings")
+@Getter
+@Setter
+public class Embedding extends BaseEntity {
 
-    @Column(name = "document_id")
-    private UUID documentId;
+    private UUID chunkId;
 
     @Column(columnDefinition = "TEXT")
-    private String content;
-
-    @Column(name = "chunk_index")
-    private Integer chunkIndex;
+    private String vector;
 }
-
-
