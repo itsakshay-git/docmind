@@ -23,6 +23,14 @@ spring:
       genai:
         api-key: ${GEMINI_API_KEY}
 
+        chat:
+          options:
+            model: gemini-2.5-flash
+
+        embedding:
+          api-key: ${GEMINI_API_KEY}
+          vertex-ai: false
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

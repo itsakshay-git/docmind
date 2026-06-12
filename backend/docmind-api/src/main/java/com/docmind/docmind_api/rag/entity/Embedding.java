@@ -15,8 +15,9 @@ import java.util.UUID;
 @Setter
 public class Embedding extends BaseEntity {
 
+    @Column(name = "chunk_id", nullable = false)
     private UUID chunkId;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String vector;
 }
