@@ -1,70 +1,93 @@
 # Database Schema
 
+Migrations live in:
+
+```text
+backend/docmind-api/src/main/resources/db/migration
+```
+
+Use new Flyway migrations only. Do not edit old migrations after they have run locally.
+
 ## users
 
-| Column        | Type      |
-| ------------- | --------- |
-| id            | UUID      |
-| email         | VARCHAR   |
-| password_hash | VARCHAR   |
-| role          | VARCHAR   |
-| created_at    | TIMESTAMP |
-| updated_at    | TIMESTAMP |
-
----
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | UUID | Primary key |
+| email | VARCHAR | Unique login identity |
+| password_hash | VARCHAR | BCrypt hash |
+| full_name | VARCHAR | Display name |
+| role | VARCHAR | User role |
+| created_at | TIMESTAMP | Audit |
+| updated_at | TIMESTAMP | Audit |
 
 ## notebooks
 
-| Column     | Type      |
-| ---------- | --------- |
-| id         | UUID      |
-| user_id    | UUID      |
-| title      | VARCHAR   |
-| created_at | TIMESTAMP |
-
----
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | UUID | Primary key |
+| title | VARCHAR | Notebook title |
+| owner_email | VARCHAR | Current ownership link |
+| created_at | TIMESTAMP | Audit |
+| updated_at | TIMESTAMP | Audit |
 
 ## documents
 
-| Column      | Type      |
-| ----------- | --------- |
-| id          | UUID      |
-| notebook_id | UUID      |
-| file_name   | VARCHAR   |
-| source_type | VARCHAR   |
-| status      | VARCHAR   |
-| created_at  | TIMESTAMP |
-
----
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | UUID | Primary key |
+| notebook_id | UUID | Parent notebook |
+| file_name | VARCHAR | Uploaded file name |
+| status | VARCHAR | Processing status |
+| created_at | TIMESTAMP | Audit |
+| updated_at | TIMESTAMP | Audit |
 
 ## chunks
 
-| Column      | Type    |
-| ----------- | ------- |
-| id          | UUID    |
-| document_id | UUID    |
-| content     | TEXT    |
-| embedding   | VECTOR  |
-| page_number | INTEGER |
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | UUID | Primary key |
+| document_id | UUID | Source document |
+| content | TEXT | Chunk text |
+| chunk_index | INTEGER | Document-local order |
+| created_at | TIMESTAMP | Audit |
+| updated_at | TIMESTAMP | Audit |
 
----
+## embeddings
 
-## chats
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | UUID | Primary key |
+| chunk_id | UUID | Embedded chunk |
+| vector | TEXT | JSON vector for MVP |
+| created_at | TIMESTAMP | Audit |
+| updated_at | TIMESTAMP | Audit |
 
-| Column      | Type      |
-| ----------- | --------- |
-| id          | UUID      |
-| notebook_id | UUID      |
-| created_at  | TIMESTAMP |
+## chat_sessions
 
----
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | UUID | Primary key |
+| notebook_id | UUID | Notebook conversation scope |
+| owner_email | VARCHAR | Owner guard |
+| title | VARCHAR | Session title |
+| created_at | TIMESTAMP | Audit |
+| updated_at | TIMESTAMP | Audit |
 
-## messages
+There is currently one default chat session per notebook and owner.
 
-| Column     | Type      |
-| ---------- | --------- |
-| id         | UUID      |
-| chat_id    | UUID      |
-| role       | VARCHAR   |
-| content    | TEXT      |
-| created_at | TIMESTAMP |
+## chat_messages
+
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | UUID | Primary key |
+| session_id | UUID | Parent chat session |
+| role | VARCHAR | USER or ASSISTANT |
+| content | TEXT | Message body |
+| sources_json | TEXT | Serialized RAG citations |
+| message_order | INTEGER | Session-local ordering |
+| created_at | TIMESTAMP | Audit |
+| updated_at | TIMESTAMP | Audit |
+
+## Future
+
+Replace JSON vector storage with PostgreSQL `pgvector` when retrieval performance becomes the next milestone.

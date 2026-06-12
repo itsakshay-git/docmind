@@ -1,12 +1,15 @@
 package com.docmind.docmind_api.document.controller;
 
+import com.docmind.docmind_api.document.dto.DocumentResponse;
 import com.docmind.docmind_api.document.service.DocumentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -22,17 +25,48 @@ public class DocumentController {
     )
     public String upload(
             @PathVariable UUID notebookId,
-            @RequestParam("file") MultipartFile file
+            @RequestParam("file") MultipartFile file,
+            Authentication authentication
     ) throws IOException {
 
         return documentService.upload(
                 notebookId,
-                file
+                file,
+                authentication.getName()
         );
     }
 
-    @GetMapping("/test")
-    public String test() {
-        return "OK";
+    @GetMapping
+    public List<DocumentResponse> getMyDocuments(
+            Authentication authentication
+    ) {
+
+        return documentService.getMyDocuments(
+                authentication.getName()
+        );
+    }
+
+    @GetMapping("/notebooks/{notebookId}")
+    public List<DocumentResponse> getNotebookDocuments(
+            @PathVariable UUID notebookId,
+            Authentication authentication
+    ) {
+
+        return documentService.getNotebookDocuments(
+                notebookId,
+                authentication.getName()
+        );
+    }
+
+    @DeleteMapping("/{documentId}")
+    public void deleteDocument(
+            @PathVariable UUID documentId,
+            Authentication authentication
+    ) throws IOException {
+
+        documentService.deleteDocument(
+                documentId,
+                authentication.getName()
+        );
     }
 }

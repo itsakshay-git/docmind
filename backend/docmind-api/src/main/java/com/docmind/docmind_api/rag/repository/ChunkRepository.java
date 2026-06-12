@@ -12,4 +12,12 @@ public interface ChunkRepository
     List<Chunk> findByDocumentIdIn(
             List<UUID> documentIds
     );
+
+    List<Chunk> findByDocumentId(
+            UUID documentId
+    );
+
+    void deleteByDocumentId(
+            UUID documentId
+    );
 }

@@ -1,111 +1,92 @@
 # DocMind Architecture
 
-## Vision
+DocMind is a Spring Boot and React document intelligence platform inspired by NotebookLM.
 
-DocMind is an AI-powered knowledge platform inspired by NotebookLM.
+The current MVP is a modular monolith backend plus a Vite React frontend.
 
-Users can:
+## Current Capabilities
 
-- Upload PDFs
-- Upload DOCX files
-- Upload TXT files
-- Import web pages
-- Import YouTube transcripts
-- Chat with documents
-- Generate summaries
-- Generate flashcards
-- Generate quizzes
-- Generate podcast scripts
+- User registration and JWT login.
+- Notebook creation and ownership checks.
+- PDF upload into a notebook.
+- PDF text extraction with PDFBox.
+- Text chunking.
+- Gemini embedding generation.
+- Embedding storage as JSON text.
+- Notebook-scoped semantic retrieval.
+- Gemini-grounded answers.
+- Persistent notebook chat history.
+- Dark-only React workspace with sources, chat, and studio areas.
 
----
+## Backend
 
-## Architecture Style
+Backend path:
 
-Phase 1:
-Modular Monolith
+```text
+backend/docmind-api/
+```
 
-Phase 2:
-Microservices
+Main modules:
 
----
+- `auth`: users, login, registration.
+- `notebook`: notebook CRUD and ownership.
+- `document`: PDF upload, parsing, document records.
+- `ai`: embedding pipeline support.
+- `rag`: semantic search and grounded answer generation.
+- `chat`: persisted notebook chat sessions and messages.
+- `security`: JWT authentication.
+- `common`: shared errors and base entities.
 
-## Modules
+More detail:
 
-### Auth Module
+```text
+docs/backend-architecture.md
+```
 
-Responsibilities:
+## Frontend
 
-- Registration
-- Login
-- JWT Authentication
-- User Management
+Frontend path:
 
-### Notebook Module
+```text
+frontend/
+```
 
-Responsibilities:
+Main areas:
 
-- Create notebook
-- Manage notebook
-- Organize sources
+- Notebook list page.
+- Notebook workspace page.
+- Sources/sidebar.
+- Chat history panel.
+- Studio panel for future study artifacts.
 
-### Document Module
+More detail:
 
-Responsibilities:
+```text
+docs/frontend-architecture.md
+```
 
-- Upload documents
-- Manage sources
-- Track processing status
+## Upload-To-Answer Flow
 
-### Processing Module
+```text
+PDF upload
+-> document metadata
+-> text extraction
+-> chunks
+-> Gemini embeddings
+-> JSON vector storage
+-> notebook-scoped retrieval
+-> Gemini answer
+-> persisted chat messages
+```
 
-Responsibilities:
+## Near-Term Direction
 
-- Text extraction
-- Chunking
-- Embedding generation
+The next major backend feature is Studio artifact generation:
 
-### RAG Module
-
-Responsibilities:
-
-- Semantic retrieval
-- Context assembly
-- Citation generation
-
-### AI Module
-
-Responsibilities:
-
-- Chat
-- Summaries
 - Flashcards
 - Quizzes
 - Podcast scripts
+- Briefing docs
+- Infographic outlines
 
----
-
-## High Level Flow
-
-User Uploads PDF
-↓
-Store Metadata
-↓
-Extract Text
-↓
-Chunk Text
-↓
-Generate Embeddings
-↓
-Store in pgvector
-↓
-Ready For Chat
-
----
-
-## Future Architecture
-
-API Gateway
-↓
-Auth Service
-Knowledge Service
-Processing Service
+The next infrastructure upgrade is moving embeddings from JSON text to PostgreSQL `pgvector`.

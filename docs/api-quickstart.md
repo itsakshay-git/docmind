@@ -117,6 +117,8 @@ Content-Type: application/json
 }
 ```
 
+`topK` is an API-level retrieval setting. The React app hides it and sends `5` by default.
+
 Expected response:
 
 ```json
@@ -132,3 +134,42 @@ Expected response:
 }
 ```
 
+## 8. Persistent Chat
+
+```http
+POST /api/v1/chat/notebooks/{notebookId}/messages
+Authorization: Bearer <accessToken>
+Content-Type: application/json
+```
+
+```json
+{
+  "content": "Summarize this notebook.",
+  "topK": 5
+}
+```
+
+Load saved messages:
+
+```http
+GET /api/v1/chat/notebooks/{notebookId}/messages
+Authorization: Bearer <accessToken>
+```
+
+## 9. Settings
+
+Profile:
+
+```http
+GET /api/v1/users/me
+PATCH /api/v1/users/me
+PUT /api/v1/users/me/password
+```
+
+Documents:
+
+```http
+GET /api/v1/documents
+GET /api/v1/documents/notebooks/{notebookId}
+DELETE /api/v1/documents/{documentId}
+```

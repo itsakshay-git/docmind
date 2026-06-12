@@ -1,101 +1,68 @@
 # DocMind Roadmap
 
-## Phase 1 - Foundation
+## Done
 
-- Project Setup
-- PostgreSQL
-- Flyway
-- Swagger
-- Docker
+- Spring Boot 3 backend with Java 21.
+- PostgreSQL and Flyway migrations.
+- JWT authentication.
+- Notebook CRUD.
+- PDF upload into notebook scope.
+- PDF text extraction with PDFBox.
+- Chunk generation.
+- Gemini embedding generation.
+- Embedding persistence as JSON text.
+- Notebook-scoped semantic search.
+- Gemini-grounded one-off RAG answers.
+- React, TypeScript, Vite frontend.
+- Dark-only NotebookLM-inspired workspace.
+- Persistent notebook chat history.
+- Basic settings page for profile, password, notebooks, and documents.
 
----
+## Current Milestone
 
-## Phase 2 - Authentication
+Make the product feel like a real document chat workspace:
 
-- User Entity
-- Registration
-- Login
-- JWT
-- Refresh Tokens
+- Persist user and assistant messages.
+- Render Markdown assistant responses.
+- Keep the workspace to three main areas: sources, chat, studio.
+- Keep advanced retrieval settings hidden from normal users.
+- Keep frontend and backend documentation current.
 
----
+## Next Milestones
 
-## Phase 3 - Notebook Management
+### Studio Artifacts
 
-- Create Notebook
-- Update Notebook
-- Delete Notebook
-- List Notebooks
+Generate and save notebook artifacts:
 
----
-
-## Phase 4 - Document Ingestion
-
-- PDF Upload
-- DOCX Upload
-- TXT Upload
-- File Storage
-
----
-
-## Phase 5 - RAG Pipeline
-
-- Text Extraction
-- Chunking
-- Embeddings
-- pgvector
-
----
-
-## Phase 6 - AI Chat
-
-- Ask Questions
-- Context Retrieval
-- Source Citations
-
----
-
-## Phase 7 - Knowledge Features
-
-- Summaries
 - Flashcards
-- Quiz Generation
+- Quiz
+- Briefing document
+- Podcast script
+- Infographic outline
 
----
+Studio generation should live in the backend because prompts, Gemini access, ownership checks, and persistence belong there.
 
-## Phase 8 - External Sources
+### Better Retrieval
 
-- Web Import
-- YouTube Import
+- Move vector storage from JSON text to `pgvector`.
+- Add similarity search in PostgreSQL instead of in-memory Java scanning.
+- Keep notebook ownership checks on every retrieval path.
 
----
+### Streaming Answers
 
-## Phase 9 - Async Processing
+- Add a streaming chat endpoint.
+- Render assistant tokens progressively in React.
+- Keep the persisted final message once streaming completes.
 
-- Kafka
-- Worker Processing
+### Source Management
 
----
+- List uploaded sources in the sidebar.
+- Show document processing state.
+- Support deleting sources and re-indexing notebooks.
 
-## Phase 10 - Performance
+### Production Hardening
 
-- Redis
-- Caching
-
----
-
-## Phase 11 - Frontend
-
-- React
-- Tailwind
-- Redux Toolkit
-- React Query
-
----
-
-## Phase 12 - DevOps
-
-- Docker
-- Kubernetes
-- CI/CD
-- Monitoring
+- Add integration tests with Testcontainers.
+- Add rate-limit friendly AI retry handling.
+- Add structured logging.
+- Add CI build for backend and frontend.

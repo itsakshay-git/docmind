@@ -12,4 +12,8 @@ public interface EmbeddingRepository
     List<Embedding> findByChunkIdIn(
             List<UUID> chunkIds
     );
+
+    void deleteByChunkIdIn(
+            List<UUID> chunkIds
+    );
 }

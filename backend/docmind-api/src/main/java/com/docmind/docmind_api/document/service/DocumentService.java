@@ -2,14 +2,19 @@ package com.docmind.docmind_api.document.service;
 
 import com.docmind.docmind_api.ai.service.EmbeddingService;
 import com.docmind.docmind_api.document.chunking.TextChunkingService;
+import com.docmind.docmind_api.document.dto.DocumentResponse;
 import com.docmind.docmind_api.document.entity.Document;
 import com.docmind.docmind_api.document.enums.DocumentStatus;
 import com.docmind.docmind_api.document.parser.PdfParser;
 import com.docmind.docmind_api.document.repository.DocumentRepository;
+import com.docmind.docmind_api.notebook.entity.Notebook;
+import com.docmind.docmind_api.notebook.repository.NotebookRepository;
 import com.docmind.docmind_api.rag.entity.Chunk;
 import com.docmind.docmind_api.rag.repository.ChunkRepository;
+import com.docmind.docmind_api.rag.repository.EmbeddingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -29,11 +34,22 @@ public class DocumentService {
     private final TextChunkingService textChunkingService;
     private final ChunkRepository chunkRepository;
     private final EmbeddingService embeddingService;
+    private final NotebookRepository notebookRepository;
+    private final EmbeddingRepository embeddingRepository;
 
+    @Transactional
     public String upload(
             UUID notebookId,
-            MultipartFile file
+            MultipartFile file,
+            String ownerEmail
     ) throws IOException {
+
+        notebookRepository
+                .findByIdAndOwnerEmail(
+                        notebookId,
+                        ownerEmail
+                )
+                .orElseThrow();
 
         String fileName =
                 UUID.randomUUID()
@@ -104,5 +120,135 @@ public class DocumentService {
         );
 
         return "Uploaded";
+    }
+
+    @Transactional(readOnly = true)
+    public List<DocumentResponse> getMyDocuments(
+            String ownerEmail
+    ) {
+
+        List<UUID> notebookIds =
+                notebookRepository.findByOwnerEmail(ownerEmail)
+                        .stream()
+                        .map(Notebook::getId)
+                        .toList();
+
+        if (notebookIds.isEmpty()) {
+            return List.of();
+        }
+
+        return documentRepository
+                .findByNotebookIdIn(notebookIds)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<DocumentResponse> getNotebookDocuments(
+            UUID notebookId,
+            String ownerEmail
+    ) {
+
+        notebookRepository
+                .findByIdAndOwnerEmail(
+                        notebookId,
+                        ownerEmail
+                )
+                .orElseThrow();
+
+        return documentRepository
+                .findByNotebookId(notebookId)
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+    @Transactional
+    public void deleteDocument(
+            UUID documentId,
+            String ownerEmail
+    ) throws IOException {
+
+        Document document =
+                documentRepository
+                        .findById(documentId)
+                        .orElseThrow();
+
+        notebookRepository
+                .findByIdAndOwnerEmail(
+                        document.getNotebookId(),
+                        ownerEmail
+                )
+                .orElseThrow();
+
+        deleteDocumentData(document);
+    }
+
+    @Transactional
+    public void deleteDocumentsForNotebook(
+            UUID notebookId
+    ) {
+
+        documentRepository
+                .findByNotebookId(notebookId)
+                .forEach(document -> {
+                    try {
+                        deleteDocumentData(document);
+                    } catch (IOException e) {
+                        throw new RuntimeException(
+                                "Failed to delete document file",
+                                e
+                        );
+                    }
+                });
+    }
+
+    private void deleteDocumentData(
+            Document document
+    ) throws IOException {
+
+        List<Chunk> chunks =
+                chunkRepository.findByDocumentId(
+                        document.getId()
+                );
+
+        List<UUID> chunkIds =
+                chunks.stream()
+                        .map(Chunk::getId)
+                        .toList();
+
+        if (!chunkIds.isEmpty()) {
+            embeddingRepository.deleteByChunkIdIn(
+                    chunkIds
+            );
+        }
+
+        chunkRepository.deleteByDocumentId(
+                document.getId()
+        );
+
+        documentRepository.delete(document);
+
+        if (document.getFilePath() != null) {
+            Files.deleteIfExists(
+                    Paths.get(
+                            document.getFilePath()
+                    )
+            );
+        }
+    }
+
+    private DocumentResponse toResponse(
+            Document document
+    ) {
+
+        return new DocumentResponse(
+                document.getId().toString(),
+                document.getNotebookId().toString(),
+                document.getFileName(),
+                document.getStatus(),
+                document.getCreatedAt()
+        );
     }
 }

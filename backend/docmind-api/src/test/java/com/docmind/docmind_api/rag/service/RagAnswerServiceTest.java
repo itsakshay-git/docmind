@@ -99,9 +99,15 @@ class RagAnswerServiceTest {
         assertThat(promptCaptor.getValue())
                 .contains(
                         "using only the context",
-                        "chunk-1",
+                        "Do not include internal IDs",
                         "Variable names can contain letters and digits.",
                         "What are Java variable naming rules?"
+                );
+
+        assertThat(promptCaptor.getValue())
+                .doesNotContain(
+                        "chunk-1",
+                        "document-1"
                 );
     }
 
