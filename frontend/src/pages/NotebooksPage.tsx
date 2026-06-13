@@ -1,13 +1,12 @@
-import { BrainCircuit, Check, LogOut, Menu, MoreVertical, Pencil, Plus, Settings, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext";
-import { NotebookCard } from "../features/notebooks/components/NotebookCard";
+import { NotebookGrid } from "../features/notebooks/components/NotebookGrid";
+import { NotebookLibraryHeader } from "../features/notebooks/components/NotebookLibraryHeader";
 import { NotebookLibraryToolbar } from "../features/notebooks/components/NotebookLibraryToolbar";
 import type { NotebookSort, NotebookView } from "../features/notebooks/components/NotebookLibraryToolbar";
+import { NotebookListTable } from "../features/notebooks/components/NotebookListTable";
 import { useCreateNotebook, useDeleteNotebook, useNotebooks, useUpdateNotebookTitle } from "../features/notebooks/hooks/useNotebooks";
-import { Button } from "../shared/components/Button";
-import { EmptyState } from "../shared/components/EmptyState";
 
 export function NotebooksPage() {
   const auth = useAuth();
@@ -27,16 +26,13 @@ export function NotebooksPage() {
   const updateTitleMutation = useUpdateNotebookTitle();
 
   function handleNotebookCreated(savedNotebook: { title: string }) {
-      setTitle("");
-      setCreateMessage(`Created "${savedNotebook.title}"`);
-      window.setTimeout(() => setCreateMessage(""), 2500);
+    setTitle("");
+    setCreateMessage(`Created "${savedNotebook.title}"`);
+    window.setTimeout(() => setCreateMessage(""), 2500);
   }
 
   function createNotebook() {
-    const nextTitle =
-      title.trim() || "Untitled notebook";
-
-    createMutation.mutate(nextTitle, {
+    createMutation.mutate(title.trim() || "Untitled notebook", {
       onSuccess: handleNotebookCreated,
     });
   }
@@ -99,16 +95,7 @@ export function NotebooksPage() {
     }
   }
 
-  function formatNotebookDate(value: string) {
-    return new Intl.DateTimeFormat("en", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }).format(new Date(value));
-  }
-
   const notebooks = notebooksQuery.data ?? [];
-
   const visibleNotebooks = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
 
@@ -129,36 +116,12 @@ export function NotebooksPage() {
 
   return (
     <main className="notebooks-page">
-      <header className="notebooks-shellbar">
-        <div className="brand-lockup compact">
-          <span>DocMind</span>
-        </div>
-        <div className="topbar-actions">
-          <Link className="button button--secondary" to="/settings"><Settings size={16} /> Settings</Link>
-          <Button icon={<LogOut size={16} />} onClick={auth.signOut} variant="ghost">Sign out</Button>
-        </div>
-        <div className="mobile-nav-menu">
-          <button
-            aria-expanded={isMobileMenuOpen}
-            aria-label="Open navigation menu"
-            className="icon-button"
-            onClick={() => setIsMobileMenuOpen((current) => !current)}
-            type="button"
-          >
-            <Menu size={18} />
-          </button>
-          {isMobileMenuOpen ? (
-            <div className="mobile-nav-menu__panel">
-              <Link onClick={() => setIsMobileMenuOpen(false)} to="/settings">
-                <Settings size={15} /> Settings
-              </Link>
-              <button onClick={auth.signOut} type="button">
-                <LogOut size={15} /> Sign out
-              </button>
-            </div>
-          ) : null}
-        </div>
-      </header>
+      <NotebookLibraryHeader
+        isMobileMenuOpen={isMobileMenuOpen}
+        onMobileMenuClose={() => setIsMobileMenuOpen(false)}
+        onMobileMenuToggle={() => setIsMobileMenuOpen((current) => !current)}
+        onSignOut={auth.signOut}
+      />
 
       <div className="notebook-library-content">
         <NotebookLibraryToolbar
@@ -176,147 +139,36 @@ export function NotebooksPage() {
           <h1>Recent notebooks</h1>
         </section>
 
-        {notebooks.length ? (
-          view === "list" ? (
-            <section className="notebook-list-table">
-              <div className="notebook-list-head">
-                <span>Title</span>
-                <span>Sources</span>
-                <span>Created</span>
-                <span>Role</span>
-                <span aria-hidden="true" />
-              </div>
-              {visibleNotebooks.map((notebook) => (
-                <div className="notebook-list-row" key={notebook.id}>
-                  {editingNotebookId === notebook.id ? (
-                    <div className="notebook-list-title">
-                      <span className="notebook-list-icon"><BrainCircuit size={15} /></span>
-                      <input
-                        aria-label="Notebook title"
-                        className="notebook-title-input"
-                        disabled={updateTitleMutation.isPending}
-                        onChange={(event) => setEditingTitle(event.target.value)}
-                        onKeyDown={(event) => handleListRenameKeyDown(event, notebook.id, notebook.title)}
-                        value={editingTitle}
-                      />
-                    </div>
-                  ) : (
-                    <Link className="notebook-list-title" to={`/notebooks/${notebook.id}`}>
-                      <span className="notebook-list-icon"><BrainCircuit size={15} /></span>
-                      <strong>{notebook.title}</strong>
-                    </Link>
-                  )}
-                  <span>{notebook.sourceCount} {notebook.sourceCount === 1 ? "Source" : "Sources"}</span>
-                  <span>{formatNotebookDate(notebook.createdAt)}</span>
-                  <span>Owner</span>
-                  <div className="notebook-list-actions">
-                    {editingNotebookId === notebook.id ? (
-                      <>
-                        <button
-                          aria-label={`Save ${notebook.title}`}
-                          className="icon-button icon-button--subtle"
-                          disabled={updateTitleMutation.isPending || !editingTitle.trim()}
-                          onClick={() => saveListRename(notebook.id, notebook.title)}
-                          type="button"
-                        >
-                          <Check size={14} />
-                        </button>
-                        <button
-                          aria-label="Cancel title edit"
-                          className="icon-button icon-button--subtle"
-                          disabled={updateTitleMutation.isPending}
-                          onClick={cancelListRename}
-                          type="button"
-                        >
-                          <X size={14} />
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        aria-label={`Edit ${notebook.title}`}
-                        className="icon-button icon-button--subtle"
-                        disabled={updateTitleMutation.isPending}
-                        onClick={() => startListRename(notebook.id, notebook.title)}
-                        type="button"
-                      >
-                        <Pencil size={14} />
-                      </button>
-                    )}
-                    <button
-                      aria-label={`Delete ${notebook.title}`}
-                      className="icon-button icon-button--subtle"
-                      disabled={deleteMutation.isPending}
-                      onClick={() => deleteNotebook(notebook.id, notebook.title)}
-                      type="button"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                    <MoreVertical size={18} />
-                  </div>
-                </div>
-              ))}
-              {!visibleNotebooks.length ? (
-                <EmptyState
-                  title="No notebooks found"
-                  description="Adjust your search to find a notebook."
-                />
-              ) : null}
-            </section>
-          ) : (
-            <section className="notebook-grid">
-              <article className="create-notebook-card">
-                <button className="create-notebook-button" disabled={createMutation.isPending} onClick={createNotebook} type="button">
-                  <span><Plus size={32} /></span>
-                  <strong>{createMutation.isPending ? "Creating..." : "Create new notebook"}</strong>
-                </button>
-                <input
-                  aria-label="Notebook title"
-                  placeholder="Optional title"
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                />
-                {createMessage ? <p className="create-feedback">{createMessage}</p> : null}
-                {createMutation.error ? <p className="create-feedback create-feedback--error">{createMutation.error.message}</p> : null}
-              </article>
-              {visibleNotebooks.map((notebook) => (
-                <NotebookCard
-                  isDeleting={deleteMutation.isPending}
-                  isUpdating={updateTitleMutation.isPending}
-                  key={notebook.id}
-                  notebook={notebook}
-                  onDelete={(notebookId) => deleteMutation.mutate(notebookId)}
-                  onRename={(notebookId, nextTitle) => updateTitleMutation.mutate({ notebookId, nextTitle })}
-                />
-              ))}
-              {!visibleNotebooks.length ? (
-                <EmptyState
-                  title="No notebooks found"
-                  description="Adjust your search to find a notebook."
-                />
-              ) : null}
-            </section>
-          )
+        {notebooks.length && view === "list" ? (
+          <NotebookListTable
+            editingNotebookId={editingNotebookId}
+            editingTitle={editingTitle}
+            isDeleting={deleteMutation.isPending}
+            isUpdating={updateTitleMutation.isPending}
+            notebooks={visibleNotebooks}
+            onCancelRename={cancelListRename}
+            onDelete={deleteNotebook}
+            onEditingTitleChange={setEditingTitle}
+            onRenameKeyDown={handleListRenameKeyDown}
+            onSaveRename={saveListRename}
+            onStartRename={startListRename}
+          />
         ) : (
-          <section className="notebook-grid">
-            <article className="create-notebook-card">
-              <button className="create-notebook-button" disabled={createMutation.isPending} onClick={createNotebook} type="button">
-                <span><Plus size={32} /></span>
-                <strong>{createMutation.isPending ? "Creating..." : "Create new notebook"}</strong>
-              </button>
-              <input
-                aria-label="Notebook title"
-                placeholder="Optional title"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-              />
-              {createMessage ? <p className="create-feedback">{createMessage}</p> : null}
-              {createMutation.error ? <p className="create-feedback create-feedback--error">{createMutation.error.message}</p> : null}
-            </article>
-            <EmptyState
-              title="No notebooks yet"
-              description="Create your first notebook and add sources to start asking grounded questions."
-            />
-          </section>
+          <NotebookGrid
+            createErrorMessage={createMutation.error?.message}
+            createMessage={createMessage}
+            emptyDescription={notebooks.length ? "Adjust your search to find a notebook." : "Create your first notebook and add sources to start asking grounded questions."}
+            emptyTitle={notebooks.length ? "No notebooks found" : "No notebooks yet"}
+            isCreating={createMutation.isPending}
+            isDeleting={deleteMutation.isPending}
+            isUpdating={updateTitleMutation.isPending}
+            notebooks={notebooks.length ? visibleNotebooks : []}
+            title={title}
+            onCreate={createNotebook}
+            onDelete={(notebookId) => deleteMutation.mutate(notebookId)}
+            onRename={(notebookId, nextTitle) => updateTitleMutation.mutate({ notebookId, nextTitle })}
+            onTitleChange={setTitle}
+          />
         )}
       </div>
     </main>

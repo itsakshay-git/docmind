@@ -49,6 +49,8 @@ Chat history is loaded from the backend and updated optimistically when the user
 
 The notebook library has grid/list modes, title search, sort controls, inline title editing, and notebook deletion. The workspace sidebar can add PDF, Website, YouTube auto-transcript, and pasted YouTube transcript sources. It lists current notebook sources and supports deleting sources without leaving the notebook.
 
+The notebook library route is a container page. Notebook list/grid/header rendering lives in `features/notebooks/components`, while query and mutation wiring lives in `features/notebooks/hooks`.
+
 Studio can generate, list, open, and delete saved study artifacts. Flashcards and quizzes run as stateful mini apps, briefing renders as Markdown, podcast artifacts support playback/download when audio generation succeeds, and infographic artifacts load an authenticated PNG blob with PNG/JPG download actions.
 
 ## State And Hooks

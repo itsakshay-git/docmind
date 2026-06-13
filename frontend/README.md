@@ -22,7 +22,7 @@ src/
   features/
     auth/              Auth API and session context
     chat/              Persistent notebook chat API, hooks, and UI
-    notebooks/         Notebook API, hooks, and notebook components
+    notebooks/         Notebook API, hooks, library components, and notebook cards
     documents/         PDF, website, and YouTube source APIs/hooks/components
     rag/               Low-level ask/search API
     studio/            Artifact API, hooks, metadata, mini apps, preview, and downloads
