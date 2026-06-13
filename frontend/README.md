@@ -32,6 +32,7 @@ src/
     components/        Reusable UI primitives
     lib/               Small utilities
     types/             API types
+  styles/              Plain CSS split by product area
 ```
 
 See also:

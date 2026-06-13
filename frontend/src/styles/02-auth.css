@@ -1,0 +1,229 @@
+﻿.login-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(360px, 460px);
+  min-height: 100vh;
+}
+
+.login-hero {
+  background:
+    linear-gradient(145deg, #050507 0%, #0a0710 52%, #050506 100%);
+  display: grid;
+  align-content: stretch;
+  gap: 24px;
+  overflow: hidden;
+  padding: 0;
+  position: relative;
+}
+
+.login-hero::before {
+  animation: loginLightDrift 18s ease-in-out infinite alternate;
+  background:
+    linear-gradient(120deg, transparent 0%, rgba(164, 116, 255, 0.13) 30%, transparent 58%),
+    linear-gradient(215deg, transparent 12%, rgba(89, 49, 160, 0.12) 45%, transparent 72%),
+    repeating-linear-gradient(105deg, rgba(166, 116, 255, 0.035) 0 1px, transparent 1px 34px);
+  content: "";
+  filter: blur(22px);
+  inset: -22%;
+  opacity: 0.9;
+  position: absolute;
+  transform: translate3d(-2%, -1%, 0) rotate(-4deg);
+}
+
+.login-hero::after {
+  background:
+    radial-gradient(circle at 28% 24%, rgba(150, 100, 255, 0.12), transparent 26%),
+    linear-gradient(180deg, rgba(102, 61, 180, 0.055), transparent 45%);
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.login-hero-glass {
+  backdrop-filter: blur(24px) saturate(1.22);
+  background:
+    linear-gradient(145deg, rgba(20, 13, 31, 0.74), rgba(4, 4, 6, 0.58));
+  border: 0;
+  border-radius: 0;
+  box-shadow:
+    inset -1px 0 0 rgba(159, 112, 255, 0.14),
+    inset 0 1px 0 rgba(159, 112, 255, 0.08);
+  align-content: center;
+  display: grid;
+  gap: 24px;
+  height: 100%;
+  min-height: 100%;
+  padding: 56px;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes loginLightDrift {
+  0% {
+    background-position: 0% 42%, 100% 58%, 0 0;
+    transform: translate3d(-3%, -1%, 0) rotate(-5deg);
+  }
+
+  100% {
+    background-position: 86% 56%, 12% 40%, 64px 28px;
+    transform: translate3d(3%, 2%, 0) rotate(4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .login-hero::before {
+    animation: none;
+  }
+}
+
+.login-hero h1 {
+  font-size: clamp(42px, 6vw, 72px);
+  letter-spacing: 0;
+  line-height: 1.02;
+  margin: 0;
+  max-width: 900px;
+}
+
+.login-hero p {
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.7;
+  margin: 0;
+  max-width: 720px;
+}
+
+.value-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.value-grid span {
+  align-items: center;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: inline-flex;
+  gap: 8px;
+  font-weight: 650;
+  padding: 10px 13px;
+}
+
+.external-profile-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.github-link {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--ink);
+  display: inline-flex;
+  gap: 8px;
+  font-weight: 650;
+  justify-self: start;
+  min-height: 40px;
+  padding: 0 13px;
+}
+
+.github-link:hover {
+  background: var(--panel-soft);
+}
+
+.login-card {
+  align-content: center;
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  display: grid;
+  gap: 17px;
+  padding: 44px;
+}
+
+.login-card h2,
+.workspace-header h1 {
+  margin: 0;
+}
+
+.demo-login-card {
+  align-items: center;
+  background: var(--panel-raised);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  padding: 12px;
+}
+
+.demo-login-card div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.demo-login-card strong {
+  font-weight: 700;
+}
+
+.demo-login-card span {
+  color: var(--muted);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.password-field {
+  align-items: center;
+  background: #11141a;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: flex;
+  overflow: hidden;
+}
+
+.password-field:focus-within {
+  border-color: var(--accent-strong);
+}
+
+.password-field input {
+  background: transparent;
+  border: 0;
+  min-width: 0;
+}
+
+.password-field button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  height: 44px;
+  justify-content: center;
+  width: 44px;
+}
+
+.password-field button:hover {
+  color: var(--ink);
+}
+
+.form-error {
+  background: #3a2426;
+  border-radius: 8px;
+  color: var(--danger);
+  font-weight: 700;
+  padding: 12px;
+}
+
+.text-action {
+  background: transparent;
+  border: 0;
+  color: var(--ink);
+  cursor: pointer;
+  font-weight: 650;
+  padding: 6px;
+}
+

@@ -11,6 +11,7 @@ Use these rules while restructuring the React frontend.
 - Avoid redesigning UI during structure work.
 - Keep route paths unchanged.
 - Keep blob downloads and authenticated media fetches in the Studio feature.
+- Keep styles imported through `src/styles/index.css`; preserve import order when moving selectors.
 
 ## Refactor Order
 
