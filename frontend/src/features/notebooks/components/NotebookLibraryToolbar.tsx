@@ -26,7 +26,9 @@ export function NotebookLibraryToolbar({
 }: NotebookLibraryToolbarProps) {
   return (
     <section className="library-toolbar" aria-label="Notebook library controls">
-      <button className="library-tab active" type="button">All</button>
+      <button className="library-tab active" type="button">
+        All
+      </button>
       <div className="library-actions">
         <label className="library-search">
           <Search size={17} />
@@ -38,14 +40,23 @@ export function NotebookLibraryToolbar({
           />
         </label>
         <div className="view-toggle" aria-label="View options">
-          <button className={view === "grid" ? "active" : ""} onClick={() => onViewChange("grid")} type="button"><Grid2X2 size={18} /></button>
-          <button className={view === "list" ? "active" : ""} onClick={() => onViewChange("list")} type="button"><List size={18} /></button>
+          <button className={view === "grid" ? "active" : ""} onClick={() => onViewChange("grid")} type="button">
+            <Grid2X2 size={18} />
+          </button>
+          <button className={view === "list" ? "active" : ""} onClick={() => onViewChange("list")} type="button">
+            <List size={18} />
+          </button>
         </div>
         <button className="sort-button" onClick={onSortToggle} type="button">
           {sort === "recent" ? <Check size={16} /> : null}
           {sort === "recent" ? "Most recent" : "Title"}
         </button>
-        <button className="button button--primary library-create-button" disabled={isCreating} onClick={onCreate} type="button">
+        <button
+          className="button button--primary library-create-button"
+          disabled={isCreating}
+          onClick={onCreate}
+          type="button"
+        >
           <Plus size={17} />
           {isCreating ? "Creating..." : "Create new"}
         </button>

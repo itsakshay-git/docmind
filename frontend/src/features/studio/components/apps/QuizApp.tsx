@@ -58,9 +58,30 @@ export function QuizApp({ artifact }: { artifact: StudioArtifact }) {
         {isFinished ? <p>{question.explanation}</p> : null}
       </div>
       <div className="studio-app-actions">
-        <button className="button button--secondary" disabled={index === 0} onClick={() => setIndex(index - 1)} type="button">Prev</button>
-        <button className="button button--secondary" disabled={index === questions.length - 1} onClick={() => setIndex(index + 1)} type="button">Next</button>
-        <button className="button button--primary" disabled={Object.keys(answers).length < questions.length} onClick={() => setIsFinished(true)} type="button">Finish</button>
+        <button
+          className="button button--secondary"
+          disabled={index === 0}
+          onClick={() => setIndex(index - 1)}
+          type="button"
+        >
+          Prev
+        </button>
+        <button
+          className="button button--secondary"
+          disabled={index === questions.length - 1}
+          onClick={() => setIndex(index + 1)}
+          type="button"
+        >
+          Next
+        </button>
+        <button
+          className="button button--primary"
+          disabled={Object.keys(answers).length < questions.length}
+          onClick={() => setIsFinished(true)}
+          type="button"
+        >
+          Finish
+        </button>
       </div>
     </article>
   );

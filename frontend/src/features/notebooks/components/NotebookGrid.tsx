@@ -54,9 +54,7 @@ export function NotebookGrid({
           onRename={onRename}
         />
       ))}
-      {!notebooks.length ? (
-        <EmptyState title={emptyTitle} description={emptyDescription} />
-      ) : null}
+      {!notebooks.length ? <EmptyState title={emptyTitle} description={emptyDescription} /> : null}
     </section>
   );
 }

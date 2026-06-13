@@ -33,7 +33,9 @@ export function WorkspaceMain({
   return (
     <section className="workspace-main">
       <section className="workspace-content-grid">
-        <div className={`workspace-mobile-section workspace-mobile-section--chat ${activeMobileSection === "chat" ? "active" : ""}`}>
+        <div
+          className={`workspace-mobile-section workspace-mobile-section--chat ${activeMobileSection === "chat" ? "active" : ""}`}
+        >
           <ChatPanel
             errorMessage={chatErrorMessage}
             isBusy={isBusy}
@@ -46,7 +48,9 @@ export function WorkspaceMain({
             onTopKChange={onChatTopKChange}
           />
         </div>
-        <div className={`workspace-mobile-section workspace-mobile-section--studio ${activeMobileSection === "studio" ? "active" : ""}`}>
+        <div
+          className={`workspace-mobile-section workspace-mobile-section--studio ${activeMobileSection === "studio" ? "active" : ""}`}
+        >
           <StudioPanel notebookId={notebookId} />
         </div>
       </section>

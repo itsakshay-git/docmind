@@ -21,7 +21,8 @@ export function PodcastApp({ artifact }: { artifact: StudioArtifact }) {
       return undefined;
     }
 
-    studioApi.audioBlobUrl(artifact.id)
+    studioApi
+      .audioBlobUrl(artifact.id)
       .then((url) => {
         currentUrl = url;
         setAudioUrl(url);
@@ -45,7 +46,9 @@ export function PodcastApp({ artifact }: { artifact: StudioArtifact }) {
       {audioUrl ? <audio className="podcast-player" controls src={audioUrl} /> : null}
       <div className="podcast-script">
         {segments.map((segment, index) => (
-          <p key={`${segment.speaker}-${index}`}><strong>{segment.speaker}:</strong> {segment.text}</p>
+          <p key={`${segment.speaker}-${index}`}>
+            <strong>{segment.speaker}:</strong> {segment.text}
+          </p>
         ))}
       </div>
     </article>

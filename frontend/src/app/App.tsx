@@ -28,10 +28,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 export function App() {
   useEffect(() => {
-    const savedTheme =
-      localStorage.getItem("docmind-theme") === "light"
-        ? "light"
-        : "dark";
+    const savedTheme = localStorage.getItem("docmind-theme") === "light" ? "light" : "dark";
 
     document.documentElement.dataset.theme = savedTheme;
   }, []);
@@ -44,27 +41,27 @@ export function App() {
             <Route element={<LoginPage />} path="/login" />
             <Route element={<Navigate replace to="/notebooks" />} path="/" />
             <Route
-              element={(
+              element={
                 <ProtectedRoute>
                   <NotebooksPage />
                 </ProtectedRoute>
-              )}
+              }
               path="/notebooks"
             />
             <Route
-              element={(
+              element={
                 <ProtectedRoute>
                   <NotebookWorkspacePage />
                 </ProtectedRoute>
-              )}
+              }
               path="/notebooks/:notebookId"
             />
             <Route
-              element={(
+              element={
                 <ProtectedRoute>
                   <SettingsPage />
                 </ProtectedRoute>
-              )}
+              }
               path="/settings"
             />
           </Routes>

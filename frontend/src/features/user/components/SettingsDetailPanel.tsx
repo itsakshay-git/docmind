@@ -63,9 +63,7 @@ export function SettingsDetailPanel({
         />
       ) : null}
 
-      {activeSection === "appearance" ? (
-        <ThemeSettingsSection theme={theme} onThemeChange={onThemeChange} />
-      ) : null}
+      {activeSection === "appearance" ? <ThemeSettingsSection theme={theme} onThemeChange={onThemeChange} /> : null}
 
       {activeSection === "delete" ? (
         <DeleteAccountSettingsSection

@@ -12,12 +12,12 @@ export function useNotebookChat(notebookId: string) {
   });
 
   const sendMessage = useMutation({
-    mutationFn: ({ content, topK }: { content: string; topK: number }) => chatApi.sendMessage(notebookId, content, topK),
+    mutationFn: ({ content, topK }: { content: string; topK: number }) =>
+      chatApi.sendMessage(notebookId, content, topK),
     onMutate: async ({ content }) => {
       await queryClient.cancelQueries({ queryKey: chatKeys.messages(notebookId) });
 
-      const previousMessages =
-        queryClient.getQueryData<ChatMessage[]>(chatKeys.messages(notebookId)) ?? [];
+      const previousMessages = queryClient.getQueryData<ChatMessage[]>(chatKeys.messages(notebookId)) ?? [];
 
       const optimisticMessage: ChatMessage = {
         id: `optimistic-${Date.now()}`,
@@ -28,18 +28,12 @@ export function useNotebookChat(notebookId: string) {
         optimistic: true,
       };
 
-      queryClient.setQueryData<ChatMessage[]>(
-        chatKeys.messages(notebookId),
-        [...previousMessages, optimisticMessage]
-      );
+      queryClient.setQueryData<ChatMessage[]>(chatKeys.messages(notebookId), [...previousMessages, optimisticMessage]);
 
       return { previousMessages };
     },
     onError: (error) => {
-      const message =
-        error instanceof Error
-          ? error.message
-          : "Message failed. Please try again.";
+      const message = error instanceof Error ? error.message : "Message failed. Please try again.";
 
       const failedAssistantMessage: ChatMessage = {
         id: `failed-${Date.now()}`,
@@ -49,20 +43,17 @@ export function useNotebookChat(notebookId: string) {
         createdAt: new Date().toISOString(),
       };
 
-      queryClient.setQueryData<ChatMessage[]>(
-        chatKeys.messages(notebookId),
-        (current = []) => [...current, failedAssistantMessage]
-      );
+      queryClient.setQueryData<ChatMessage[]>(chatKeys.messages(notebookId), (current = []) => [
+        ...current,
+        failedAssistantMessage,
+      ]);
     },
     onSuccess: (response) => {
-      queryClient.setQueryData<ChatMessage[]>(
-        chatKeys.messages(notebookId),
-        (current = []) => [
-          ...current.filter((message) => !message.optimistic),
-          response.userMessage,
-          response.assistantMessage,
-        ]
-      );
+      queryClient.setQueryData<ChatMessage[]>(chatKeys.messages(notebookId), (current = []) => [
+        ...current.filter((message) => !message.optimistic),
+        response.userMessage,
+        response.assistantMessage,
+      ]);
     },
   });
 

@@ -67,6 +67,16 @@ To point at another backend URL, create `.env.local`:
 VITE_DOCMIND_API_URL=http://localhost:8081
 ```
 
+## Quality Checks
+
+```powershell
+corepack pnpm lint
+corepack pnpm format:check
+corepack pnpm build
+```
+
+Use `corepack pnpm format` to apply the shared Prettier style.
+
 ## Product Direction
 
 The UI supports dark and light themes and keeps the notebook workspace focused on three areas:

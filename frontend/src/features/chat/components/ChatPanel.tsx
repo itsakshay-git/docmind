@@ -57,10 +57,7 @@ export function ChatPanel({
       <div className="panel-heading">
         <span>Chat</span>
         <div className="chat-toolbar">
-          <label
-            className="tooltip"
-            data-tooltip="Controls how many source chunks are used for the answer."
-          >
+          <label className="tooltip" data-tooltip="Controls how many source chunks are used for the answer.">
             Context
             <select
               aria-label="Retrieved context count"
@@ -88,14 +85,18 @@ export function ChatPanel({
       <div className="chat-thread" ref={threadRef}>
         {isLoading ? (
           <article className="chat-message chat-message--assistant">
-            <div className="chat-avatar"><Bot size={17} /></div>
+            <div className="chat-avatar">
+              <Bot size={17} />
+            </div>
             <div className="chat-bubble chat-bubble--loading">Loading conversation...</div>
           </article>
         ) : null}
 
         {!isLoading && messages.length === 0 ? (
           <article className="chat-message chat-message--assistant">
-            <div className="chat-avatar"><Bot size={17} /></div>
+            <div className="chat-avatar">
+              <Bot size={17} />
+            </div>
             <div className="chat-bubble">
               Ask a question about this notebook. Answers are saved here so the conversation feels continuous.
             </div>
@@ -103,38 +104,38 @@ export function ChatPanel({
         ) : null}
 
         {messages.map((message) => (
-          <article className={`chat-message chat-message--${message.role === "USER" ? "user" : "assistant"}`} key={message.id}>
-            <div className="chat-avatar">
-              {message.role === "USER" ? <User size={17} /> : <Bot size={17} />}
-            </div>
+          <article
+            className={`chat-message chat-message--${message.role === "USER" ? "user" : "assistant"}`}
+            key={message.id}
+          >
+            <div className="chat-avatar">{message.role === "USER" ? <User size={17} /> : <Bot size={17} />}</div>
             <div className="chat-bubble">
               {message.role === "ASSISTANT" ? (
-                <ReactMarkdown
-                  components={{ code: CodeBlock }}
-                  remarkPlugins={[remarkGfm]}
-                >
+                <ReactMarkdown components={{ code: CodeBlock }} remarkPlugins={[remarkGfm]}>
                   {message.content}
                 </ReactMarkdown>
               ) : (
                 message.content
               )}
-              {message.sources.length > 0 ? (
-                <div className="chat-sources">{message.sources.length} sources</div>
-              ) : null}
+              {message.sources.length > 0 ? <div className="chat-sources">{message.sources.length} sources</div> : null}
             </div>
           </article>
         ))}
 
         {errorMessage ? (
           <article className="chat-message chat-message--assistant">
-            <div className="chat-avatar"><Bot size={17} /></div>
+            <div className="chat-avatar">
+              <Bot size={17} />
+            </div>
             <div className="chat-bubble chat-bubble--error">{errorMessage}</div>
           </article>
         ) : null}
 
         {isBusy ? (
           <article className="chat-message chat-message--assistant">
-            <div className="chat-avatar"><Bot size={17} /></div>
+            <div className="chat-avatar">
+              <Bot size={17} />
+            </div>
             <div className="chat-bubble chat-bubble--loading">Thinking...</div>
           </article>
         ) : null}
@@ -154,7 +155,12 @@ export function ChatPanel({
             }
           }}
         />
-        <button aria-label="Send message" className="icon-button icon-button--primary" disabled={isBusy || !cleanContent()} onClick={sendMessage}>
+        <button
+          aria-label="Send message"
+          className="icon-button icon-button--primary"
+          disabled={isBusy || !cleanContent()}
+          onClick={sendMessage}
+        >
           <Send size={18} />
         </button>
       </div>
@@ -162,11 +168,7 @@ export function ChatPanel({
   );
 }
 
-function CodeBlock({
-  children,
-  className,
-  ...props
-}: ComponentPropsWithoutRef<"code">) {
+function CodeBlock({ children, className, ...props }: ComponentPropsWithoutRef<"code">) {
   const [isCopied, setIsCopied] = useState(false);
   const match = /language-(\w+)/.exec(className ?? "");
   const language = match?.[1] ?? "code";

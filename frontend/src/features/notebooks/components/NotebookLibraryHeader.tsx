@@ -21,8 +21,12 @@ export function NotebookLibraryHeader({
         <span>DocMind</span>
       </div>
       <div className="topbar-actions">
-        <Link className="button button--secondary" to="/settings"><Settings size={16} /> Settings</Link>
-        <Button icon={<LogOut size={16} />} onClick={onSignOut} variant="ghost">Sign out</Button>
+        <Link className="button button--secondary" to="/settings">
+          <Settings size={16} /> Settings
+        </Link>
+        <Button icon={<LogOut size={16} />} onClick={onSignOut} variant="ghost">
+          Sign out
+        </Button>
       </div>
       <div className="mobile-nav-menu">
         <button

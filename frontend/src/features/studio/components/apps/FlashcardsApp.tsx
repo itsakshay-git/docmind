@@ -32,8 +32,8 @@ export function FlashcardsApp({ artifact }: { artifact: StudioArtifact }) {
 
     const key = `${index}-${card.front}`;
 
-    setKnown((current) => bucket === "known" ? unique([...current, key]) : current.filter((item) => item !== key));
-    setMissed((current) => bucket === "missed" ? unique([...current, key]) : current.filter((item) => item !== key));
+    setKnown((current) => (bucket === "known" ? unique([...current, key]) : current.filter((item) => item !== key)));
+    setMissed((current) => (bucket === "missed" ? unique([...current, key]) : current.filter((item) => item !== key)));
     setIsFlipped(false);
     setIndex((current) => Math.min(current + 1, cards.length - 1));
   }
@@ -51,7 +51,9 @@ export function FlashcardsApp({ artifact }: { artifact: StudioArtifact }) {
     <article className="studio-mini-app flashcards-app">
       <div>
         <h3>{artifact.title}</h3>
-        <p className="flashcard-progress">{index + 1} / {cards.length} cards | {known.length} got it | {missed.length} review again</p>
+        <p className="flashcard-progress">
+          {index + 1} / {cards.length} cards | {known.length} got it | {missed.length} review again
+        </p>
       </div>
       <button
         className={`flashcard ${toneClass} ${isFlipped ? "flipped" : ""}`}
@@ -61,15 +63,39 @@ export function FlashcardsApp({ artifact }: { artifact: StudioArtifact }) {
       >
         <span className="flashcard__shine" aria-hidden="true" />
         <span className="flashcard__content">{isFlipped ? card.back : card.front}</span>
-        <small>{isFlipped ? "Answer" : card.difficulty ?? "Card"}</small>
+        <small>{isFlipped ? "Answer" : (card.difficulty ?? "Card")}</small>
       </button>
       <div className="studio-app-actions">
-        <button className="button button--secondary" disabled={index === 0} onClick={() => { setIndex(index - 1); setIsFlipped(false); }} type="button">Prev</button>
-        <button className="button button--secondary" disabled={index === cards.length - 1} onClick={() => { setIndex(index + 1); setIsFlipped(false); }} type="button">Next</button>
+        <button
+          className="button button--secondary"
+          disabled={index === 0}
+          onClick={() => {
+            setIndex(index - 1);
+            setIsFlipped(false);
+          }}
+          type="button"
+        >
+          Prev
+        </button>
+        <button
+          className="button button--secondary"
+          disabled={index === cards.length - 1}
+          onClick={() => {
+            setIndex(index + 1);
+            setIsFlipped(false);
+          }}
+          type="button"
+        >
+          Next
+        </button>
       </div>
       <div className="studio-app-actions">
-        <button className="button button--secondary" onClick={() => mark("missed")} type="button"><X size={15} /> Did not get it</button>
-        <button className="button button--primary" onClick={() => mark("known")} type="button"><Check size={15} /> Got it</button>
+        <button className="button button--secondary" onClick={() => mark("missed")} type="button">
+          <X size={15} /> Did not get it
+        </button>
+        <button className="button button--primary" onClick={() => mark("known")} type="button">
+          <Check size={15} /> Got it
+        </button>
       </div>
     </article>
   );

@@ -31,10 +31,18 @@ export function WorkspaceSidebar({
   onUploadPdf,
 }: WorkspaceSidebarProps) {
   return (
-    <aside className={`workspace-sidebar workspace-mobile-section workspace-mobile-section--sources ${activeMobileSection === "sources" ? "active" : ""}`}>
-      <Link className="back-link" to="/notebooks"><ArrowLeft size={16} /> All notebooks</Link>
+    <aside
+      className={`workspace-sidebar workspace-mobile-section workspace-mobile-section--sources ${activeMobileSection === "sources" ? "active" : ""}`}
+    >
+      <Link className="back-link" to="/notebooks">
+        <ArrowLeft size={16} /> All notebooks
+      </Link>
       <section className="sidebar-block">
-        <div className="panel-heading"><span><Library size={17} /> Notebook</span></div>
+        <div className="panel-heading">
+          <span>
+            <Library size={17} /> Notebook
+          </span>
+        </div>
         <h2>{notebookTitle}</h2>
         <p>Source-grounded workspace for upload, retrieval, chat, and study artifacts.</p>
       </section>
@@ -45,11 +53,7 @@ export function WorkspaceSidebar({
         onAddYouTubeUrl={onAddYouTubeUrl}
         onUpload={onUploadPdf}
       />
-      <SourceListPanel
-        documents={documents}
-        isDeleting={isDeletingSource}
-        onDelete={onDeleteSource}
-      />
+      <SourceListPanel documents={documents} isDeleting={isDeletingSource} onDelete={onDeleteSource} />
     </aside>
   );
 }

@@ -31,8 +31,13 @@ export function NotebookWorkspacePage() {
   } = useNotebookChat(notebookId);
 
   const notebook = notebooksQuery.data?.find((item) => item.id === notebookId);
-  const isAddingSource = uploadMutation.isPending || addWebUrlMutation.isPending || addYouTubeUrlMutation.isPending || addYouTubeTranscriptMutation.isPending;
-  const isBusy = sendMessageMutation.isPending || clearChatMutation.isPending || isAddingSource || deleteDocumentMutation.isPending;
+  const isAddingSource =
+    uploadMutation.isPending ||
+    addWebUrlMutation.isPending ||
+    addYouTubeUrlMutation.isPending ||
+    addYouTubeTranscriptMutation.isPending;
+  const isBusy =
+    sendMessageMutation.isPending || clearChatMutation.isPending || isAddingSource || deleteDocumentMutation.isPending;
 
   return (
     <main className="workspace-page">
@@ -46,7 +51,9 @@ export function NotebookWorkspacePage() {
         isDeletingSource={deleteDocumentMutation.isPending}
         notebookTitle={notebook?.title ?? "Notebook"}
         onAddWebUrl={(url) => addWebUrlMutation.mutate(url)}
-        onAddYouTubeTranscript={(url, title, transcript) => addYouTubeTranscriptMutation.mutate({ url, title, transcript })}
+        onAddYouTubeTranscript={(url, title, transcript) =>
+          addYouTubeTranscriptMutation.mutate({ url, title, transcript })
+        }
         onAddYouTubeUrl={(url) => addYouTubeUrlMutation.mutate(url)}
         onDeleteSource={(documentId) => deleteDocumentMutation.mutate(documentId)}
         onUploadPdf={(file) => uploadMutation.mutate(file)}

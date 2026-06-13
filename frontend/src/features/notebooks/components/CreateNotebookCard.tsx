@@ -20,7 +20,9 @@ export function CreateNotebookCard({
   return (
     <article className="create-notebook-card">
       <button className="create-notebook-button" disabled={isCreating} onClick={onCreate} type="button">
-        <span><Plus size={32} /></span>
+        <span>
+          <Plus size={32} />
+        </span>
         <strong>{isCreating ? "Creating..." : "Create new notebook"}</strong>
       </button>
       <input

@@ -15,38 +15,52 @@ type ArtifactAppProps = {
   onDownload: (format: "audio" | "png" | "jpg") => void;
 };
 
-export function ArtifactApp({
-  artifact,
-  downloadError,
-  isDeleting,
-  onBack,
-  onDelete,
-  onDownload,
-}: ArtifactAppProps) {
+export function ArtifactApp({ artifact, downloadError, isDeleting, onBack, onDelete, onDownload }: ArtifactAppProps) {
   const showAudioDownload = artifact.type === "PODCAST_SCRIPT" && artifact.audioAvailable;
   const showImageDownloads = artifact.type === "INFOGRAPHIC_OUTLINE" && artifact.imageAvailable;
 
   return (
     <>
       <div className="studio-app-header">
-        <button className="text-action" onClick={onBack} type="button"><ArrowLeft size={15} /> Studio</button>
+        <button className="text-action" onClick={onBack} type="button">
+          <ArrowLeft size={15} /> Studio
+        </button>
         <div className="studio-preview-actions">
           {showAudioDownload ? (
-            <button className="icon-button icon-button--subtle" onClick={() => onDownload("audio")} type="button" aria-label="Download Audio">
+            <button
+              className="icon-button icon-button--subtle"
+              onClick={() => onDownload("audio")}
+              type="button"
+              aria-label="Download Audio"
+            >
               <AudioLines size={15} />
             </button>
           ) : null}
           {showImageDownloads ? (
             <>
-              <button className="button button--secondary button--compact" onClick={() => onDownload("png")} type="button">
+              <button
+                className="button button--secondary button--compact"
+                onClick={() => onDownload("png")}
+                type="button"
+              >
                 <Download size={14} /> PNG
               </button>
-              <button className="button button--secondary button--compact" onClick={() => onDownload("jpg")} type="button">
+              <button
+                className="button button--secondary button--compact"
+                onClick={() => onDownload("jpg")}
+                type="button"
+              >
                 <Download size={14} /> JPG
               </button>
             </>
           ) : null}
-          <button className="icon-button icon-button--subtle" disabled={isDeleting} onClick={onDelete} type="button" aria-label="Delete artifact">
+          <button
+            className="icon-button icon-button--subtle"
+            disabled={isDeleting}
+            onClick={onDelete}
+            type="button"
+            aria-label="Delete artifact"
+          >
             <Trash2 size={15} />
           </button>
         </div>

@@ -51,12 +51,9 @@ export const studioApi = {
 
   async download(artifactId: string, format: "audio" | "png" | "jpg") {
     const token = tokenStorage.get();
-    const response = await fetch(
-      `${API_BASE_URL}/api/v1/studio/artifacts/${artifactId}/download?format=${format}`,
-      {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      }
-    );
+    const response = await fetch(`${API_BASE_URL}/api/v1/studio/artifacts/${artifactId}/download?format=${format}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
 
     if (!response.ok) {
       throw new Error(await response.text());

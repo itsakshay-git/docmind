@@ -43,7 +43,9 @@ export function NotebookListTable({
         <div className="notebook-list-row" key={notebook.id}>
           {editingNotebookId === notebook.id ? (
             <div className="notebook-list-title">
-              <span className="notebook-list-icon"><BrainCircuit size={15} /></span>
+              <span className="notebook-list-icon">
+                <BrainCircuit size={15} />
+              </span>
               <input
                 aria-label="Notebook title"
                 className="notebook-title-input"
@@ -55,11 +57,15 @@ export function NotebookListTable({
             </div>
           ) : (
             <Link className="notebook-list-title" to={`/notebooks/${notebook.id}`}>
-              <span className="notebook-list-icon"><BrainCircuit size={15} /></span>
+              <span className="notebook-list-icon">
+                <BrainCircuit size={15} />
+              </span>
               <strong>{notebook.title}</strong>
             </Link>
           )}
-          <span>{notebook.sourceCount} {notebook.sourceCount === 1 ? "Source" : "Sources"}</span>
+          <span>
+            {notebook.sourceCount} {notebook.sourceCount === 1 ? "Source" : "Sources"}
+          </span>
           <span>{formatNotebookDate(notebook.createdAt)}</span>
           <span>Owner</span>
           <div className="notebook-list-actions">
@@ -109,10 +115,7 @@ export function NotebookListTable({
         </div>
       ))}
       {!notebooks.length ? (
-        <EmptyState
-          title="No notebooks found"
-          description="Adjust your search to find a notebook."
-        />
+        <EmptyState title="No notebooks found" description="Adjust your search to find a notebook." />
       ) : null}
     </section>
   );

@@ -19,12 +19,18 @@ export function DeleteAccountSettingsSection({
   return (
     <>
       <div className="settings-section-heading">
-        <span><ShieldAlert size={18} /> Delete account</span>
+        <span>
+          <ShieldAlert size={18} /> Delete account
+        </span>
         <p>Permanently remove your account, notebooks, sources, embeddings, and chat history.</p>
       </div>
       <div className="danger-zone">
         <p>Type your email address to confirm deletion.</p>
-        <TextField label="Confirm email" value={confirmation} onChange={(event) => onConfirmationChange(event.target.value)} />
+        <TextField
+          label="Confirm email"
+          value={confirmation}
+          onChange={(event) => onConfirmationChange(event.target.value)}
+        />
         {mutation.error ? <p className="settings-error">{mutation.error.message}</p> : null}
         <Button
           disabled={!canDeleteAccount || mutation.isPending}

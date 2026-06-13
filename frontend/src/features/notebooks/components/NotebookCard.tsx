@@ -101,7 +101,9 @@ export function NotebookCard({ isDeleting, isUpdating, notebook, onDelete, onRen
           ) : (
             <h3>{notebook.title}</h3>
           )}
-          <p>{notebook.sourceCount} {notebook.sourceCount === 1 ? "source" : "sources"}</p>
+          <p>
+            {notebook.sourceCount} {notebook.sourceCount === 1 ? "source" : "sources"}
+          </p>
         </div>
       </div>
       <div className="notebook-card-actions">

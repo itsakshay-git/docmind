@@ -6,7 +6,12 @@ import { NotebookLibraryHeader } from "../features/notebooks/components/Notebook
 import { NotebookLibraryToolbar } from "../features/notebooks/components/NotebookLibraryToolbar";
 import type { NotebookSort, NotebookView } from "../features/notebooks/components/NotebookLibraryToolbar";
 import { NotebookListTable } from "../features/notebooks/components/NotebookListTable";
-import { useCreateNotebook, useDeleteNotebook, useNotebooks, useUpdateNotebookTitle } from "../features/notebooks/hooks/useNotebooks";
+import {
+  useCreateNotebook,
+  useDeleteNotebook,
+  useNotebooks,
+  useUpdateNotebookTitle,
+} from "../features/notebooks/hooks/useNotebooks";
 
 export function NotebooksPage() {
   const auth = useAuth();
@@ -77,7 +82,11 @@ export function NotebooksPage() {
     setEditingTitle("");
   }
 
-  function handleListRenameKeyDown(event: React.KeyboardEvent<HTMLInputElement>, notebookId: string, currentTitle: string) {
+  function handleListRenameKeyDown(
+    event: React.KeyboardEvent<HTMLInputElement>,
+    notebookId: string,
+    currentTitle: string
+  ) {
     if (event.key === "Enter") {
       event.preventDefault();
       saveListRename(notebookId, currentTitle);
@@ -95,16 +104,12 @@ export function NotebooksPage() {
     }
   }
 
-  const notebooks = notebooksQuery.data ?? [];
+  const notebooks = useMemo(() => notebooksQuery.data ?? [], [notebooksQuery.data]);
   const visibleNotebooks = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
 
     return [...notebooks]
-      .filter((notebook) =>
-        query
-          ? notebook.title.toLowerCase().includes(query)
-          : true
-      )
+      .filter((notebook) => (query ? notebook.title.toLowerCase().includes(query) : true))
       .sort((first, second) => {
         if (sort === "title") {
           return first.title.localeCompare(second.title);
@@ -157,7 +162,11 @@ export function NotebooksPage() {
           <NotebookGrid
             createErrorMessage={createMutation.error?.message}
             createMessage={createMessage}
-            emptyDescription={notebooks.length ? "Adjust your search to find a notebook." : "Create your first notebook and add sources to start asking grounded questions."}
+            emptyDescription={
+              notebooks.length
+                ? "Adjust your search to find a notebook."
+                : "Create your first notebook and add sources to start asking grounded questions."
+            }
             emptyTitle={notebooks.length ? "No notebooks found" : "No notebooks yet"}
             isCreating={createMutation.isPending}
             isDeleting={deleteMutation.isPending}

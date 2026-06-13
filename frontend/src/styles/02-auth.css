@@ -5,8 +5,7 @@
 }
 
 .login-hero {
-  background:
-    linear-gradient(145deg, #050507 0%, #0a0710 52%, #050506 100%);
+  background: linear-gradient(145deg, #050507 0%, #0a0710 52%, #050506 100%);
   display: grid;
   align-content: stretch;
   gap: 24px;
@@ -41,8 +40,7 @@
 
 .login-hero-glass {
   backdrop-filter: blur(24px) saturate(1.22);
-  background:
-    linear-gradient(145deg, rgba(20, 13, 31, 0.74), rgba(4, 4, 6, 0.58));
+  background: linear-gradient(145deg, rgba(20, 13, 31, 0.74), rgba(4, 4, 6, 0.58));
   border: 0;
   border-radius: 0;
   box-shadow:
@@ -60,12 +58,18 @@
 
 @keyframes loginLightDrift {
   0% {
-    background-position: 0% 42%, 100% 58%, 0 0;
+    background-position:
+      0% 42%,
+      100% 58%,
+      0 0;
     transform: translate3d(-3%, -1%, 0) rotate(-5deg);
   }
 
   100% {
-    background-position: 86% 56%, 12% 40%, 64px 28px;
+    background-position:
+      86% 56%,
+      12% 40%,
+      64px 28px;
     transform: translate3d(3%, 2%, 0) rotate(4deg);
   }
 }
@@ -226,4 +230,3 @@
   font-weight: 650;
   padding: 6px;
 }
-

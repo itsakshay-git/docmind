@@ -34,14 +34,13 @@ export async function httpClient<T>(path: string, options: HttpOptions = {}): Pr
   });
 
   const contentType = response.headers.get("content-type") ?? "";
-  const payload = contentType.includes("application/json")
-    ? await response.json()
-    : await response.text();
+  const payload = contentType.includes("application/json") ? await response.json() : await response.text();
 
   if (!response.ok) {
-    const message = typeof payload === "object" && payload?.message
-      ? payload.message
-      : String(payload || `Request failed with status ${response.status}`);
+    const message =
+      typeof payload === "object" && payload?.message
+        ? payload.message
+        : String(payload || `Request failed with status ${response.status}`);
 
     throw new ApiError(message, response.status);
   }

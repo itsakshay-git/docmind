@@ -9,13 +9,11 @@ export function DemoLoginCard({ onUseDemo }: DemoLoginCardProps) {
     <div className="demo-login-card">
       <div>
         <strong>Recruiter demo</strong>
-        <span>{demoCredentials.email} / {demoCredentials.password}</span>
+        <span>
+          {demoCredentials.email} / {demoCredentials.password}
+        </span>
       </div>
-      <button
-        className="text-action"
-        onClick={onUseDemo}
-        type="button"
-      >
+      <button className="text-action" onClick={onUseDemo} type="button">
         Use
       </button>
     </div>

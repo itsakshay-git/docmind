@@ -7,12 +7,7 @@ type PasswordFieldProps = {
   onValueChange: (value: string) => void;
 };
 
-export function PasswordField({
-  isVisible,
-  value,
-  onToggleVisibility,
-  onValueChange,
-}: PasswordFieldProps) {
+export function PasswordField({ isVisible, value, onToggleVisibility, onValueChange }: PasswordFieldProps) {
   return (
     <label className="field">
       <span>Password</span>
@@ -22,11 +17,7 @@ export function PasswordField({
           type={isVisible ? "text" : "password"}
           value={value}
         />
-        <button
-          aria-label={isVisible ? "Hide password" : "Show password"}
-          onClick={onToggleVisibility}
-          type="button"
-        >
+        <button aria-label={isVisible ? "Hide password" : "Show password"} onClick={onToggleVisibility} type="button">
           {isVisible ? <EyeOff size={17} /> : <Eye size={17} />}
         </button>
       </div>

@@ -1,9 +1,4 @@
-export type StudioArtifactType =
-  | "FLASHCARDS"
-  | "QUIZ"
-  | "BRIEFING"
-  | "PODCAST_SCRIPT"
-  | "INFOGRAPHIC_OUTLINE";
+export type StudioArtifactType = "FLASHCARDS" | "QUIZ" | "BRIEFING" | "PODCAST_SCRIPT" | "INFOGRAPHIC_OUTLINE";
 
 export type StudioArtifact = {
   id: string;

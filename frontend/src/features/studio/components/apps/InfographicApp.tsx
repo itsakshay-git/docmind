@@ -25,7 +25,8 @@ export function InfographicApp({ artifact }: { artifact: StudioArtifact }) {
       return undefined;
     }
 
-    studioApi.imageBlobUrl(artifact.id)
+    studioApi
+      .imageBlobUrl(artifact.id)
       .then((url) => {
         currentUrl = url;
         setImageUrl(url);
@@ -63,22 +64,13 @@ export function InfographicApp({ artifact }: { artifact: StudioArtifact }) {
       </div>
       {imageError ? <p className="settings-error">{imageError}</p> : null}
       {imageUrl ? (
-        <button
-          className="infographic-frame"
-          onClick={() => setIsPreviewOpen(true)}
-          type="button"
-        >
+        <button className="infographic-frame" onClick={() => setIsPreviewOpen(true)} type="button">
           <img className="infographic-image" src={imageUrl} alt={data.title ?? artifact.title} />
           <span>Click to preview</span>
         </button>
       ) : null}
       {isPreviewOpen && imageUrl ? (
-        <div
-          aria-modal="true"
-          className="infographic-modal"
-          onClick={() => setIsPreviewOpen(false)}
-          role="dialog"
-        >
+        <div aria-modal="true" className="infographic-modal" onClick={() => setIsPreviewOpen(false)} role="dialog">
           <div className="infographic-modal__content" onClick={(event) => event.stopPropagation()}>
             <div className="infographic-modal__header">
               <strong>{data.title ?? artifact.title}</strong>

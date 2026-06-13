@@ -12,17 +12,20 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState(() => tokenStorage.get());
 
-  const value = useMemo<AuthContextValue>(() => ({
-    isAuthenticated: Boolean(token),
-    setSession(nextToken) {
-      tokenStorage.set(nextToken);
-      setToken(nextToken);
-    },
-    signOut() {
-      tokenStorage.clear();
-      setToken("");
-    },
-  }), [token]);
+  const value = useMemo<AuthContextValue>(
+    () => ({
+      isAuthenticated: Boolean(token),
+      setSession(nextToken) {
+        tokenStorage.set(nextToken);
+        setToken(nextToken);
+      },
+      signOut() {
+        tokenStorage.clear();
+        setToken("");
+      },
+    }),
+    [token]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

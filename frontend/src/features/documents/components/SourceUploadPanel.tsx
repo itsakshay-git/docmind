@@ -12,7 +12,13 @@ type SourceUploadPanelProps = {
   onUpload: (file: File) => void;
 };
 
-export function SourceUploadPanel({ isUploading, onAddWebUrl, onAddYouTubeTranscript, onAddYouTubeUrl, onUpload }: SourceUploadPanelProps) {
+export function SourceUploadPanel({
+  isUploading,
+  onAddWebUrl,
+  onAddYouTubeTranscript,
+  onAddYouTubeUrl,
+  onUpload,
+}: SourceUploadPanelProps) {
   const [file, setFile] = useState<File | null>(null);
   const [mode, setMode] = useState<SourceMode>("PDF");
   const [url, setUrl] = useState("");
@@ -49,12 +55,20 @@ export function SourceUploadPanel({ isUploading, onAddWebUrl, onAddYouTubeTransc
   return (
     <section className="source-upload-panel">
       <div className="panel-heading">
-        <span><FileUp size={17} /> Sources</span>
+        <span>
+          <FileUp size={17} /> Sources
+        </span>
       </div>
       <div className="source-mode-tabs">
-        <button className={mode === "PDF" ? "active" : ""} onClick={() => setMode("PDF")} type="button">PDF</button>
-        <button className={mode === "WEB_URL" ? "active" : ""} onClick={() => setMode("WEB_URL")} type="button">Website</button>
-        <button className={mode === "YOUTUBE" ? "active" : ""} onClick={() => setMode("YOUTUBE")} type="button">YouTube</button>
+        <button className={mode === "PDF" ? "active" : ""} onClick={() => setMode("PDF")} type="button">
+          PDF
+        </button>
+        <button className={mode === "WEB_URL" ? "active" : ""} onClick={() => setMode("WEB_URL")} type="button">
+          Website
+        </button>
+        <button className={mode === "YOUTUBE" ? "active" : ""} onClick={() => setMode("YOUTUBE")} type="button">
+          YouTube
+        </button>
       </div>
       <form className="source-dropzone" onSubmit={submit}>
         {mode === "PDF" ? (
@@ -62,7 +76,11 @@ export function SourceUploadPanel({ isUploading, onAddWebUrl, onAddYouTubeTransc
             <Upload size={22} />
             <strong>{file ? file.name : "Upload a PDF source"}</strong>
             <p>Extract, chunk, embed, and connect the PDF to chat.</p>
-            <input type="file" accept="application/pdf" onChange={(event) => setFile(event.target.files?.[0] ?? null)} />
+            <input
+              type="file"
+              accept="application/pdf"
+              onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+            />
             <Button disabled={!file || isUploading} icon={<Upload size={16} />} type="submit">
               {isUploading ? "Processing" : "Add PDF"}
             </Button>
@@ -74,7 +92,11 @@ export function SourceUploadPanel({ isUploading, onAddWebUrl, onAddYouTubeTransc
             <Link size={22} />
             <strong>Add website</strong>
             <p>Import readable page text from a URL.</p>
-            <input placeholder="https://example.com/article" value={url} onChange={(event) => setUrl(event.target.value)} />
+            <input
+              placeholder="https://example.com/article"
+              value={url}
+              onChange={(event) => setUrl(event.target.value)}
+            />
             <Button disabled={!url.trim() || isUploading} icon={<Link size={16} />} type="submit">
               {isUploading ? "Processing" : "Add website"}
             </Button>
@@ -87,13 +109,33 @@ export function SourceUploadPanel({ isUploading, onAddWebUrl, onAddYouTubeTransc
             <strong>Add YouTube transcript</strong>
             <p>Paste a transcript for reliable ingestion, or try auto-fetch when captions are public.</p>
             <div className="source-mode-tabs source-mode-tabs--compact">
-              <button className={youtubeMode === "MANUAL" ? "active" : ""} onClick={() => setYouTubeMode("MANUAL")} type="button">Paste</button>
-              <button className={youtubeMode === "AUTO" ? "active" : ""} onClick={() => setYouTubeMode("AUTO")} type="button">Auto</button>
+              <button
+                className={youtubeMode === "MANUAL" ? "active" : ""}
+                onClick={() => setYouTubeMode("MANUAL")}
+                type="button"
+              >
+                Paste
+              </button>
+              <button
+                className={youtubeMode === "AUTO" ? "active" : ""}
+                onClick={() => setYouTubeMode("AUTO")}
+                type="button"
+              >
+                Auto
+              </button>
             </div>
-            <input placeholder="https://www.youtube.com/watch?v=..." value={url} onChange={(event) => setUrl(event.target.value)} />
+            <input
+              placeholder="https://www.youtube.com/watch?v=..."
+              value={url}
+              onChange={(event) => setUrl(event.target.value)}
+            />
             {youtubeMode === "MANUAL" ? (
               <>
-                <input placeholder="Optional title" value={youtubeTitle} onChange={(event) => setYouTubeTitle(event.target.value)} />
+                <input
+                  placeholder="Optional title"
+                  value={youtubeTitle}
+                  onChange={(event) => setYouTubeTitle(event.target.value)}
+                />
                 <textarea
                   placeholder="Paste transcript text here"
                   rows={7}

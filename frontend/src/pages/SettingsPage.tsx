@@ -4,7 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext";
 import { SettingsDetailPanel } from "../features/user/components/SettingsDetailPanel";
 import { SettingsMenu } from "../features/user/components/SettingsMenu";
-import { useDeleteUserAccount, useUpdateUserPassword, useUpdateUserProfile, useUserProfile } from "../features/user/hooks/useUserProfile";
+import {
+  useDeleteUserAccount,
+  useUpdateUserPassword,
+  useUpdateUserProfile,
+  useUserProfile,
+} from "../features/user/hooks/useUserProfile";
 import type { SettingsSection, ThemeMode } from "../features/user/model/settingsSections";
 
 export function SettingsPage() {
@@ -46,7 +51,9 @@ export function SettingsPage() {
   return (
     <main className="settings-page">
       <header className="settings-header">
-        <Link className="back-link" to="/notebooks"><ArrowLeft size={16} /> Back to notebooks</Link>
+        <Link className="back-link" to="/notebooks">
+          <ArrowLeft size={16} /> Back to notebooks
+        </Link>
         <h1>Settings</h1>
       </header>
 

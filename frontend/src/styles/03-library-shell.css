@@ -146,7 +146,10 @@
   height: 44px;
   justify-content: center;
   padding: 0;
-  transition: width 160ms ease, border-radius 160ms ease, padding 160ms ease;
+  transition:
+    width 160ms ease,
+    border-radius 160ms ease,
+    padding 160ms ease;
   width: 44px;
 }
 
@@ -302,7 +305,10 @@
   overflow: hidden;
   padding: 20px;
   position: relative;
-  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    background 160ms ease;
 }
 
 .notebook-card-link:hover,
@@ -455,4 +461,3 @@
   justify-content: flex-end;
   opacity: 0.92;
 }
-

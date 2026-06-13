@@ -14,6 +14,7 @@ frontend/
 - Lucide React for professional iconography.
 - React Markdown and remark-gfm for assistant and Studio Markdown rendering.
 - Plain CSS for styling.
+- ESLint and Prettier for frontend quality checks.
 
 ## Structure
 
@@ -67,6 +68,17 @@ Current query keys are documented in `docs/frontend-structure-snapshot.md`.
 Styles are imported through `src/styles/index.css`. The split is organizational only; selectors remain global and should be renamed only with matching component updates and verification.
 
 Backend-facing DTOs live in `src/shared/types` and are split by feature. New code should import from `shared/types`, not individual type files, unless a feature-local type is intentionally private.
+
+## Quality Checks
+
+Run before committing frontend changes:
+
+```powershell
+cd "D:\my projects\docmind\frontend"
+corepack pnpm lint
+corepack pnpm format:check
+corepack pnpm build
+```
 
 ## Settings
 

@@ -24,7 +24,9 @@ export function SourceListPanel({ documents, isDeleting, onDelete }: SourceListP
   return (
     <section className="source-list-panel">
       <div className="panel-heading">
-        <span><FileText size={17} /> Files</span>
+        <span>
+          <FileText size={17} /> Files
+        </span>
       </div>
       {documents.length ? (
         <div className="source-list">
@@ -33,7 +35,9 @@ export function SourceListPanel({ documents, isDeleting, onDelete }: SourceListP
               <FileText size={16} />
               <div>
                 <strong>{document.fileName}</strong>
-                <span>{labelFor(document.sourceType)} | {document.status}</span>
+                <span>
+                  {labelFor(document.sourceType)} | {document.status}
+                </span>
                 {document.failureReason ? <small>{document.failureReason}</small> : null}
               </div>
               <button
@@ -48,7 +52,10 @@ export function SourceListPanel({ documents, isDeleting, onDelete }: SourceListP
           ))}
         </div>
       ) : (
-        <EmptyState title="No sources yet" description="Add a PDF, website, or YouTube transcript to make this notebook searchable." />
+        <EmptyState
+          title="No sources yet"
+          description="Add a PDF, website, or YouTube transcript to make this notebook searchable."
+        />
       )}
     </section>
   );

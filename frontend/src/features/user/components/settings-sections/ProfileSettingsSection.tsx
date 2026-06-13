@@ -11,16 +11,13 @@ type ProfileSettingsSectionProps = {
   onFullNameChange: (fullName: string) => void;
 };
 
-export function ProfileSettingsSection({
-  email,
-  fullName,
-  mutation,
-  onFullNameChange,
-}: ProfileSettingsSectionProps) {
+export function ProfileSettingsSection({ email, fullName, mutation, onFullNameChange }: ProfileSettingsSectionProps) {
   return (
     <>
       <div className="settings-section-heading">
-        <span><UserRound size={18} /> User</span>
+        <span>
+          <UserRound size={18} /> User
+        </span>
         <p>Manage the identity shown in DocMind.</p>
       </div>
       <div className="settings-form">

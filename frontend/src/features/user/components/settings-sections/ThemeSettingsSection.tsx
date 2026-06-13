@@ -10,7 +10,9 @@ export function ThemeSettingsSection({ theme, onThemeChange }: ThemeSettingsSect
   return (
     <>
       <div className="settings-section-heading">
-        <span><Moon size={18} /> Theme</span>
+        <span>
+          <Moon size={18} /> Theme
+        </span>
         <p>Choose how DocMind looks on this device.</p>
       </div>
       <div className="theme-options" role="radiogroup" aria-label="Theme mode">
