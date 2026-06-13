@@ -20,7 +20,7 @@ src/
   app/                 App shell, routes, providers
   pages/               Route-level pages
   features/
-    auth/              Auth API and session context
+    auth/              Auth API, session context, login components, and demo model
     chat/              Persistent notebook chat API, hooks, and UI
     notebooks/         Notebook API, hooks, library components, and notebook cards
     documents/         PDF, website, and YouTube source APIs/hooks/components

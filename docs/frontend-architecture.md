@@ -22,7 +22,7 @@ src/
   app/                 Route shell and providers
   pages/               Route-level screens
   features/
-    auth/              Login/register API and auth context
+    auth/              Login/register API, auth context, login components, and demo model
     chat/              Notebook chat history API, hooks, and chat UI
     documents/         PDF, website, YouTube source APIs, hooks, and source panels
     notebooks/         Notebook API, hooks, and notebook UI
@@ -45,6 +45,8 @@ The app supports dark and light themes. The workspace intentionally has three pr
 - Sources/sidebar
 - Chat
 - Studio
+
+The login/register route is a container page. Recruiter-facing hero content, demo credentials, password field, and auth form rendering live in `features/auth`.
 
 Chat history is loaded from the backend and updated optimistically when the user sends a message. Assistant messages render Markdown. The chat header includes a compact `Context` selector for retrieved source count and a clear-chat action for deleting persisted notebook messages.
 
