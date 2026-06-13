@@ -26,7 +26,7 @@ src/
     documents/         PDF, website, and YouTube source APIs/hooks/components
     rag/               Low-level ask/search API
     studio/            Artifact API, hooks, metadata, mini apps, preview, and downloads
-    user/              Account APIs and hooks
+    user/              Account APIs, hooks, model metadata, and settings components
   shared/
     api/               HTTP client
     components/        Reusable UI primitives

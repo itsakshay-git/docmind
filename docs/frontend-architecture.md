@@ -71,6 +71,8 @@ The frontend includes `/settings` for account management:
 - Switch dark/light theme.
 - Delete account.
 
+The settings route is a container page. Account settings UI lives in `features/user/components`, settings metadata lives in `features/user/model`, and server-state mutations live in `features/user/hooks`.
+
 ## Run
 
 ```powershell
