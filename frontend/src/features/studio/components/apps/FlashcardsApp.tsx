@@ -51,9 +51,7 @@ export function FlashcardsApp({ artifact }: { artifact: StudioArtifact }) {
     <article className="studio-mini-app flashcards-app">
       <div>
         <h3>{artifact.title}</h3>
-        <p className="flashcard-progress-ascii">{index + 1} / {cards.length} cards | {known.length} got it | {missed.length} review again</p>
-        <p className="flashcard-progress">{index + 1} / {cards.length} cards {" Â· "} {known.length} got it {" Â· "} {missed.length} review again</p>
-        <p>{index + 1} / {cards.length} cards Â· {known.length} got it Â· {missed.length} review again</p>
+        <p className="flashcard-progress">{index + 1} / {cards.length} cards | {known.length} got it | {missed.length} review again</p>
       </div>
       <button
         className={`flashcard ${toneClass} ${isFlipped ? "flipped" : ""}`}

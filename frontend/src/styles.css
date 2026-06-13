@@ -1910,10 +1910,6 @@ textarea {
   margin-top: 4px;
 }
 
-.flashcards-app > div > p:not(.flashcard-progress-ascii) {
-  display: none;
-}
-
 .flashcard {
   align-items: center;
   aspect-ratio: 1.35;

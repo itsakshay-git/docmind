@@ -33,7 +33,7 @@ export function SourceListPanel({ documents, isDeleting, onDelete }: SourceListP
               <FileText size={16} />
               <div>
                 <strong>{document.fileName}</strong>
-                <span>{labelFor(document.sourceType)} · {document.status}</span>
+                <span>{labelFor(document.sourceType)} | {document.status}</span>
                 {document.failureReason ? <small>{document.failureReason}</small> : null}
               </div>
               <button
