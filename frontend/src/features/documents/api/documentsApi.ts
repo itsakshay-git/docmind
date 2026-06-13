@@ -1,5 +1,5 @@
-import { httpClient } from "../../../shared/api/httpClient";
-import type { DocumentSource } from "../../../shared/types/api";
+﻿import { httpClient } from "../../../shared/api/httpClient";
+import type { DocumentSource } from "../../../shared/types";
 
 export const documentsApi = {
   uploadPdf(notebookId: string, file: File) {

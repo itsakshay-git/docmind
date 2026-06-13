@@ -1,5 +1,5 @@
-import { ArrowLeft, AudioLines, Download, Trash2 } from "lucide-react";
-import type { StudioArtifact } from "../../../shared/types/api";
+﻿import { ArrowLeft, AudioLines, Download, Trash2 } from "lucide-react";
+import type { StudioArtifact } from "../../../shared/types";
 import { FlashcardsApp } from "./apps/FlashcardsApp";
 import { InfographicApp } from "./apps/InfographicApp";
 import { MarkdownArtifactApp } from "./apps/MarkdownArtifactApp";

@@ -1,6 +1,6 @@
-import ReactMarkdown from "react-markdown";
+﻿import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { StudioArtifact } from "../../../../shared/types/api";
+import type { StudioArtifact } from "../../../../shared/types";
 
 export function MarkdownArtifactApp({ artifact }: { artifact: StudioArtifact }) {
   return (

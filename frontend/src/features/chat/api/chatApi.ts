@@ -1,5 +1,5 @@
-import { httpClient } from "../../../shared/api/httpClient";
-import type { ChatExchangeResponse, ChatMessage } from "../../../shared/types/api";
+﻿import { httpClient } from "../../../shared/api/httpClient";
+import type { ChatExchangeResponse, ChatMessage } from "../../../shared/types";
 
 export const chatApi = {
   getMessages(notebookId: string) {

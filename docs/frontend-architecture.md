@@ -33,7 +33,7 @@ src/
     api/               HTTP client
     components/        Reusable UI primitives
     lib/               Small utilities
-    types/             Shared API types
+    types/             Feature-split API types with a barrel export
   styles/              Plain CSS split by product area
 ```
 
@@ -58,6 +58,8 @@ TanStack Query is the server-state layer. Feature hooks own query keys, mutation
 Current query keys are documented in `docs/frontend-structure-snapshot.md`.
 
 Styles are imported through `src/styles/index.css`. The split is organizational only; selectors remain global and should be renamed only with matching component updates and verification.
+
+Backend-facing DTOs live in `src/shared/types` and are split by feature. New code should import from `shared/types`, not individual type files, unless a feature-local type is intentionally private.
 
 ## Settings
 

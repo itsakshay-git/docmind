@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
-import type { StudioArtifact } from "../../../../shared/types/api";
+﻿import { useEffect, useMemo, useState } from "react";
+import type { StudioArtifact } from "../../../../shared/types";
 import { studioApi } from "../../api/studioApi";
 import { readJson } from "../../utils/artifactJson";
 

@@ -1,6 +1,6 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+﻿import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { chatApi } from "../api/chatApi";
-import type { ChatMessage } from "../../../shared/types/api";
+import type { ChatMessage } from "../../../shared/types";
 import { chatKeys } from "./chatKeys";
 
 export function useNotebookChat(notebookId: string) {

@@ -1,5 +1,5 @@
-import { httpClient } from "../../../shared/api/httpClient";
-import type { AuthResponse } from "../../../shared/types/api";
+﻿import { httpClient } from "../../../shared/api/httpClient";
+import type { AuthResponse } from "../../../shared/types";
 
 export const authApi = {
   register(email: string, password: string) {

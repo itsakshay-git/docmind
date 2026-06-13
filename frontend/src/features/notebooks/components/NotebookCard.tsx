@@ -1,7 +1,7 @@
-import { BookOpen, Check, Pencil, Trash2, X } from "lucide-react";
+﻿import { BookOpen, Check, Pencil, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import type { Notebook } from "../../../shared/types/api";
+import type { Notebook } from "../../../shared/types";
 
 type NotebookCardProps = {
   isUpdating: boolean;

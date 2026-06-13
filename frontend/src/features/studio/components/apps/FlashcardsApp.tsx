@@ -1,6 +1,6 @@
-import { Check, X } from "lucide-react";
+﻿import { Check, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import type { StudioArtifact } from "../../../../shared/types/api";
+import type { StudioArtifact } from "../../../../shared/types";
 import { readJson, unique } from "../../utils/artifactJson";
 import { MarkdownArtifactApp } from "./MarkdownArtifactApp";
 

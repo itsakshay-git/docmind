@@ -1,6 +1,6 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+﻿import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { studioApi } from "../api/studioApi";
-import type { StudioArtifactType } from "../../../shared/types/api";
+import type { StudioArtifactType } from "../../../shared/types";
 import { studioKeys } from "./studioKeys";
 
 export function useStudioArtifacts(notebookId: string) {

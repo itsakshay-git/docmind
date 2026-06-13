@@ -1,6 +1,6 @@
-import { httpClient } from "../../../shared/api/httpClient";
+﻿import { httpClient } from "../../../shared/api/httpClient";
 import { tokenStorage } from "../../../shared/lib/tokenStorage";
-import type { StudioArtifact, StudioArtifactType } from "../../../shared/types/api";
+import type { StudioArtifact, StudioArtifactType } from "../../../shared/types";
 
 const API_BASE_URL = import.meta.env.VITE_DOCMIND_API_URL ?? "http://localhost:8081";
 

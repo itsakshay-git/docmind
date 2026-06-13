@@ -31,7 +31,7 @@ src/
     api/               HTTP client
     components/        Reusable UI primitives
     lib/               Small utilities
-    types/             API types
+    types/             Feature-split API types with a barrel export
   styles/              Plain CSS split by product area
 ```
 

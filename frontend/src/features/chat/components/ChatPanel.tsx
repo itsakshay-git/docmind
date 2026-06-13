@@ -1,8 +1,8 @@
-import { Bot, Check, Copy, Send, Trash2, User } from "lucide-react";
+﻿import { Bot, Check, Copy, Send, Trash2, User } from "lucide-react";
 import { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { ChatMessage } from "../../../shared/types/api";
+import type { ChatMessage } from "../../../shared/types";
 
 type ChatPanelProps = {
   errorMessage?: string;

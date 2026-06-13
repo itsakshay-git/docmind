@@ -1,8 +1,8 @@
-import { X } from "lucide-react";
+﻿import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import type { StudioArtifact } from "../../../../shared/types/api";
+import type { StudioArtifact } from "../../../../shared/types";
 import { studioApi } from "../../api/studioApi";
 import { readJson } from "../../utils/artifactJson";
 

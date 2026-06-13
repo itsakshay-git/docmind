@@ -1,5 +1,5 @@
-import { FileText, Trash2 } from "lucide-react";
-import type { DocumentSource } from "../../../shared/types/api";
+﻿import { FileText, Trash2 } from "lucide-react";
+import type { DocumentSource } from "../../../shared/types";
 import { EmptyState } from "../../../shared/components/EmptyState";
 
 type SourceListPanelProps = {

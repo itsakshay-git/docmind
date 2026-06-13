@@ -1,4 +1,4 @@
-import type { StudioArtifact } from "../../../shared/types/api";
+﻿import type { StudioArtifact } from "../../../shared/types";
 
 export function readJson<T>(artifact: StudioArtifact): T {
   try {

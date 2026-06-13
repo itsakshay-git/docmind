@@ -1,5 +1,5 @@
-import { httpClient } from "../../../shared/api/httpClient";
-import type { RagAskResponse, SemanticSearchResult } from "../../../shared/types/api";
+﻿import { httpClient } from "../../../shared/api/httpClient";
+import type { RagAskResponse, SemanticSearchResult } from "../../../shared/types";
 
 export const ragApi = {
   ask(notebookId: string, question: string, topK: number) {

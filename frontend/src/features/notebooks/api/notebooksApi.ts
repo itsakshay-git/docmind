@@ -1,5 +1,5 @@
-import { httpClient } from "../../../shared/api/httpClient";
-import type { Notebook } from "../../../shared/types/api";
+﻿import { httpClient } from "../../../shared/api/httpClient";
+import type { Notebook } from "../../../shared/types";
 
 export const notebooksApi = {
   list() {

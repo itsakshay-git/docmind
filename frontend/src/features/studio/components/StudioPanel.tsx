@@ -1,9 +1,9 @@
-import { ArrowLeft, ArrowRight } from "lucide-react";
+﻿import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useState } from "react";
 import { studioApi } from "../api/studioApi";
 import { useStudioArtifacts } from "../hooks/useStudioArtifacts";
 import { artifactTypes } from "../model/artifactTypes";
-import type { StudioArtifact, StudioArtifactType } from "../../../shared/types/api";
+import type { StudioArtifact, StudioArtifactType } from "../../../shared/types";
 import { ArtifactApp } from "./ArtifactApp";
 
 type StudioPanelProps = {

@@ -1,6 +1,6 @@
-import { AudioLines, Brain, FileChartColumn, FileText, Layers3 } from "lucide-react";
+﻿import { AudioLines, Brain, FileChartColumn, FileText, Layers3 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { StudioArtifactType } from "../../../shared/types/api";
+import type { StudioArtifactType } from "../../../shared/types";
 
 export const artifactTypes: Array<{
   type: StudioArtifactType;

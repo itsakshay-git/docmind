@@ -1,5 +1,5 @@
-import { httpClient } from "../../../shared/api/httpClient";
-import type { UserProfile } from "../../../shared/types/api";
+﻿import { httpClient } from "../../../shared/api/httpClient";
+import type { UserProfile } from "../../../shared/types";
 
 export const userApi = {
   getProfile() {
