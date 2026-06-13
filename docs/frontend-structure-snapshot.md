@@ -1,8 +1,8 @@
 # Frontend Structure Snapshot
 
-Date: 2026-06-13
+Date: 2026-06-14
 
-This snapshot records the current working React frontend before the structure refactor. Use it as the baseline when moving code.
+This snapshot records the current working React frontend after the structure refactor. Use it as the baseline for future changes.
 
 ## Stack
 
@@ -12,7 +12,7 @@ This snapshot records the current working React frontend before the structure re
 - AuthContext plus tokenStorage for JWT session state.
 - React Markdown + remark-gfm for assistant and Studio Markdown.
 - lucide-react for icons.
-- Plain CSS in `src/styles.css`.
+- Plain CSS split by product area under `src/styles/` and imported through `src/styles/index.css`.
 
 No Redux, Zustand, Tailwind, or generated client is currently used.
 
@@ -26,16 +26,25 @@ No Redux, Zustand, Tailwind, or generated client is currently used.
 
 ## Feature Ownership
 
-- `features/auth`: auth API and session context.
-- `features/notebooks`: notebook API and notebook card UI.
-- `features/documents`: source APIs and source upload/list panels.
-- `features/chat`: persisted chat API and chat panel.
+- `features/auth`: auth API, session context, login form/hero components, and demo credential model.
+- `features/notebooks`: notebook API, query hooks, library header/toolbar/grid/list components, and notebook cards.
+- `features/documents`: source APIs, query hooks, and source upload/list panels.
+- `features/chat`: persisted chat API, query hooks, and chat panel.
 - `features/rag`: lower-level ask/search API kept for direct RAG calls.
-- `features/studio`: Studio artifact API and mini app UI.
-- `features/user`: user profile/password/delete API.
+- `features/studio`: Studio artifact API, query hooks, artifact metadata, mini apps, and artifact shell.
+- `features/user`: user profile/password/delete API, query hooks, settings metadata, and settings section components.
+- `features/workspace`: notebook workspace layout, mobile tabs, sidebar, and main content shell.
 - `shared/api`: HTTP client and API error handling.
-- `shared/types`: backend-facing DTO types.
+- `shared/types`: feature-split backend-facing DTO types re-exported through `shared/types`.
 - `shared/components`: reusable primitives.
+- `styles`: global CSS split by product area.
+
+## Route Containers
+
+- `pages/LoginPage.tsx`: owns auth form state, login/register mode, mutation, and navigation.
+- `pages/NotebooksPage.tsx`: owns notebook search/sort/view state and notebook mutations.
+- `pages/NotebookWorkspacePage.tsx`: owns workspace mobile section state and source/chat mutation wiring.
+- `pages/SettingsPage.tsx`: owns settings active section, form state, theme effect, and account mutations.
 
 ## Query Keys
 
