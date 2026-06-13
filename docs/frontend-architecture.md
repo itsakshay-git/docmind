@@ -29,6 +29,7 @@ src/
     rag/               Low-level RAG search/ask API
     studio/            Study artifact API, hooks, metadata, mini apps, and UI surface
     user/              Profile/password/delete APIs and hooks
+    workspace/         Notebook workspace layout components and mobile section model
   shared/
     api/               HTTP client
     components/        Reusable UI primitives
@@ -52,6 +53,8 @@ The notebook library has grid/list modes, title search, sort controls, inline ti
 The notebook library route is a container page. Notebook list/grid/header rendering lives in `features/notebooks/components`, while query and mutation wiring lives in `features/notebooks/hooks`.
 
 Studio can generate, list, open, and delete saved study artifacts. Flashcards and quizzes run as stateful mini apps, briefing renders as Markdown, podcast artifacts support playback/download when audio generation succeeds, and infographic artifacts load an authenticated PNG blob with PNG/JPG download actions.
+
+The notebook workspace route is a container page. Workspace layout, mobile tabs, sidebar, and main content shell live in `features/workspace`; source, chat, and Studio behavior remains owned by their feature folders.
 
 ## State And Hooks
 

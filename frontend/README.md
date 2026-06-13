@@ -27,6 +27,7 @@ src/
     rag/               Low-level ask/search API
     studio/            Artifact API, hooks, metadata, mini apps, preview, and downloads
     user/              Account APIs, hooks, model metadata, and settings components
+    workspace/         Notebook workspace layout components and mobile section model
   shared/
     api/               HTTP client
     components/        Reusable UI primitives

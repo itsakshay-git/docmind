@@ -1,24 +1,13 @@
-import { ArrowLeft, Library } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useNotebookChat } from "../features/chat/hooks/useNotebookChat";
-import { ChatPanel } from "../features/chat/components/ChatPanel";
-import { SourceListPanel } from "../features/documents/components/SourceListPanel";
-import { SourceUploadPanel } from "../features/documents/components/SourceUploadPanel";
 import { useNotebookDocuments, useSourceMutations } from "../features/documents/hooks/useNotebookDocuments";
-import { StudioPanel } from "../features/studio/components/StudioPanel";
 import { useNotebooks } from "../features/notebooks/hooks/useNotebooks";
-
-type WorkspaceMobileSection = "sources" | "chat" | "studio";
-
-const workspaceMobileSections: Array<{
-  id: WorkspaceMobileSection;
-  label: string;
-}> = [
-  { id: "sources", label: "Sources" },
-  { id: "chat", label: "Chat" },
-  { id: "studio", label: "Studio" },
-];
+import { WorkspaceMain } from "../features/workspace/components/WorkspaceMain";
+import { WorkspaceMobileTabs } from "../features/workspace/components/WorkspaceMobileTabs";
+import { WorkspaceMobileTopbar } from "../features/workspace/components/WorkspaceMobileTopbar";
+import { WorkspaceSidebar } from "../features/workspace/components/WorkspaceSidebar";
+import type { WorkspaceMobileSection } from "../features/workspace/model/workspaceSections";
 
 export function NotebookWorkspacePage() {
   const { notebookId = "" } = useParams();
@@ -47,69 +36,39 @@ export function NotebookWorkspacePage() {
 
   return (
     <main className="workspace-page">
-      <div className="workspace-mobile-topbar">
-        <Link className="back-link" to="/notebooks"><ArrowLeft size={16} /> All notebooks</Link>
-      </div>
+      <WorkspaceMobileTopbar />
+      <WorkspaceMobileTabs activeSection={activeMobileSection} onSectionChange={setActiveMobileSection} />
 
-      <nav className="workspace-mobile-tabs" aria-label="Workspace sections">
-        {workspaceMobileSections.map((section) => (
-          <button
-            aria-pressed={activeMobileSection === section.id}
-            className={activeMobileSection === section.id ? "active" : ""}
-            key={section.id}
-            onClick={() => setActiveMobileSection(section.id)}
-            type="button"
-          >
-            {section.label}
-          </button>
-        ))}
-      </nav>
+      <WorkspaceSidebar
+        activeMobileSection={activeMobileSection}
+        documents={notebookDocumentsQuery.data ?? []}
+        isAddingSource={isAddingSource}
+        isDeletingSource={deleteDocumentMutation.isPending}
+        notebookTitle={notebook?.title ?? "Notebook"}
+        onAddWebUrl={(url) => addWebUrlMutation.mutate(url)}
+        onAddYouTubeTranscript={(url, title, transcript) => addYouTubeTranscriptMutation.mutate({ url, title, transcript })}
+        onAddYouTubeUrl={(url) => addYouTubeUrlMutation.mutate(url)}
+        onDeleteSource={(documentId) => deleteDocumentMutation.mutate(documentId)}
+        onUploadPdf={(file) => uploadMutation.mutate(file)}
+      />
 
-      <aside className={`workspace-sidebar workspace-mobile-section workspace-mobile-section--sources ${activeMobileSection === "sources" ? "active" : ""}`}>
-        <Link className="back-link" to="/notebooks"><ArrowLeft size={16} /> All notebooks</Link>
-        <section className="sidebar-block">
-          <div className="panel-heading"><span><Library size={17} /> Notebook</span></div>
-          <h2>{notebook?.title ?? "Notebook"}</h2>
-          <p>Source-grounded workspace for upload, retrieval, chat, and study artifacts.</p>
-        </section>
-        <SourceUploadPanel
-          isUploading={isAddingSource}
-          onAddWebUrl={(url) => addWebUrlMutation.mutate(url)}
-          onAddYouTubeTranscript={(url, title, transcript) => addYouTubeTranscriptMutation.mutate({ url, title, transcript })}
-          onAddYouTubeUrl={(url) => addYouTubeUrlMutation.mutate(url)}
-          onUpload={(file) => uploadMutation.mutate(file)}
-        />
-        <SourceListPanel
-          documents={notebookDocumentsQuery.data ?? []}
-          isDeleting={deleteDocumentMutation.isPending}
-          onDelete={(documentId) => deleteDocumentMutation.mutate(documentId)}
-        />
-      </aside>
-
-      <section className="workspace-main">
-        <section className="workspace-content-grid">
-          <div className={`workspace-mobile-section workspace-mobile-section--chat ${activeMobileSection === "chat" ? "active" : ""}`}>
-            <ChatPanel
-              errorMessage={messagesQuery.error instanceof Error ? messagesQuery.error.message : undefined}
-              isBusy={isBusy}
-              isClearing={clearChatMutation.isPending}
-              isLoading={messagesQuery.isLoading}
-              messages={messages}
-              topK={chatTopK}
-              onClear={() => {
-                if (window.confirm("Clear this notebook chat history?")) {
-                  clearChatMutation.mutate();
-                }
-              }}
-              onSend={(content, topK) => sendMessageMutation.mutate({ content, topK })}
-              onTopKChange={setChatTopK}
-            />
-          </div>
-          <div className={`workspace-mobile-section workspace-mobile-section--studio ${activeMobileSection === "studio" ? "active" : ""}`}>
-            <StudioPanel notebookId={notebookId} />
-          </div>
-        </section>
-      </section>
+      <WorkspaceMain
+        activeMobileSection={activeMobileSection}
+        chatErrorMessage={messagesQuery.error instanceof Error ? messagesQuery.error.message : undefined}
+        chatTopK={chatTopK}
+        isBusy={isBusy}
+        isChatClearing={clearChatMutation.isPending}
+        isChatLoading={messagesQuery.isLoading}
+        messages={messages}
+        notebookId={notebookId}
+        onChatClear={() => {
+          if (window.confirm("Clear this notebook chat history?")) {
+            clearChatMutation.mutate();
+          }
+        }}
+        onChatSend={(content, topK) => sendMessageMutation.mutate({ content, topK })}
+        onChatTopKChange={setChatTopK}
+      />
     </main>
   );
 }
