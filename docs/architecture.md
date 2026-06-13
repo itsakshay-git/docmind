@@ -16,7 +16,7 @@ The current MVP is a modular monolith backend plus a Vite React frontend.
 - Notebook-scoped semantic retrieval.
 - Gemini-grounded answers.
 - Persistent notebook chat history.
-- Dark-only React workspace with sources, chat, and studio areas.
+- React workspace with dark/light theme support, sources, chat, and studio areas.
 
 ## Backend
 
@@ -30,7 +30,7 @@ Main modules:
 
 - `auth`: users, login, registration.
 - `notebook`: notebook CRUD and ownership.
-- `document`: PDF upload, parsing, document records.
+- `document`: PDF, website, and YouTube transcript ingestion, parsing, and document records.
 - `ai`: embedding pipeline support.
 - `rag`: semantic search and grounded answer generation.
 - `chat`: persisted notebook chat sessions and messages.
@@ -57,7 +57,7 @@ Main areas:
 - Notebook workspace page.
 - Sources/sidebar.
 - Chat history panel.
-- Studio panel for future study artifacts.
+- Studio panel for generated study artifacts.
 
 More detail:
 
@@ -68,7 +68,7 @@ docs/frontend-architecture.md
 ## Upload-To-Answer Flow
 
 ```text
-PDF upload
+Source upload
 -> document metadata
 -> text extraction
 -> chunks
@@ -81,12 +81,6 @@ PDF upload
 
 ## Near-Term Direction
 
-The next major backend feature is Studio artifact generation:
-
-- Flashcards
-- Quizzes
-- Podcast scripts
-- Briefing docs
-- Infographic outlines
+Studio now supports flashcards, quizzes, briefings, podcast audio/script, and infographic images.
 
 The next infrastructure upgrade is moving embeddings from JSON text to PostgreSQL `pgvector`.

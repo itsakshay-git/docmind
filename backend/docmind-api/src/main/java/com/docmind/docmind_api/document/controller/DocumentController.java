@@ -1,5 +1,7 @@
 package com.docmind.docmind_api.document.controller;
 
+import com.docmind.docmind_api.document.dto.AddUrlSourceRequest;
+import com.docmind.docmind_api.document.dto.AddYouTubeTranscriptRequest;
 import com.docmind.docmind_api.document.dto.DocumentResponse;
 import com.docmind.docmind_api.document.service.DocumentService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,48 @@ public class DocumentController {
         return documentService.upload(
                 notebookId,
                 file,
+                authentication.getName()
+        );
+    }
+
+    @PostMapping("/{notebookId}/web-url")
+    public DocumentResponse addWebUrl(
+            @PathVariable UUID notebookId,
+            @RequestBody AddUrlSourceRequest request,
+            Authentication authentication
+    ) {
+
+        return documentService.addWebUrl(
+                notebookId,
+                request.getUrl(),
+                authentication.getName()
+        );
+    }
+
+    @PostMapping("/{notebookId}/youtube")
+    public DocumentResponse addYouTube(
+            @PathVariable UUID notebookId,
+            @RequestBody AddUrlSourceRequest request,
+            Authentication authentication
+    ) {
+
+        return documentService.addYouTube(
+                notebookId,
+                request.getUrl(),
+                authentication.getName()
+        );
+    }
+
+    @PostMapping("/{notebookId}/youtube-transcript")
+    public DocumentResponse addYouTubeTranscript(
+            @PathVariable UUID notebookId,
+            @RequestBody AddYouTubeTranscriptRequest request,
+            Authentication authentication
+    ) {
+
+        return documentService.addYouTubeTranscript(
+                notebookId,
+                request,
                 authentication.getName()
         );
     }

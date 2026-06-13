@@ -36,7 +36,12 @@ Use new Flyway migrations only. Do not edit old migrations after they have run l
 | --- | --- | --- |
 | id | UUID | Primary key |
 | notebook_id | UUID | Parent notebook |
-| file_name | VARCHAR | Uploaded file name |
+| file_name | VARCHAR | Display name or uploaded file name |
+| file_path | VARCHAR | Stored file path, nullable for non-file sources |
+| source_type | VARCHAR | `PDF`, `WEB_URL`, `YOUTUBE`, or `YOUTUBE_TRANSCRIPT` |
+| source_url | VARCHAR | Original URL for web and YouTube sources |
+| failure_reason | TEXT | Failure detail for failed ingestion |
+| content | TEXT | Extracted source text |
 | status | VARCHAR | Processing status |
 | created_at | TIMESTAMP | Audit |
 | updated_at | TIMESTAMP | Audit |
@@ -88,6 +93,26 @@ There is currently one default chat session per notebook and owner.
 | created_at | TIMESTAMP | Audit |
 | updated_at | TIMESTAMP | Audit |
 
+## studio_artifacts
+
+| Column | Type | Notes |
+| --- | --- | --- |
+| id | UUID | Primary key |
+| notebook_id | UUID | Notebook scope |
+| owner_email | VARCHAR | Owner guard |
+| type | VARCHAR | `FLASHCARDS`, `QUIZ`, `BRIEFING`, `PODCAST_SCRIPT`, or `INFOGRAPHIC_OUTLINE` |
+| title | VARCHAR | Generated artifact title |
+| markdown_content | TEXT | Human preview/download content |
+| json_content | TEXT | Structured machine-readable artifact data |
+| source_chunk_ids | TEXT | JSON list of retrieved chunk ids used for generation |
+| audio_file_path | VARCHAR | Saved podcast WAV path, nullable |
+| audio_mime_type | VARCHAR | Audio content type, nullable |
+| image_file_path | VARCHAR | Saved infographic PNG path, nullable |
+| image_mime_type | VARCHAR | Image content type, nullable |
+| created_at | TIMESTAMP | Audit |
+| updated_at | TIMESTAMP | Audit |
+
 ## Future
 
 Replace JSON vector storage with PostgreSQL `pgvector` when retrieval performance becomes the next milestone.
+Podcast audio is saved as a generated WAV file when Gemini TTS succeeds. Infographic PNG files are saved under `storage/studio-images/` and converted to JPG on download when requested.

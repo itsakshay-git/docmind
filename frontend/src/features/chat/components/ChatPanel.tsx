@@ -1,5 +1,5 @@
-import { Bot, Send, Sparkles, User } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { Bot, Check, Copy, Send, Trash2, User } from "lucide-react";
+import { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { ChatMessage } from "../../../shared/types/api";
@@ -7,12 +7,26 @@ import type { ChatMessage } from "../../../shared/types/api";
 type ChatPanelProps = {
   errorMessage?: string;
   isBusy: boolean;
+  isClearing: boolean;
   isLoading: boolean;
   messages: ChatMessage[];
-  onSend: (content: string) => void;
+  topK: number;
+  onClear: () => void;
+  onSend: (content: string, topK: number) => void;
+  onTopKChange: (topK: number) => void;
 };
 
-export function ChatPanel({ errorMessage, isBusy, isLoading, messages, onSend }: ChatPanelProps) {
+export function ChatPanel({
+  errorMessage,
+  isBusy,
+  isClearing,
+  isLoading,
+  messages,
+  topK,
+  onClear,
+  onSend,
+  onTopKChange,
+}: ChatPanelProps) {
   const [content, setContent] = useState("");
   const threadRef = useRef<HTMLDivElement>(null);
 
@@ -34,14 +48,41 @@ export function ChatPanel({ errorMessage, isBusy, isLoading, messages, onSend }:
       return;
     }
 
-    onSend(nextContent);
+    onSend(nextContent, topK);
     setContent("");
   }
 
   return (
     <section className="chat-panel">
       <div className="panel-heading">
-        <span><Sparkles size={17} /> Chat</span>
+        <span>Chat</span>
+        <div className="chat-toolbar">
+          <label
+            className="tooltip"
+            data-tooltip="Controls how many source chunks are used for the answer."
+          >
+            Context
+            <select
+              aria-label="Retrieved context count"
+              value={topK}
+              onChange={(event) => onTopKChange(Number(event.target.value))}
+            >
+              <option value={3}>Short</option>
+              <option value={5}>Balanced</option>
+              <option value={8}>Deep</option>
+            </select>
+          </label>
+          <button
+            className="icon-button icon-button--subtle tooltip"
+            data-tooltip="Delete this notebook's saved chat history."
+            disabled={isBusy || isClearing || messages.length === 0}
+            onClick={onClear}
+            type="button"
+            aria-label="Clear chat"
+          >
+            <Trash2 size={15} />
+          </button>
+        </div>
       </div>
 
       <div className="chat-thread" ref={threadRef}>
@@ -68,7 +109,12 @@ export function ChatPanel({ errorMessage, isBusy, isLoading, messages, onSend }:
             </div>
             <div className="chat-bubble">
               {message.role === "ASSISTANT" ? (
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.content}</ReactMarkdown>
+                <ReactMarkdown
+                  components={{ code: CodeBlock }}
+                  remarkPlugins={[remarkGfm]}
+                >
+                  {message.content}
+                </ReactMarkdown>
               ) : (
                 message.content
               )}
@@ -113,5 +159,48 @@ export function ChatPanel({ errorMessage, isBusy, isLoading, messages, onSend }:
         </button>
       </div>
     </section>
+  );
+}
+
+function CodeBlock({
+  children,
+  className,
+  ...props
+}: ComponentPropsWithoutRef<"code">) {
+  const [isCopied, setIsCopied] = useState(false);
+  const match = /language-(\w+)/.exec(className ?? "");
+  const language = match?.[1] ?? "code";
+  const code = String(children).replace(/\n$/, "");
+  const isInline = !className;
+
+  if (isInline) {
+    return (
+      <code className={className} {...props}>
+        {children}
+      </code>
+    );
+  }
+
+  async function copyCode() {
+    await navigator.clipboard.writeText(code);
+    setIsCopied(true);
+    window.setTimeout(() => setIsCopied(false), 1200);
+  }
+
+  return (
+    <div className="code-block">
+      <div className="code-block__header">
+        <span>{language}</span>
+        <button onClick={copyCode} type="button">
+          {isCopied ? <Check size={14} /> : <Copy size={14} />}
+          {isCopied ? "Copied" : "Copy"}
+        </button>
+      </div>
+      <pre>
+        <code className={className} {...props}>
+          {code}
+        </code>
+      </pre>
+    </div>
   );
 }

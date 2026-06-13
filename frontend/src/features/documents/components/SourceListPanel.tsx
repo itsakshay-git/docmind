@@ -9,6 +9,18 @@ type SourceListPanelProps = {
 };
 
 export function SourceListPanel({ documents, isDeleting, onDelete }: SourceListPanelProps) {
+  function labelFor(sourceType: DocumentSource["sourceType"]) {
+    if (sourceType === "WEB_URL") {
+      return "WEB";
+    }
+
+    if (sourceType === "YOUTUBE_TRANSCRIPT") {
+      return "YOUTUBE";
+    }
+
+    return sourceType;
+  }
+
   return (
     <section className="source-list-panel">
       <div className="panel-heading">
@@ -21,7 +33,8 @@ export function SourceListPanel({ documents, isDeleting, onDelete }: SourceListP
               <FileText size={16} />
               <div>
                 <strong>{document.fileName}</strong>
-                <span>{document.status}</span>
+                <span>{labelFor(document.sourceType)} · {document.status}</span>
+                {document.failureReason ? <small>{document.failureReason}</small> : null}
               </div>
               <button
                 aria-label={`Delete ${document.fileName}`}
@@ -35,7 +48,7 @@ export function SourceListPanel({ documents, isDeleting, onDelete }: SourceListP
           ))}
         </div>
       ) : (
-        <EmptyState title="No sources yet" description="Upload a PDF to make this notebook searchable." />
+        <EmptyState title="No sources yet" description="Add a PDF, website, or YouTube transcript to make this notebook searchable." />
       )}
     </section>
   );

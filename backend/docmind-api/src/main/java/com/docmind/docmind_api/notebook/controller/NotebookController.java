@@ -2,6 +2,7 @@ package com.docmind.docmind_api.notebook.controller;
 
 import com.docmind.docmind_api.notebook.dto.CreateNotebookRequest;
 import com.docmind.docmind_api.notebook.dto.NotebookResponse;
+import com.docmind.docmind_api.notebook.dto.UpdateNotebookRequest;
 import com.docmind.docmind_api.notebook.service.NotebookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -60,6 +61,20 @@ public class NotebookController {
 
         notebookService.deleteNotebook(
                 id,
+                authentication.getName()
+        );
+    }
+
+    @PatchMapping("/{id}")
+    public NotebookResponse updateNotebook(
+            @PathVariable UUID id,
+            @RequestBody UpdateNotebookRequest request,
+            Authentication authentication
+    ) {
+
+        return notebookService.updateNotebook(
+                id,
+                request,
                 authentication.getName()
         );
     }

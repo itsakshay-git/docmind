@@ -1,0 +1,2 @@
+-- Documents use VARCHAR source_type, so no schema change is required.
+-- This migration records the introduction of the YOUTUBE_TRANSCRIPT source type.

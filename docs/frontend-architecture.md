@@ -12,7 +12,8 @@ frontend/
 - React Router for pages.
 - TanStack Query for server state, mutations, and cache updates.
 - Lucide React for professional iconography.
-- React Markdown and remark-gfm for assistant answer rendering.
+- React Markdown and remark-gfm for assistant and Studio Markdown rendering.
+- Plain CSS for styling.
 
 ## Structure
 
@@ -22,11 +23,12 @@ src/
   pages/               Route-level screens
   features/
     auth/              Login/register API and auth context
-    chat/              Notebook chat history API and chat UI
-    documents/         PDF upload API and source upload panel
-    notebooks/         Notebook API and notebook cards
+    chat/              Notebook chat history API, hooks, and chat UI
+    documents/         PDF, website, YouTube source APIs, hooks, and source panels
+    notebooks/         Notebook API, hooks, and notebook UI
     rag/               Low-level RAG search/ask API
-    studio/            Study artifact UI surface
+    studio/            Study artifact API, hooks, metadata, mini apps, and UI surface
+    user/              Profile/password/delete APIs and hooks
   shared/
     api/               HTTP client
     components/        Reusable UI primitives
@@ -36,25 +38,33 @@ src/
 
 ## UI Direction
 
-The app is dark-only. The workspace intentionally has three primary areas:
+The app supports dark and light themes. The workspace intentionally has three primary areas:
 
 - Sources/sidebar
 - Chat
 - Studio
 
-Chat history is loaded from the backend and updated optimistically when the user sends a message. Assistant messages render Markdown.
+Chat history is loaded from the backend and updated optimistically when the user sends a message. Assistant messages render Markdown. The chat header includes a compact `Context` selector for retrieved source count and a clear-chat action for deleting persisted notebook messages.
 
-The chat retrieval size is not exposed in the UI. The frontend sends `topK: 5` internally so the product feels simple for normal users.
+The notebook library has grid/list modes, title search, sort controls, inline title editing, and notebook deletion. The workspace sidebar can add PDF, Website, YouTube auto-transcript, and pasted YouTube transcript sources. It lists current notebook sources and supports deleting sources without leaving the notebook.
+
+Studio can generate, list, open, and delete saved study artifacts. Flashcards and quizzes run as stateful mini apps, briefing renders as Markdown, podcast artifacts support playback/download when audio generation succeeds, and infographic artifacts load an authenticated PNG blob with PNG/JPG download actions.
+
+## State And Hooks
+
+TanStack Query is the server-state layer. Feature hooks own query keys, mutations, and cache invalidation. AuthContext owns the JWT session. Local component state is used for view-only state such as selected tabs, open artifact, search text, form drafts, and flashcard/quiz progress.
+
+Current query keys are documented in `docs/frontend-structure-snapshot.md`.
 
 ## Settings
 
-The frontend includes `/settings` for basic account and workspace management:
+The frontend includes `/settings` for account management:
 
 - View email.
 - Update full name.
 - Update password.
-- Delete notebooks.
-- Delete uploaded documents.
+- Switch dark/light theme.
+- Delete account.
 
 ## Run
 

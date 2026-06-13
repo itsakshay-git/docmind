@@ -34,3 +34,17 @@ spring:
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
+
+docmind:
+  studio:
+    tts-model: ${DOCMIND_STUDIO_TTS_MODEL:gemini-3.1-flash-tts-preview}
+    tts-host-a-voice: ${DOCMIND_STUDIO_TTS_HOST_A_VOICE:Charon}
+    tts-host-b-voice: ${DOCMIND_STUDIO_TTS_HOST_B_VOICE:Aoede}
+    audio-storage-dir: ${DOCMIND_STUDIO_AUDIO_STORAGE_DIR:storage/studio-audio}
+    image-storage-dir: ${DOCMIND_STUDIO_IMAGE_STORAGE_DIR:storage/studio-images}
+
+  demo:
+    enabled: ${DOCMIND_DEMO_ENABLED:true}
+    email: ${DOCMIND_DEMO_EMAIL:recruiter@docmind.dev}
+    password: ${DOCMIND_DEMO_PASSWORD:Demo@12345}
+    full-name: ${DOCMIND_DEMO_FULL_NAME:Recruiter Demo}

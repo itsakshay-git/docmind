@@ -2,8 +2,10 @@ package com.docmind.docmind_api.document.service;
 
 import com.docmind.docmind_api.ai.service.EmbeddingService;
 import com.docmind.docmind_api.document.chunking.TextChunkingService;
+import com.docmind.docmind_api.document.dto.AddYouTubeTranscriptRequest;
 import com.docmind.docmind_api.document.dto.DocumentResponse;
 import com.docmind.docmind_api.document.entity.Document;
+import com.docmind.docmind_api.document.enums.DocumentSourceType;
 import com.docmind.docmind_api.document.enums.DocumentStatus;
 import com.docmind.docmind_api.document.parser.PdfParser;
 import com.docmind.docmind_api.document.repository.DocumentRepository;
@@ -36,6 +38,8 @@ public class DocumentService {
     private final EmbeddingService embeddingService;
     private final NotebookRepository notebookRepository;
     private final EmbeddingRepository embeddingRepository;
+    private final WebPageIngestionService webPageIngestionService;
+    private final YouTubeTranscriptIngestionService youTubeTranscriptIngestionService;
 
     @Transactional
     public String upload(
@@ -77,6 +81,7 @@ public class DocumentService {
         document.setNotebookId(notebookId);
         document.setFileName(file.getOriginalFilename());
         document.setFilePath(uploadPath.toString());
+        document.setSourceType(DocumentSourceType.PDF);
         document.setStatus(DocumentStatus.UPLOADED);
 
         documentRepository.save(document);
@@ -86,40 +91,151 @@ public class DocumentService {
                         uploadPath.toString()
                 );
 
-        document.setContent(content);
-        document.setStatus(DocumentStatus.PROCESSED);
-
-        documentRepository.save(document);
-
-        List<String> chunks =
-                textChunkingService.chunk(
-                        content,
-                        1000
-                );
-
-        List<Chunk> chunkEntities = new ArrayList<>();
-
-        int index = 0;
-
-        for (String chunkContent : chunks) {
-
-            Chunk chunk = new Chunk();
-
-            chunk.setDocumentId(document.getId());
-            chunk.setContent(chunkContent);
-            chunk.setChunkIndex(index++);
-
-            chunkEntities.add(chunk);
-        }
-
-        List<Chunk> savedChunks =
-                chunkRepository.saveAll(chunkEntities);
-
-        embeddingService.generateAndSaveEmbeddings(
-                savedChunks
+        indexDocumentText(
+                document,
+                content
         );
 
         return "Uploaded";
+    }
+
+    @Transactional
+    public DocumentResponse addWebUrl(
+            UUID notebookId,
+            String url,
+            String ownerEmail
+    ) {
+
+        notebookRepository
+                .findByIdAndOwnerEmail(
+                        notebookId,
+                        ownerEmail
+                )
+                .orElseThrow();
+
+        Document document =
+                createSourceDocument(
+                        notebookId,
+                        "Website",
+                        DocumentSourceType.WEB_URL,
+                        url
+                );
+
+        try {
+            WebPageIngestionService.WebPageContent content =
+                    webPageIngestionService.fetch(url);
+
+            document.setFileName(
+                    content.title()
+            );
+            document.setSourceUrl(
+                    content.url()
+            );
+
+            indexDocumentText(
+                    document,
+                    content.text()
+            );
+        } catch (Exception e) {
+            markFailed(
+                    document,
+                    e.getMessage()
+            );
+        }
+
+        return toResponse(document);
+    }
+
+    @Transactional
+    public DocumentResponse addYouTube(
+            UUID notebookId,
+            String url,
+            String ownerEmail
+    ) {
+
+        notebookRepository
+                .findByIdAndOwnerEmail(
+                        notebookId,
+                        ownerEmail
+                )
+                .orElseThrow();
+
+        Document document =
+                createSourceDocument(
+                        notebookId,
+                        "YouTube video",
+                        DocumentSourceType.YOUTUBE,
+                        url
+                );
+
+        try {
+            YouTubeTranscriptIngestionService.YouTubeTranscript transcript =
+                    youTubeTranscriptIngestionService.fetch(url);
+
+            document.setFileName(
+                    transcript.title()
+            );
+            document.setSourceUrl(
+                    transcript.url()
+            );
+
+            indexDocumentText(
+                    document,
+                    transcript.text()
+            );
+        } catch (Exception e) {
+            markFailed(
+                    document,
+                    e.getMessage()
+            );
+        }
+
+        return toResponse(document);
+    }
+
+    @Transactional
+    public DocumentResponse addYouTubeTranscript(
+            UUID notebookId,
+            AddYouTubeTranscriptRequest request,
+            String ownerEmail
+    ) {
+
+        notebookRepository
+                .findByIdAndOwnerEmail(
+                        notebookId,
+                        ownerEmail
+                )
+                .orElseThrow();
+
+        String transcript =
+                request.getTranscript();
+
+        if (transcript == null || transcript.isBlank()) {
+            throw new IllegalArgumentException(
+                    "Transcript text is required"
+            );
+        }
+
+        String title =
+                request.getTitle() == null
+                        || request.getTitle().isBlank()
+                        ? "YouTube transcript"
+                        : request.getTitle().trim();
+
+        Document document =
+                createSourceDocument(
+                        notebookId,
+                        title,
+                        DocumentSourceType.YOUTUBE_TRANSCRIPT,
+                        request.getUrl()
+                );
+
+        indexDocumentText(
+                document,
+                transcript.trim()
+        );
+
+        return toResponse(document);
     }
 
     @Transactional(readOnly = true)
@@ -162,6 +278,16 @@ public class DocumentService {
                 .stream()
                 .map(this::toResponse)
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public long countDocumentsForNotebook(
+            UUID notebookId
+    ) {
+
+        return documentRepository.countByNotebookId(
+                notebookId
+        );
     }
 
     @Transactional
@@ -247,8 +373,91 @@ public class DocumentService {
                 document.getId().toString(),
                 document.getNotebookId().toString(),
                 document.getFileName(),
+                document.getSourceType(),
+                document.getSourceUrl(),
                 document.getStatus(),
+                document.getFailureReason(),
                 document.getCreatedAt()
         );
+    }
+
+    private Document createSourceDocument(
+            UUID notebookId,
+            String fileName,
+            DocumentSourceType sourceType,
+            String sourceUrl
+    ) {
+
+        Document document =
+                new Document();
+
+        document.setNotebookId(notebookId);
+        document.setFileName(fileName);
+        document.setSourceType(sourceType);
+        document.setSourceUrl(sourceUrl);
+        document.setStatus(DocumentStatus.PROCESSING);
+
+        return documentRepository.save(document);
+    }
+
+    private void indexDocumentText(
+            Document document,
+            String content
+    ) {
+
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException(
+                    "No text content could be extracted from this source"
+            );
+        }
+
+        document.setContent(content);
+        document.setStatus(DocumentStatus.PROCESSED);
+        document.setFailureReason(null);
+
+        documentRepository.save(document);
+
+        List<String> chunks =
+                textChunkingService.chunk(
+                        content,
+                        1000
+                );
+
+        List<Chunk> chunkEntities = new ArrayList<>();
+
+        int index = 0;
+
+        for (String chunkContent : chunks) {
+
+            Chunk chunk = new Chunk();
+
+            chunk.setDocumentId(document.getId());
+            chunk.setContent(chunkContent);
+            chunk.setChunkIndex(index++);
+
+            chunkEntities.add(chunk);
+        }
+
+        List<Chunk> savedChunks =
+                chunkRepository.saveAll(chunkEntities);
+
+        embeddingService.generateAndSaveEmbeddings(
+                savedChunks
+        );
+    }
+
+    private void markFailed(
+            Document document,
+            String reason
+    ) {
+
+        document.setStatus(DocumentStatus.FAILED);
+        document.setFailureReason(
+                reason == null || reason.isBlank()
+                        ? "Source ingestion failed"
+                        : reason
+        );
+
+        documentRepository.save(document);
     }
 }

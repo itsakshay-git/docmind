@@ -21,17 +21,23 @@ src/
   pages/               Route-level pages
   features/
     auth/              Auth API and session context
-    chat/              Persistent notebook chat history
-    notebooks/         Notebook API and notebook cards
-    documents/         Source upload API and components
+    chat/              Persistent notebook chat API, hooks, and UI
+    notebooks/         Notebook API, hooks, and notebook components
+    documents/         PDF, website, and YouTube source APIs/hooks/components
     rag/               Low-level ask/search API
-    studio/            Study-generation panel
+    studio/            Artifact API, hooks, metadata, mini apps, preview, and downloads
+    user/              Account APIs and hooks
   shared/
     api/               HTTP client
     components/        Reusable UI primitives
     lib/               Small utilities
     types/             API types
 ```
+
+See also:
+
+- `docs/frontend-structure-snapshot.md`
+- `docs/frontend-refactor-rules.md`
 
 ## Run
 
@@ -61,10 +67,16 @@ VITE_DOCMIND_API_URL=http://localhost:8081
 
 ## Product Direction
 
-The UI is dark-only and keeps the notebook workspace focused on three areas:
+The UI supports dark and light themes and keeps the notebook workspace focused on three areas:
 
 - Sources
 - Chat
 - Studio
 
 Chat messages are loaded from the backend, optimistically updated on send, and assistant responses render Markdown.
+
+Studio artifacts are generated from notebook sources, saved on the backend, and opened as mini apps. Flashcards, quizzes, and briefings stay in-app. Podcast artifacts expose audio playback/download when available, and infographic artifacts preview an authenticated PNG with PNG/JPG download actions.
+
+Notebook cards expose management actions on hover/focus. Uploaded notebook sources can be deleted directly from the workspace sidebar.
+
+The workspace can add PDF files, website URLs, best-effort YouTube auto-transcripts, and pasted YouTube transcripts. All sources reuse the same backend chunking and embedding pipeline as PDFs.

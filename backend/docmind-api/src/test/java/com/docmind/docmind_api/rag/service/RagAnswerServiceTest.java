@@ -99,6 +99,7 @@ class RagAnswerServiceTest {
         assertThat(promptCaptor.getValue())
                 .contains(
                         "using only the context",
+                        "fenced Markdown code blocks",
                         "Do not include internal IDs",
                         "Variable names can contain letters and digits.",
                         "What are Java variable naming rules?"

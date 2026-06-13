@@ -2,6 +2,8 @@ package com.docmind.docmind_api.user.service;
 
 import com.docmind.docmind_api.auth.entity.User;
 import com.docmind.docmind_api.auth.repository.UserRepository;
+import com.docmind.docmind_api.notebook.repository.NotebookRepository;
+import com.docmind.docmind_api.notebook.service.NotebookService;
 import com.docmind.docmind_api.user.dto.UpdatePasswordRequest;
 import com.docmind.docmind_api.user.dto.UpdateProfileRequest;
 import com.docmind.docmind_api.user.dto.UserProfileResponse;
@@ -15,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserSettingsService {
 
     private final UserRepository userRepository;
+    private final NotebookRepository notebookRepository;
+    private final NotebookService notebookService;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
@@ -80,6 +84,23 @@ public class UserSettingsService {
         );
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteAccount(
+            String email
+    ) {
+
+        User user =
+                getUser(email);
+
+        notebookRepository.findByOwnerEmail(email)
+                .forEach(notebook -> notebookService.deleteNotebook(
+                        notebook.getId(),
+                        email
+                ));
+
+        userRepository.delete(user);
     }
 
     private User getUser(

@@ -17,6 +17,14 @@
 - Dark-only NotebookLM-inspired workspace.
 - Persistent notebook chat history.
 - Basic settings page for profile, password, notebooks, and documents.
+- Notebook library hover actions for deleting notebooks.
+- Notebook title editing from library cards.
+- Workspace source list with document deletion.
+- Website URL source ingestion.
+- YouTube transcript source ingestion.
+- Manual pasted YouTube transcript ingestion for reliable demos.
+- Studio mini apps: flashcards, quiz, briefing, podcast audio/script, and generated infographic images.
+- Studio artifact preview, podcast audio download, infographic PNG/JPG download, playback, and delete.
 
 ## Current Milestone
 
@@ -30,17 +38,10 @@ Make the product feel like a real document chat workspace:
 
 ## Next Milestones
 
-### Studio Artifacts
+### Studio V2
 
-Generate and save notebook artifacts:
-
-- Flashcards
-- Quiz
-- Briefing document
-- Podcast script
-- Infographic outline
-
-Studio generation should live in the backend because prompts, Gemini access, ownership checks, and persistence belong there.
+- Add PDF export for Studio artifacts.
+- Improve infographic rendering templates and add richer downloadable study formats.
 
 ### Better Retrieval
 
@@ -56,9 +57,10 @@ Studio generation should live in the backend because prompts, Gemini access, own
 
 ### Source Management
 
-- List uploaded sources in the sidebar.
-- Show document processing state.
-- Support deleting sources and re-indexing notebooks.
+- Add Brave Search import using `BRAVE_SEARCH_API_KEY`.
+- Improve source details in the sidebar.
+- Add source preview/snippets.
+- Support re-indexing notebooks after source changes.
 
 ### Production Hardening
 

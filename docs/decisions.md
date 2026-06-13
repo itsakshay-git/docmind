@@ -49,9 +49,9 @@ Frontend Stack
 
 React
 Vite
-Tailwind
-Redux Toolkit
 React Query
+React Router
+Plain CSS
 
 Reason:
-Modern ecosystem with excellent developer experience.
+React Query handles server state and cache invalidation. AuthContext handles the JWT session. Local React state is enough for UI-only state, so Redux/Zustand are intentionally not used right now.

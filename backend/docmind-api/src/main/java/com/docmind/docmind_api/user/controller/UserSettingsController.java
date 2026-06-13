@@ -6,6 +6,7 @@ import com.docmind.docmind_api.user.dto.UserProfileResponse;
 import com.docmind.docmind_api.user.service.UserSettingsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -51,6 +52,16 @@ public class UserSettingsController {
         userSettingsService.updatePassword(
                 authentication.getName(),
                 request
+        );
+    }
+
+    @DeleteMapping
+    public void deleteAccount(
+            Authentication authentication
+    ) {
+
+        userSettingsService.deleteAccount(
+                authentication.getName()
         );
     }
 }

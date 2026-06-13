@@ -13,4 +13,10 @@ export const chatApi = {
       body: JSON.stringify({ content, topK }),
     });
   },
+
+  clearMessages(notebookId: string) {
+    return httpClient<void>(`/api/v1/chat/notebooks/${notebookId}/messages`, {
+      method: "DELETE",
+    });
+  },
 };

@@ -21,4 +21,10 @@ export const userApi = {
       body: JSON.stringify({ currentPassword, newPassword }),
     });
   },
+
+  deleteAccount() {
+    return httpClient<void>("/api/v1/users/me", {
+      method: "DELETE",
+    });
+  },
 };

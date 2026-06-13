@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { AuthProvider, useAuth } from "../features/auth/context/AuthContext";
 import { LoginPage } from "../pages/LoginPage";
@@ -26,6 +27,15 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 export function App() {
+  useEffect(() => {
+    const savedTheme =
+      localStorage.getItem("docmind-theme") === "light"
+        ? "light"
+        : "dark";
+
+    document.documentElement.dataset.theme = savedTheme;
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

@@ -6,6 +6,7 @@ import com.docmind.docmind_api.chat.dto.ChatMessageResponse;
 import com.docmind.docmind_api.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,18 @@ public class ChatController {
         return chatService.sendMessage(
                 notebookId,
                 request,
+                authentication.getName()
+        );
+    }
+
+    @DeleteMapping("/notebooks/{notebookId}/messages")
+    public void clearMessages(
+            @PathVariable UUID notebookId,
+            Authentication authentication
+    ) {
+
+        chatService.clearMessages(
+                notebookId,
                 authentication.getName()
         );
     }

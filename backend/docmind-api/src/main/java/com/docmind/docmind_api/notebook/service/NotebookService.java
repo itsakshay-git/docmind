@@ -6,6 +6,7 @@ import com.docmind.docmind_api.chat.repository.ChatSessionRepository;
 import com.docmind.docmind_api.document.service.DocumentService;
 import com.docmind.docmind_api.notebook.dto.CreateNotebookRequest;
 import com.docmind.docmind_api.notebook.dto.NotebookResponse;
+import com.docmind.docmind_api.notebook.dto.UpdateNotebookRequest;
 import com.docmind.docmind_api.notebook.entity.Notebook;
 import com.docmind.docmind_api.notebook.repository.NotebookRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,9 @@ public class NotebookService {
 
         return new NotebookResponse(
                 saved.getId().toString(),
-                saved.getTitle()
+                saved.getTitle(),
+                saved.getCreatedAt(),
+                0
         );
     }
 
@@ -52,10 +55,7 @@ public class NotebookService {
         return notebookRepository
                 .findByOwnerEmail(ownerEmail)
                 .stream()
-                .map(n -> new NotebookResponse(
-                        n.getId().toString(),
-                        n.getTitle()
-                ))
+                .map(this::toResponse)
                 .toList();
     }
 
@@ -75,7 +75,11 @@ public class NotebookService {
 
         return new NotebookResponse(
                 notebook.getId().toString(),
-                notebook.getTitle()
+                notebook.getTitle(),
+                notebook.getCreatedAt(),
+                documentService.countDocumentsForNotebook(
+                        notebook.getId()
+                )
         );
     }
 
@@ -105,6 +109,60 @@ public class NotebookService {
         );
 
         notebookRepository.delete(notebook);
+    }
+
+    @Transactional
+    public NotebookResponse updateNotebook(
+            UUID id,
+            UpdateNotebookRequest request,
+            String ownerEmail
+    ) {
+
+        Notebook notebook =
+                notebookRepository
+                        .findByIdAndOwnerEmail(
+                                id,
+                                ownerEmail
+                        )
+                        .orElseThrow();
+
+        if (request.getTitle() == null
+                || request.getTitle().isBlank()) {
+            throw new IllegalArgumentException(
+                    "Notebook title is required"
+            );
+        }
+
+        notebook.setTitle(
+                request.getTitle()
+                        .trim()
+        );
+
+        Notebook saved =
+                notebookRepository.save(notebook);
+
+        return new NotebookResponse(
+                saved.getId().toString(),
+                saved.getTitle(),
+                saved.getCreatedAt(),
+                documentService.countDocumentsForNotebook(
+                        saved.getId()
+                )
+        );
+    }
+
+    private NotebookResponse toResponse(
+            Notebook notebook
+    ) {
+
+        return new NotebookResponse(
+                notebook.getId().toString(),
+                notebook.getTitle(),
+                notebook.getCreatedAt(),
+                documentService.countDocumentsForNotebook(
+                        notebook.getId()
+                )
+        );
     }
 
     private void deleteChatSession(

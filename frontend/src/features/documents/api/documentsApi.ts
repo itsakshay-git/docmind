@@ -12,6 +12,30 @@ export const documentsApi = {
     });
   },
 
+  addWebUrl(notebookId: string, url: string) {
+    return httpClient<DocumentSource>(`/api/v1/documents/${notebookId}/web-url`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+  },
+
+  addYouTubeUrl(notebookId: string, url: string) {
+    return httpClient<DocumentSource>(`/api/v1/documents/${notebookId}/youtube`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url }),
+    });
+  },
+
+  addYouTubeTranscript(notebookId: string, url: string, title: string, transcript: string) {
+    return httpClient<DocumentSource>(`/api/v1/documents/${notebookId}/youtube-transcript`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ url, title, transcript }),
+    });
+  },
+
   getEmbeddingCount() {
     return httpClient<number>("/api/v1/embeddings/count");
   },

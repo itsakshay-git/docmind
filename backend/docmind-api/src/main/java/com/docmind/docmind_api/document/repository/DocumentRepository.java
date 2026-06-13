@@ -13,4 +13,6 @@ public interface DocumentRepository
     List<Document> findByNotebookId(UUID notebookId);
 
     List<Document> findByNotebookIdIn(Collection<UUID> notebookIds);
+
+    long countByNotebookId(UUID notebookId);
 }

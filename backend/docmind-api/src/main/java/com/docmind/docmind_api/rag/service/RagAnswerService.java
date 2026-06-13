@@ -98,6 +98,8 @@ public class RagAnswerService {
                 If the context does not contain the answer, say you do not know from the provided document.
                 Format the answer as clean Markdown.
                 Use short paragraphs and bullet points when the answer has multiple items.
+                When the answer includes code, always use fenced Markdown code blocks with a language tag, such as ```java, ```sql, ```json, or ```bash.
+                Put explanations outside code blocks.
                 Do not include internal IDs, UUIDs, chunk IDs, document IDs, raw scores, or implementation details in the answer.
                 Do not mention "source passage" unless the user explicitly asks about sources.
 

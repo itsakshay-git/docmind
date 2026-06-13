@@ -1,6 +1,8 @@
 export type Notebook = {
   id: string;
   title: string;
+  createdAt: string;
+  sourceCount: number;
 };
 
 export type UserProfile = {
@@ -17,7 +19,10 @@ export type DocumentSource = {
   id: string;
   notebookId: string;
   fileName: string;
+  sourceType: "PDF" | "WEB_URL" | "YOUTUBE" | "YOUTUBE_TRANSCRIPT";
+  sourceUrl: string | null;
   status: "UPLOADED" | "PROCESSING" | "PROCESSED" | "FAILED";
+  failureReason: string | null;
   createdAt: string;
 };
 
@@ -53,4 +58,24 @@ export type ChatMessage = {
 export type ChatExchangeResponse = {
   userMessage: ChatMessage;
   assistantMessage: ChatMessage;
+};
+
+export type StudioArtifactType =
+  | "FLASHCARDS"
+  | "QUIZ"
+  | "BRIEFING"
+  | "PODCAST_SCRIPT"
+  | "INFOGRAPHIC_OUTLINE";
+
+export type StudioArtifact = {
+  id: string;
+  notebookId: string;
+  type: StudioArtifactType;
+  title: string;
+  markdownContent: string;
+  jsonContent: string;
+  sourceChunkIds: string[];
+  audioAvailable: boolean;
+  imageAvailable: boolean;
+  createdAt: string;
 };

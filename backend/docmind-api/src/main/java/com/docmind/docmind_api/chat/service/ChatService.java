@@ -126,6 +126,23 @@ public class ChatService {
         );
     }
 
+    @Transactional
+    public void clearMessages(
+            UUID notebookId,
+            String ownerEmail
+    ) {
+
+        Optional<ChatSession> session =
+                findSession(
+                        notebookId,
+                        ownerEmail
+                );
+
+        session.ifPresent(chatSession -> chatMessageRepository.deleteBySessionId(
+                chatSession.getId()
+        ));
+    }
+
     private Optional<ChatSession> findSession(
             UUID notebookId,
             String ownerEmail

@@ -19,4 +19,12 @@ export const notebooksApi = {
       method: "DELETE",
     });
   },
+
+  updateTitle(notebookId: string, title: string) {
+    return httpClient<Notebook>(`/api/v1/notebooks/${notebookId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title }),
+    });
+  },
 };
