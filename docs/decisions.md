@@ -19,10 +19,10 @@ Date:
 2026-06-02
 
 Decision:
-Use PostgreSQL + pgvector
+Use PostgreSQL first, keep `pgvector` as the next retrieval upgrade
 
 Reason:
-Simple deployment and supports vector search.
+PostgreSQL keeps the MVP deployable and easy to inspect. Embeddings are stored as JSON text for the first deployed version, while `pgvector` remains the planned upgrade for database-native similarity search.
 
 ---
 

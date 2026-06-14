@@ -46,6 +46,12 @@ Notebook workspace with source-grounded chat and Studio flashcards:
 
 ## System Design
 
+Documentation map:
+
+```text
+docs/README.md
+```
+
 Open the detailed design file:
 
 ```text
