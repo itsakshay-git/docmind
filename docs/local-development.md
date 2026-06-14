@@ -102,6 +102,8 @@ The API runs at:
 http://localhost:8081
 ```
 
+The backend also supports a `PORT` environment variable for hosted deployments and defaults to `8081` locally.
+
 ## Frontend Environment
 
 Optional:

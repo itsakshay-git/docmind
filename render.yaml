@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: docmind-api
+    runtime: docker
+    plan: free
+    dockerContext: ./backend/docmind-api
+    dockerfilePath: ./backend/docmind-api/Dockerfile
+    healthCheckPath: /actuator/health
+    autoDeploy: true
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: DOCMIND_CORS_ALLOWED_ORIGINS
+        sync: false
+      - key: DOCMIND_DEMO_ENABLED
+        value: "true"
+      - key: DOCMIND_DEMO_EMAIL
+        value: recruiter@docmind.dev
+      - key: DOCMIND_DEMO_PASSWORD
+        sync: false
+      - key: DOCMIND_DEMO_FULL_NAME
+        value: Recruiter Demo

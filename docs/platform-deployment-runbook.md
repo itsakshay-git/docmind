@@ -41,6 +41,12 @@ Flyway runs automatically when the backend starts. Do not manually create DocMin
 
 Recommended first backend deploy: Render Web Service from the backend Dockerfile.
 
+The repository includes a Render Blueprint file:
+
+```text
+render.yaml
+```
+
 Setup:
 
 ```text
@@ -51,6 +57,8 @@ Root directory / Docker build context: backend/docmind-api
 Dockerfile path: backend/docmind-api/Dockerfile
 Health check path: /actuator/health
 ```
+
+The backend reads `PORT` from the hosting environment and falls back to `8081` locally.
 
 Required environment variables:
 
@@ -104,6 +112,12 @@ Expected:
 ## 3. Vercel Frontend
 
 Deploy the React/Vite frontend after the backend URL is known.
+
+The frontend includes Vercel project config:
+
+```text
+frontend/vercel.json
+```
 
 Setup:
 

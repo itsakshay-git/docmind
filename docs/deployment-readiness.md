@@ -158,6 +158,12 @@ docker run --rm -p 8081:8081 \
 
 For managed deployment platforms, set the same environment variables in the platform dashboard.
 
+Render Blueprint config lives at:
+
+```text
+render.yaml
+```
+
 Frontend:
 
 ```bash
@@ -165,6 +171,12 @@ cd frontend
 corepack enable
 pnpm install --frozen-lockfile
 pnpm build
+```
+
+Vercel config lives at:
+
+```text
+frontend/vercel.json
 ```
 
 ## Pre-Deploy Checklist
