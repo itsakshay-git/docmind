@@ -72,6 +72,7 @@ VITE_DOCMIND_API_URL=http://localhost:8081
 ```powershell
 corepack pnpm lint
 corepack pnpm format:check
+corepack pnpm test
 corepack pnpm build
 ```
 

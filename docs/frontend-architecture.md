@@ -77,6 +77,7 @@ Run before committing frontend changes:
 cd "D:\my projects\docmind\frontend"
 corepack pnpm lint
 corepack pnpm format:check
+corepack pnpm test
 corepack pnpm build
 ```
 
