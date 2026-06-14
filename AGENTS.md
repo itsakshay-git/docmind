@@ -2,9 +2,9 @@
 
 ## Project Context
 
-DocMind is a Spring Boot document intelligence platform inspired by NotebookLM. The MVP flow is PDF upload, text extraction, chunking, embedding generation, storage, semantic retrieval, and Gemini-grounded answers.
+DocMind is a deployed full-stack document intelligence platform inspired by NotebookLM. The current MVP supports notebook-scoped source ingestion, text extraction, chunking, Gemini embeddings, semantic retrieval, grounded chat, and Studio study artifact generation.
 
-Use [docs/chatgpt-project-handoff.md](docs/chatgpt-project-handoff.md) as the current handoff from the ChatGPT web Project.
+Start with [README.md](README.md), [docs/README.md](docs/README.md), and [docs/system-design.md](docs/system-design.md). Use [docs/chatgpt-project-handoff.md](docs/chatgpt-project-handoff.md) only as historical project context.
 
 ## Stack
 
@@ -15,8 +15,12 @@ Use [docs/chatgpt-project-handoff.md](docs/chatgpt-project-handoff.md) as the cu
 - Flyway
 - Spring Security with JWT
 - Spring AI 1.1.7
-- Google Gemini for chat and embeddings
+- Google Gemini for chat, embeddings, Studio generation, and TTS
 - Apache PDFBox for PDF parsing
+- jsoup for website ingestion
+- React, TypeScript, Vite frontend
+- TanStack Query for frontend server state
+- Docker, GitHub Actions CI, Testcontainers, and Spring Boot Actuator
 
 ## Working Rules
 
@@ -32,5 +36,18 @@ Use [docs/chatgpt-project-handoff.md](docs/chatgpt-project-handoff.md) as the cu
 
 ## Current Direction
 
-The next milestone is automatic embedding generation and storage for uploaded PDF chunks, followed by semantic retrieval and the first RAG question-answering flow.
+DocMind is deployed as a portfolio-ready MVP:
 
+- Frontend: Vercel
+- Backend: Render
+- Database: Neon PostgreSQL
+- AI provider: Google Gemini
+- Monitoring baseline: Actuator health plus Prometheus-ready metrics
+
+Near-term work should focus on polish and production hardening:
+
+- Object storage for Studio audio/image files.
+- `pgvector` migration for database-native similarity search.
+- Streaming chat responses.
+- Better Gemini quota/rate-limit error handling.
+- Production observability beyond the current Actuator baseline.
