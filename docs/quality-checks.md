@@ -51,3 +51,32 @@ Expected response:
 ```
 
 `/actuator/health` is public for local/dev checks. Other actuator endpoints remain protected unless explicitly permitted in a later deployment milestone.
+
+## GitHub Actions
+
+The CI workflow lives at:
+
+```text
+.github/workflows/ci.yml
+```
+
+It runs on pushes to `main`, `master`, and `codex/**`, plus pull requests into `main` or `master`.
+
+Backend job:
+
+```powershell
+cd "D:\my projects\docmind\backend\docmind-api"
+cmd /c mvnw.cmd test
+```
+
+Frontend job:
+
+```powershell
+cd "D:\my projects\docmind\frontend"
+corepack pnpm lint
+corepack pnpm format:check
+corepack pnpm test
+corepack pnpm build
+```
+
+The current CI baseline does not require `GEMINI_API_KEY` or a PostgreSQL service container. Add those only when backend tests start exercising real database or provider integrations.
