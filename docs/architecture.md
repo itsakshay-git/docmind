@@ -65,6 +65,16 @@ More detail:
 docs/frontend-architecture.md
 ```
 
+## Local Infrastructure
+
+Local development uses Docker Compose for PostgreSQL only. The backend exposes a minimal Spring Boot Actuator baseline for health, info, and metrics.
+
+More detail:
+
+```text
+docs/local-development.md
+```
+
 ## Upload-To-Answer Flow
 
 ```text
@@ -83,4 +93,4 @@ Source upload
 
 Studio now supports flashcards, quizzes, briefings, podcast audio/script, and infographic images.
 
-The next infrastructure upgrade is moving embeddings from JSON text to PostgreSQL `pgvector`.
+The next infrastructure upgrade is moving embeddings from JSON text to PostgreSQL `pgvector`. Prometheus, Grafana, Kubernetes, and cloud deployment are later milestones.

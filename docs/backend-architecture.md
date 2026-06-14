@@ -18,6 +18,7 @@ backend/docmind-api/
 - Google Gemini chat and embeddings
 - Apache PDFBox
 - jsoup
+- Spring Boot Actuator
 
 ## Feature Packages
 
@@ -80,6 +81,18 @@ Studio supports flashcards, quiz, briefing, podcast audio/script, and generated 
 - Use constructor injection with Lombok `@RequiredArgsConstructor`.
 - Keep frontend-facing DTOs explicit.
 - Run the backend test baseline from `docs/quality-checks.md` before committing backend changes.
+
+## Monitoring
+
+Spring Boot Actuator exposes the local/dev monitoring baseline:
+
+- `GET /actuator/health`
+- `GET /actuator/info`
+- `GET /actuator/metrics`
+
+Only `GET /actuator/health` is public. It is intended for local health checks and future deployment probes. Other exposed actuator endpoints remain behind normal security, and sensitive actuator endpoints are not exposed.
+
+Local infrastructure and environment variables are documented in `docs/local-development.md`.
 
 ## Management APIs
 

@@ -2,6 +2,7 @@ package com.docmind.docmind_api.security;
 
 import com.docmind.docmind_api.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -44,6 +45,8 @@ public class SecurityConfig {
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
                         )
+                        .permitAll()
+                        .requestMatchers(EndpointRequest.to("health"))
                         .permitAll()
                         .anyRequest()
                         .authenticated()

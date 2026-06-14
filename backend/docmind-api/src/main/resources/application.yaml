@@ -35,6 +35,25 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: DocMind API
+    description: Notebook-scoped source ingestion, RAG chat, and Studio artifact API
+
 docmind:
   studio:
     tts-model: ${DOCMIND_STUDIO_TTS_MODEL:gemini-3.1-flash-tts-preview}
