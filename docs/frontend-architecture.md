@@ -71,7 +71,7 @@ Backend-facing DTOs live in `src/shared/types` and are split by feature. New cod
 
 ## Quality Checks
 
-Run before committing frontend changes:
+Run before committing frontend changes. See also `docs/quality-checks.md`.
 
 ```powershell
 cd "D:\my projects\docmind\frontend"

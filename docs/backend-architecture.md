@@ -79,6 +79,7 @@ Studio supports flashcards, quiz, briefing, podcast audio/script, and generated 
 - Keep Gemini access server-side only.
 - Use constructor injection with Lombok `@RequiredArgsConstructor`.
 - Keep frontend-facing DTOs explicit.
+- Run the backend test baseline from `docs/quality-checks.md` before committing backend changes.
 
 ## Management APIs
 
