@@ -136,6 +136,26 @@ cd backend/docmind-api
 ./mvnw package -DskipTests
 ```
 
+Backend Docker image:
+
+```bash
+docker build -t docmind-api ./backend/docmind-api
+```
+
+Run the backend image against a database reachable from the container:
+
+```bash
+docker run --rm -p 8081:8081 \
+  -e GEMINI_API_KEY=... \
+  -e SPRING_DATASOURCE_URL=jdbc:postgresql://host.docker.internal:5433/docmind \
+  -e SPRING_DATASOURCE_USERNAME=admin \
+  -e SPRING_DATASOURCE_PASSWORD=admin123 \
+  -e DOCMIND_CORS_ALLOWED_ORIGINS=http://127.0.0.1:5173 \
+  docmind-api
+```
+
+For managed deployment platforms, set the same environment variables in the platform dashboard.
+
 Frontend:
 
 ```bash
