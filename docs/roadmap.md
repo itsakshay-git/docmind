@@ -14,7 +14,7 @@
 - Notebook-scoped semantic search.
 - Gemini-grounded one-off RAG answers.
 - React, TypeScript, Vite frontend.
-- Dark-only NotebookLM-inspired workspace.
+- Dark/light DocMind workspace UI.
 - Persistent notebook chat history.
 - Basic settings page for profile, password, notebooks, and documents.
 - Notebook library hover actions for deleting notebooks.
@@ -25,16 +25,14 @@
 - Manual pasted YouTube transcript ingestion for reliable demos.
 - Studio mini apps: flashcards, quiz, briefing, podcast audio/script, and generated infographic images.
 - Studio artifact preview, podcast audio download, infographic PNG/JPG download, playback, and delete.
+- Local Docker PostgreSQL healthcheck.
+- Spring Boot Actuator health/info/metrics baseline.
+- GitHub Actions CI for backend and frontend checks.
+- Deployment readiness docs and environment-driven backend database/CORS config.
 
 ## Current Milestone
 
-Make the product feel like a real document chat workspace:
-
-- Persist user and assistant messages.
-- Render Markdown assistant responses.
-- Keep the workspace to three main areas: sources, chat, studio.
-- Keep advanced retrieval settings hidden from normal users.
-- Keep frontend and backend documentation current.
+Prepare DocMind for a clean first deployment without adding cloud-specific coupling.
 
 ## Next Milestones
 
@@ -67,4 +65,5 @@ Make the product feel like a real document chat workspace:
 - Add integration tests with Testcontainers.
 - Add rate-limit friendly AI retry handling.
 - Add structured logging.
-- Add CI build for backend and frontend.
+- Add object storage for Studio audio and infographic files.
+- Add Prometheus/Grafana or hosted observability after deployment.

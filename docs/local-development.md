@@ -52,6 +52,10 @@ GEMINI_API_KEY
 Optional:
 
 ```text
+SPRING_DATASOURCE_URL
+SPRING_DATASOURCE_USERNAME
+SPRING_DATASOURCE_PASSWORD
+DOCMIND_CORS_ALLOWED_ORIGINS
 DOCMIND_DEMO_ENABLED
 DOCMIND_DEMO_EMAIL
 DOCMIND_DEMO_PASSWORD
@@ -64,6 +68,8 @@ DOCMIND_STUDIO_IMAGE_STORAGE_DIR
 ```
 
 Studio audio and image files are stored on the backend filesystem for the MVP. Production deployment should move these files to object storage or another durable storage service.
+
+Local defaults are already configured for PostgreSQL at `localhost:5433` and frontend origins at `localhost` / `127.0.0.1`.
 
 Run backend:
 
@@ -132,6 +138,8 @@ Expected shape:
 ```
 
 Prometheus, Grafana, Kubernetes, and cloud deployment are intentionally outside this milestone.
+
+Deployment preparation is documented in `docs/deployment-readiness.md`.
 
 ## Local Dev Checklist
 

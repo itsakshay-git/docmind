@@ -67,6 +67,8 @@ To point at another backend URL, create `.env.local`:
 VITE_DOCMIND_API_URL=http://localhost:8081
 ```
 
+For production builds, set `VITE_DOCMIND_API_URL` in the hosting provider to the deployed backend URL.
+
 ## Quality Checks
 
 ```powershell

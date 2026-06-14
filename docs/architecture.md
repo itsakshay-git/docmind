@@ -73,6 +73,7 @@ More detail:
 
 ```text
 docs/local-development.md
+docs/deployment-readiness.md
 ```
 
 ## Upload-To-Answer Flow
@@ -93,4 +94,4 @@ Source upload
 
 Studio now supports flashcards, quizzes, briefings, podcast audio/script, and infographic images.
 
-The next infrastructure upgrade is moving embeddings from JSON text to PostgreSQL `pgvector`. Prometheus, Grafana, Kubernetes, and cloud deployment are later milestones.
+The next infrastructure upgrade is moving embeddings from JSON text to PostgreSQL `pgvector`. Prometheus, Grafana, Kubernetes, object storage, and cloud deployment execution are later milestones.

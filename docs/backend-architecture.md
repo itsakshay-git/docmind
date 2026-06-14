@@ -94,6 +94,8 @@ Only `GET /actuator/health` is public. It is intended for local health checks an
 
 Local infrastructure and environment variables are documented in `docs/local-development.md`.
 
+Deployment readiness, including production datasource and CORS environment variables, is documented in `docs/deployment-readiness.md`.
+
 ## Management APIs
 
 The backend exposes basic authenticated settings and management APIs:

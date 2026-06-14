@@ -1,8 +1,8 @@
 package com.docmind.docmind_api.security;
 
 import com.docmind.docmind_api.security.jwt.JwtAuthenticationFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -16,10 +16,21 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtFilter;
+    private final List<String> allowedOrigins;
+
+    public SecurityConfig(
+            JwtAuthenticationFilter jwtFilter,
+            @Value("${docmind.cors.allowed-origins}") List<String> allowedOrigins
+    ) {
+
+        this.jwtFilter =
+                jwtFilter;
+        this.allowedOrigins =
+                allowedOrigins;
+    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http)
@@ -61,14 +72,7 @@ public class SecurityConfig {
         CorsConfiguration configuration =
                 new CorsConfiguration();
 
-        configuration.setAllowedOrigins(
-                List.of(
-                        "http://localhost:5173",
-                        "http://127.0.0.1:5173",
-                        "http://localhost:5500",
-                        "http://127.0.0.1:5500"
-                )
-        );
+        configuration.setAllowedOrigins(allowedOrigins);
 
         configuration.setAllowedMethods(
                 List.of(
