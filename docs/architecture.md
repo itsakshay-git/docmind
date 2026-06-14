@@ -4,6 +4,12 @@ DocMind is a Spring Boot and React document intelligence platform inspired by No
 
 The current MVP is a modular monolith backend plus a Vite React frontend.
 
+For the detailed deployed system design, see:
+
+```text
+docs/system-design.md
+```
+
 ## Current Capabilities
 
 - User registration and JWT login.

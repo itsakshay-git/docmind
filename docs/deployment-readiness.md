@@ -4,6 +4,15 @@ This document prepares DocMind for deployment without deploying it yet.
 
 For step-by-step Vercel, Render, and Neon setup, see `docs/platform-deployment-runbook.md`.
 
+For the full deployed architecture, see `docs/system-design.md`.
+
+Current deployed endpoints:
+
+```text
+Frontend: https://docmind-omega-woad.vercel.app/
+Backend health: https://docmind-2fa9.onrender.com/actuator/health
+```
+
 ## Recommended First Deployment
 
 For a simple resume-friendly deployment:
