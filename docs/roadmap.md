@@ -29,6 +29,7 @@
 - Spring Boot Actuator health/info/metrics baseline.
 - GitHub Actions CI for backend and frontend checks.
 - Deployment readiness docs and environment-driven backend database/CORS config.
+- Testcontainers backend smoke test for PostgreSQL, Flyway, JPA, and app context startup.
 
 ## Current Milestone
 
@@ -62,7 +63,6 @@ Prepare DocMind for a clean first deployment without adding cloud-specific coupl
 
 ### Production Hardening
 
-- Add integration tests with Testcontainers.
 - Add rate-limit friendly AI retry handling.
 - Add structured logging.
 - Add object storage for Studio audio and infographic files.
