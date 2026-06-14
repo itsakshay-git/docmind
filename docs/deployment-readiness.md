@@ -2,6 +2,8 @@
 
 This document prepares DocMind for deployment without deploying it yet.
 
+For step-by-step Vercel, Render, and Neon setup, see `docs/platform-deployment-runbook.md`.
+
 ## Recommended First Deployment
 
 For a simple resume-friendly deployment:
