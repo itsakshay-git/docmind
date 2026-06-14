@@ -137,6 +137,16 @@ Expected response:
 }
 ```
 
+## Metrics
+
+The backend also exposes Prometheus-format metrics through Spring Boot Actuator:
+
+```text
+GET /actuator/prometheus
+```
+
+Only `/actuator/health` is public. Keep `/actuator/prometheus` protected unless a private Prometheus scraper or monitoring platform needs access through a controlled network/auth strategy.
+
 ## Build Commands
 
 Backend:
@@ -204,7 +214,7 @@ frontend/vercel.json
 
 ## Not Included Yet
 
-- Prometheus/Grafana monitoring.
+- Running Prometheus/Grafana dashboards.
 - Object storage for Studio files.
 - Docker image publishing.
 - Kubernetes.

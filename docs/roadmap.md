@@ -32,6 +32,7 @@
 - Testcontainers backend smoke test for PostgreSQL, Flyway, JPA, and app context startup.
 - Backend multi-stage Dockerfile for container deployment.
 - Render and Vercel deployment config templates.
+- Prometheus-ready Actuator metrics endpoint.
 
 ## Current Milestone
 
@@ -68,5 +69,5 @@ Prepare DocMind for a clean first deployment without adding cloud-specific coupl
 - Add rate-limit friendly AI retry handling.
 - Add structured logging.
 - Add object storage for Studio audio and infographic files.
-- Add Prometheus/Grafana or hosted observability after deployment.
+- Add Grafana dashboards or hosted observability after deployment.
 - Add production compose if needed.

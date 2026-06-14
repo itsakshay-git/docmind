@@ -135,12 +135,13 @@ Exposed actuator endpoints:
 GET /actuator/health
 GET /actuator/info
 GET /actuator/metrics
+GET /actuator/prometheus
 ```
 
 Security behavior:
 
 - `GET /actuator/health` is public for local/dev health checks.
-- `GET /actuator/info` and `GET /actuator/metrics` are exposed but still require authentication.
+- `GET /actuator/info`, `GET /actuator/metrics`, and `GET /actuator/prometheus` are exposed but still require authentication.
 - Sensitive actuator endpoints are not exposed.
 
 Manual health check:
@@ -158,6 +159,14 @@ Expected shape:
 ```
 
 Prometheus, Grafana, Kubernetes, and cloud deployment are intentionally outside this milestone.
+
+Prometheus-format metrics are available through Actuator once authenticated:
+
+```text
+GET /actuator/prometheus
+```
+
+This makes the backend Prometheus-ready without running Prometheus or Grafana locally yet.
 
 Deployment preparation is documented in `docs/deployment-readiness.md`.
 

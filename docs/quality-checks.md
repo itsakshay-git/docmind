@@ -56,6 +56,14 @@ Expected response:
 
 `/actuator/health` is public for local/dev checks. Other actuator endpoints remain protected unless explicitly permitted in a later deployment milestone.
 
+Prometheus metrics are exposed for authenticated/local monitoring integrations:
+
+```powershell
+Invoke-RestMethod http://localhost:8081/actuator/prometheus
+```
+
+Do not make `/actuator/prometheus` public on production free-tier hosting unless a controlled scraper requires it.
+
 ## GitHub Actions
 
 The CI workflow lives at:

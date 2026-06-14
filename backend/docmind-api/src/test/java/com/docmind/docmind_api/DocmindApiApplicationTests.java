@@ -1,9 +1,11 @@
 package com.docmind.docmind_api;
 
 import com.docmind.docmind_api.auth.repository.UserRepository;
+import io.micrometer.prometheusmetrics.PrometheusMeterRegistry;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.DynamicPropertyRegistry;
@@ -16,6 +18,7 @@ import java.util.TimeZone;
 
 @SpringBootTest
 @Testcontainers
+@AutoConfigureObservability
 class DocmindApiApplicationTests {
 
     static {
@@ -59,6 +62,9 @@ class DocmindApiApplicationTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PrometheusMeterRegistry prometheusMeterRegistry;
+
     @Test
     void contextLoadsWithFlywayAndPostgres() {
 
@@ -74,6 +80,10 @@ class DocmindApiApplicationTests {
         );
         Assertions.assertTrue(
                 userRepository.existsByEmail("recruiter@docmind.dev")
+        );
+
+        Assertions.assertNotNull(
+                prometheusMeterRegistry
         );
     }
 }

@@ -294,12 +294,11 @@ Current monitoring:
 
 - Spring Boot Actuator.
 - Public `/actuator/health`.
-- Exposed `info` and `metrics` endpoints behind authentication.
+- Exposed `info`, `metrics`, and `prometheus` endpoints behind authentication.
 - Render health check integration.
 
 Future monitoring:
 
-- Prometheus metrics endpoint.
 - Grafana dashboard.
 - Structured logs.
 - Request latency/error tracking.
