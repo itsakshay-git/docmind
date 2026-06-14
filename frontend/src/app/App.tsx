@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from "../features/auth/context/AuthContext";
 import { LoginPage } from "../pages/LoginPage";
 import { NotebookWorkspacePage } from "../pages/NotebookWorkspacePage";
 import { NotebooksPage } from "../pages/NotebooksPage";
+import { NotFoundPage } from "../pages/NotFoundPage";
 import { SettingsPage } from "../pages/SettingsPage";
 
 const queryClient = new QueryClient({
@@ -64,6 +65,7 @@ export function App() {
               }
               path="/settings"
             />
+            <Route element={<NotFoundPage />} path="*" />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

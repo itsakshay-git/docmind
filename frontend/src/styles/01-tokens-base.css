@@ -430,6 +430,44 @@ textarea {
   margin: 0;
 }
 
+.not-found-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+  background: radial-gradient(circle at 30% 20%, rgba(91, 124, 250, 0.18), transparent 30%), var(--bg);
+}
+
+.not-found-panel {
+  display: grid;
+  width: min(440px, 100%);
+  gap: 16px;
+  justify-items: start;
+  padding: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  box-shadow: var(--shadow-soft);
+}
+
+.not-found-panel p {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.not-found-panel h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.not-found-panel span {
+  color: var(--muted);
+  line-height: 1.6;
+}
+
 .status-pill {
   border-radius: 8px;
   display: inline-flex;
