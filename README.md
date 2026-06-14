@@ -14,6 +14,26 @@ Backend health:
 https://docmind-2fa9.onrender.com/actuator/health
 ```
 
+## Demo
+
+Demo video:
+
+```text
+Coming soon
+```
+
+Landing and recruiter login:
+
+![DocMind landing page](docs/assets/screenshots/landing.png)
+
+Notebook library:
+
+![DocMind notebook library](docs/assets/screenshots/notebook-library.png)
+
+Notebook workspace with source-grounded chat and Studio flashcards:
+
+![DocMind notebook workspace](docs/assets/screenshots/workspace.png)
+
 ## Highlights
 
 - Notebook-scoped source ingestion for PDFs, websites, YouTube transcripts, and pasted transcripts.
