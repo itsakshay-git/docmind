@@ -132,9 +132,8 @@ User asks question
   -> frontend sends notebook-scoped chat request
   -> backend stores user message
   -> question plus bounded chat memory is embedded with Gemini
-  -> candidate notebook chunks are loaded
-  -> stored JSON vectors are parsed
-  -> cosine similarity ranks chunks
+  -> PostgreSQL searches notebook-owned pgvector embeddings
+  -> exact cosine similarity ranks chunks in the database
   -> top chunks are sent to Gemini as grounded context
   -> assistant tokens stream to the frontend
   -> final assistant answer is stored
@@ -143,17 +142,16 @@ User asks question
 
 Current retrieval design:
 
-- Vectors are stored as JSON `TEXT`.
-- Similarity runs in Java memory.
+- Vectors are stored in PostgreSQL `pgvector` as `vector(3072)`, with legacy JSON `TEXT` retained for compatibility.
+- Exact cosine similarity runs in PostgreSQL through a narrow JDBC repository.
 - Search is restricted to one notebook owned by the authenticated user.
 - Default retrieval count is kept small for predictable latency and cost.
 - Chat history is persisted for display and deletion, and recent prior turns are passed as bounded model memory during notebook chat answer generation.
 
 Future retrieval upgrade:
 
-- Move vectors to PostgreSQL `pgvector`.
-- Push similarity search into the database.
-- Improve conversation-aware query rewriting, chunk metadata, re-indexing, and source previews.
+- Add conversation-aware query rewriting, chunk metadata, re-indexing, and source previews.
+- Evaluate hybrid keyword/vector search, reranking, and ANN indexing after corpus size and latency justify the extra complexity.
 - Continue hardening streaming chat, cancellation behavior, and user-facing error recovery while preserving the existing non-streaming API fallback.
 
 ## 7. Studio Artifact Flow
@@ -312,8 +310,7 @@ Future monitoring:
 
 Current MVP decisions:
 
-- Embeddings are JSON text, not `pgvector`.
-- Java in-memory cosine search is used for retrieval.
+- Embeddings use exact PostgreSQL `pgvector` search. ANN indexing is deferred because current Gemini embeddings are 3072-dimensional and the corpus is still MVP-sized.
 - Chat history is persisted, and bounded recent-turn memory is included in notebook chat prompts.
 - Studio files use a filesystem-backed `StudioMediaStorage` adapter.
 - YouTube auto-transcript is best effort.
@@ -330,9 +327,8 @@ Why these choices are acceptable:
 High-value next steps:
 
 - Harden bounded conversational memory for follow-up questions.
-- Add streaming assistant responses.
-- Move embeddings to `pgvector`.
-- Add conversation-aware retrieval, source previews, and re-indexing.
+- Harden streaming assistant responses and cancellation behavior.
+- Add conversation-aware retrieval, source previews, hybrid search, reranking, and re-indexing.
 - Add a production object-storage adapter for Studio media.
 - Add Brave Search import.
 - Add Prometheus/Grafana or hosted dashboards for the custom AI/RAG metrics.

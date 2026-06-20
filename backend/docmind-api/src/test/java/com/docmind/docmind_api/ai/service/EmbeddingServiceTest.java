@@ -1,11 +1,12 @@
 package com.docmind.docmind_api.ai.service;
 
 import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import com.docmind.docmind_api.rag.entity.Chunk;
-import com.docmind.docmind_api.rag.entity.Embedding;
 import com.docmind.docmind_api.rag.repository.EmbeddingRepository;
+import com.docmind.docmind_api.rag.repository.EmbeddingVectorRepository;
+import com.docmind.docmind_api.rag.repository.EmbeddingVectorRepository.EmbeddingVectorWrite;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -34,10 +36,14 @@ class EmbeddingServiceTest {
     private final EmbeddingRepository embeddingRepository =
             mock(EmbeddingRepository.class);
 
+    private final EmbeddingVectorRepository embeddingVectorRepository =
+            mock(EmbeddingVectorRepository.class);
+
     private final EmbeddingService embeddingService =
             new EmbeddingService(
                     embeddingModel,
                     embeddingRepository,
+                    embeddingVectorRepository,
                     new ObjectMapper(),
                     aiOperationMetrics
             );
@@ -53,7 +59,7 @@ class EmbeddingServiceTest {
                         List.of()
                 );
 
-        verify(embeddingRepository, never())
+        verify(embeddingVectorRepository, never())
                 .saveAll(
                         List.of()
                 );
@@ -93,6 +99,18 @@ class EmbeddingServiceTest {
                 )
         );
 
+        when(
+                embeddingVectorRepository.toVectorLiteral(
+                        new float[]{1.0f, 2.0f}
+                )
+        ).thenReturn("[1.0,2.0]");
+
+        when(
+                embeddingVectorRepository.toVectorLiteral(
+                        new float[]{3.0f, 4.0f}
+                )
+        ).thenReturn("[3.0,4.0]");
+
         embeddingService.generateAndSaveEmbeddings(
                 List.of(
                         firstChunk,
@@ -100,38 +118,42 @@ class EmbeddingServiceTest {
                 )
         );
 
-        ArgumentCaptor<Iterable<Embedding>> captor =
+        ArgumentCaptor<List<EmbeddingVectorWrite>> captor =
                 ArgumentCaptor.forClass(
-                        Iterable.class
+                        List.class
                 );
 
-        verify(embeddingRepository)
+        verify(embeddingVectorRepository)
                 .saveAll(
                         captor.capture()
                 );
 
-        List<Embedding> savedEmbeddings =
-                asList(
-                        captor.getValue()
-                );
+        List<EmbeddingVectorWrite> savedEmbeddings =
+                captor.getValue();
 
         assertThat(savedEmbeddings)
                 .hasSize(2);
 
-        assertThat(savedEmbeddings.get(0).getChunkId())
+        assertThat(savedEmbeddings.get(0).chunkId())
                 .isEqualTo(
                         firstChunk.getId()
                 );
 
-        assertThat(savedEmbeddings.get(0).getVector())
+        assertThat(savedEmbeddings.get(0).jsonVector())
                 .isEqualTo("[1.0,2.0]");
 
-        assertThat(savedEmbeddings.get(1).getChunkId())
+        assertThat(savedEmbeddings.get(0).vectorLiteral())
+                .isEqualTo("[1.0,2.0]");
+
+        assertThat(savedEmbeddings.get(1).chunkId())
                 .isEqualTo(
                         secondChunk.getId()
                 );
 
-        assertThat(savedEmbeddings.get(1).getVector())
+        assertThat(savedEmbeddings.get(1).jsonVector())
+                .isEqualTo("[3.0,4.0]");
+
+        assertThat(savedEmbeddings.get(1).vectorLiteral())
                 .isEqualTo("[3.0,4.0]");
     }
 
@@ -176,9 +198,9 @@ class EmbeddingServiceTest {
                         "Expected 2 embeddings but received 1"
                 );
 
-        verify(embeddingRepository, never())
+        verify(embeddingVectorRepository, never())
                 .saveAll(
-                        org.mockito.ArgumentMatchers.any()
+                        any()
                 );
     }
 
@@ -195,11 +217,5 @@ class EmbeddingServiceTest {
         );
 
         return chunk;
-    }
-
-    private static List<Embedding> asList(
-            Iterable<Embedding> embeddings
-    ) {
-        return (List<Embedding>) embeddings;
     }
 }

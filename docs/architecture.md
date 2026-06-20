@@ -18,7 +18,7 @@ docs/system-design.md
 - PDF text extraction with PDFBox.
 - Text chunking.
 - Gemini embedding generation.
-- Embedding storage as JSON text.
+- Embedding storage and exact cosine search with PostgreSQL `pgvector`.
 - Notebook-scoped semantic retrieval.
 - Gemini-grounded answers.
 - Persistent notebook chat history.
@@ -90,7 +90,7 @@ Source upload
 -> text extraction
 -> chunks
 -> Gemini embeddings
--> JSON vector storage
+-> pgvector storage
 -> notebook-scoped retrieval
 -> Gemini answer
 -> persisted chat messages
@@ -100,4 +100,4 @@ Source upload
 
 Studio now supports flashcards, quizzes, briefings, podcast audio/script, and infographic images.
 
-The next infrastructure upgrade is moving embeddings from JSON text to PostgreSQL `pgvector`. Prometheus, Grafana, Kubernetes, object storage, and cloud deployment execution are later milestones.
+The retrieval infrastructure now uses PostgreSQL `pgvector` exact search while keeping legacy JSON vector text for compatibility. Prometheus, Grafana, Kubernetes, object storage, ANN indexing, hybrid search, and reranking are later milestones.

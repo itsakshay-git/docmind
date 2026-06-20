@@ -2,8 +2,9 @@ package com.docmind.docmind_api.ai.service;
 
 import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
 import com.docmind.docmind_api.rag.entity.Chunk;
-import com.docmind.docmind_api.rag.entity.Embedding;
 import com.docmind.docmind_api.rag.repository.EmbeddingRepository;
+import com.docmind.docmind_api.rag.repository.EmbeddingVectorRepository;
+import com.docmind.docmind_api.rag.repository.EmbeddingVectorRepository.EmbeddingVectorWrite;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -19,6 +20,7 @@ public class EmbeddingService {
 
     private final EmbeddingModel embeddingModel;
     private final EmbeddingRepository embeddingRepository;
+    private final EmbeddingVectorRepository embeddingVectorRepository;
     private final ObjectMapper objectMapper;
     private final AiOperationMetrics aiOperationMetrics;
 
@@ -61,7 +63,7 @@ public class EmbeddingService {
                 );
             }
 
-            List<Embedding> embeddings =
+            List<EmbeddingVectorWrite> embeddings =
                     new ArrayList<>();
 
             for (int i = 0; i < chunks.size(); i++) {
@@ -73,36 +75,20 @@ public class EmbeddingService {
                                 .get(i)
                                 .getOutput();
 
-                List<Double> vector =
-                        new ArrayList<>(
-                                output.length
-                        );
-
-                for (float value : output) {
-                    vector.add(
-                            (double) value
-                    );
-                }
-
-                Embedding embedding =
-                        new Embedding();
-
-                embedding.setChunkId(
-                        chunk.getId()
-                );
-
-                embedding.setVector(
-                        objectMapper.writeValueAsString(
-                                vector
-                        )
-                );
-
                 embeddings.add(
-                        embedding
+                        new EmbeddingVectorWrite(
+                                chunk.getId(),
+                                toJsonVector(
+                                        output
+                                ),
+                                embeddingVectorRepository.toVectorLiteral(
+                                        output
+                                )
+                        )
                 );
             }
 
-            embeddingRepository.saveAll(
+            embeddingVectorRepository.saveAll(
                     embeddings
             );
 
@@ -119,6 +105,26 @@ public class EmbeddingService {
                     e
             );
         }
+    }
+
+    private String toJsonVector(
+            float[] output
+    ) throws Exception {
+
+        List<Double> vector =
+                new ArrayList<>(
+                        output.length
+                );
+
+        for (float value : output) {
+            vector.add(
+                    (double) value
+            );
+        }
+
+        return objectMapper.writeValueAsString(
+                vector
+        );
     }
 
     public long countEmbeddings() {

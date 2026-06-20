@@ -42,9 +42,9 @@ user/       Profile and password settings
 3. Source-specific extractor produces text.
 4. Text is chunked.
 5. Gemini creates one embedding per chunk.
-6. Embeddings are stored as JSON text.
+6. Embeddings are stored in PostgreSQL `pgvector` as 3072-dimensional vectors, with the legacy JSON text value retained for compatibility.
 7. Search embeds the user question.
-8. Java cosine similarity ranks notebook chunks.
+8. PostgreSQL exact cosine similarity ranks notebook-owned chunks.
 9. Gemini answers using the retrieved context.
 
 PDF uses PDFBox. Websites use jsoup. YouTube auto-fetch is best effort. The reliable YouTube path is pasted transcript ingestion, stored as `YOUTUBE_TRANSCRIPT`.
