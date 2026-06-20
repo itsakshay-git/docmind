@@ -100,6 +100,7 @@ Flyway runs on backend startup and applies migrations automatically. Before a pr
 
 - The database URL points to the production database.
 - The database user has permission to create/alter tables.
+- The database supports `CREATE EXTENSION vector` for PostgreSQL `pgvector`; enable it manually first if the managed database blocks extension creation during Flyway.
 - Old migrations are not edited after deployment.
 - New schema changes use new Flyway migration versions only.
 

@@ -1,18 +1,12 @@
 package com.docmind.docmind_api.rag.service;
 
 import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
-import com.docmind.docmind_api.document.entity.Document;
-import com.docmind.docmind_api.document.repository.DocumentRepository;
 import com.docmind.docmind_api.notebook.entity.Notebook;
 import com.docmind.docmind_api.notebook.repository.NotebookRepository;
 import com.docmind.docmind_api.rag.dto.SemanticSearchRequest;
 import com.docmind.docmind_api.rag.dto.SemanticSearchResult;
-import com.docmind.docmind_api.rag.entity.Chunk;
-import com.docmind.docmind_api.rag.entity.Embedding;
-import com.docmind.docmind_api.rag.repository.ChunkRepository;
-import com.docmind.docmind_api.rag.repository.EmbeddingRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.docmind.docmind_api.rag.repository.EmbeddingVectorRepository;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;
 import org.springframework.ai.embedding.EmbeddingModel;
 
@@ -22,11 +16,11 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.ArgumentMatchers.anyList;
 
 class RagSearchServiceTest {
 
@@ -38,50 +32,24 @@ class RagSearchServiceTest {
     private final NotebookRepository notebookRepository =
             mock(NotebookRepository.class);
 
-    private final DocumentRepository documentRepository =
-            mock(DocumentRepository.class);
-
-    private final ChunkRepository chunkRepository =
-            mock(ChunkRepository.class);
-
-    private final EmbeddingRepository embeddingRepository =
-            mock(EmbeddingRepository.class);
-
     private final EmbeddingModel embeddingModel =
             mock(EmbeddingModel.class);
+
+    private final EmbeddingVectorRepository embeddingVectorRepository =
+            mock(EmbeddingVectorRepository.class);
 
     private final RagSearchService ragSearchService =
             new RagSearchService(
                     notebookRepository,
-                    documentRepository,
-                    chunkRepository,
-                    embeddingRepository,
                     embeddingModel,
-                    new ObjectMapper(),
+                    embeddingVectorRepository,
                     aiOperationMetrics
             );
 
     @Test
-    void returnsTopResultsSortedByScore() {
+    void returnsDbRankedResults() {
         UUID notebookId =
                 UUID.randomUUID();
-
-        Document document =
-                document(
-                        notebookId
-                );
-
-        Chunk relevantChunk =
-                chunk(
-                        document.getId(),
-                        "relevant content"
-                );
-
-        Chunk lessRelevantChunk =
-                chunk(
-                        document.getId(),
-                        "less relevant content"
-                );
 
         when(
                 notebookRepository.findByIdAndOwnerEmail(
@@ -95,46 +63,6 @@ class RagSearchServiceTest {
         );
 
         when(
-                documentRepository.findByNotebookId(
-                        notebookId
-                )
-        ).thenReturn(
-                List.of(
-                        document
-                )
-        );
-
-        when(
-                chunkRepository.findByDocumentIdIn(
-                        List.of(
-                                document.getId()
-                        )
-                )
-        ).thenReturn(
-                List.of(
-                        relevantChunk,
-                        lessRelevantChunk
-                )
-        );
-
-        when(
-                embeddingRepository.findByChunkIdIn(
-                        anyList()
-                )
-        ).thenReturn(
-                List.of(
-                        embedding(
-                                relevantChunk.getId(),
-                                "[1.0,0.0]"
-                        ),
-                        embedding(
-                                lessRelevantChunk.getId(),
-                                "[0.0,1.0]"
-                        )
-                )
-        );
-
-        when(
                 embeddingModel.embed(
                         "needle"
                 )
@@ -142,16 +70,37 @@ class RagSearchServiceTest {
                 new float[]{1.0f, 0.0f}
         );
 
-        SemanticSearchRequest request =
-                request(
-                        "needle",
+        when(
+                embeddingVectorRepository.toVectorLiteral(
+                        new float[]{1.0f, 0.0f}
+                )
+        ).thenReturn("[1.0,0.0]");
+
+        when(
+                embeddingVectorRepository.searchSimilar(
+                        notebookId,
+                        "user@example.com",
+                        "[1.0,0.0]",
                         1
-                );
+                )
+        ).thenReturn(
+                List.of(
+                        new SemanticSearchResult(
+                                "chunk-1",
+                                "document-1",
+                                "relevant content",
+                                0.99
+                        )
+                )
+        );
 
         List<SemanticSearchResult> results =
                 ragSearchService.search(
                         notebookId,
-                        request,
+                        request(
+                                "needle",
+                                1
+                        ),
                         "user@example.com"
                 );
 
@@ -159,12 +108,7 @@ class RagSearchServiceTest {
                 .hasSize(1);
 
         assertThat(results.get(0).getChunkId())
-                .isEqualTo(
-                        relevantChunk.getId().toString()
-                );
-
-        assertThat(results.get(0).getScore())
-                .isEqualTo(1.0);
+                .isEqualTo("chunk-1");
     }
 
     @Test
@@ -193,14 +137,22 @@ class RagSearchServiceTest {
                         RuntimeException.class
                 );
 
-        verify(documentRepository, never())
-                .findByNotebookId(
-                        notebookId
+        verify(embeddingModel, never())
+                .embed(
+                        "question"
+                );
+
+        verify(embeddingVectorRepository, never())
+                .searchSimilar(
+                        any(),
+                        any(),
+                        any(),
+                        any(Integer.class)
                 );
     }
 
     @Test
-    void returnsEmptyListWhenNotebookHasNoDocuments() {
+    void normalizesTopKAndReturnsEmptyListWhenNoVectorsMatch() {
         UUID notebookId =
                 UUID.randomUUID();
 
@@ -216,8 +168,25 @@ class RagSearchServiceTest {
         );
 
         when(
-                documentRepository.findByNotebookId(
-                        notebookId
+                embeddingModel.embed(
+                        "question"
+                )
+        ).thenReturn(
+                new float[]{0.5f, 0.5f}
+        );
+
+        when(
+                embeddingVectorRepository.toVectorLiteral(
+                        new float[]{0.5f, 0.5f}
+                )
+        ).thenReturn("[0.5,0.5]");
+
+        when(
+                embeddingVectorRepository.searchSimilar(
+                        notebookId,
+                        "user@example.com",
+                        "[0.5,0.5]",
+                        5
                 )
         ).thenReturn(
                 List.of()
@@ -228,7 +197,7 @@ class RagSearchServiceTest {
                         notebookId,
                         request(
                                 "question",
-                                5
+                                0
                         ),
                         "user@example.com"
                 );
@@ -236,9 +205,12 @@ class RagSearchServiceTest {
         assertThat(results)
                 .isEmpty();
 
-        verify(chunkRepository, never())
-                .findByDocumentIdIn(
-                        List.of()
+        verify(embeddingVectorRepository)
+                .searchSimilar(
+                        notebookId,
+                        "user@example.com",
+                        "[0.5,0.5]",
+                        5
                 );
     }
 
@@ -259,65 +231,5 @@ class RagSearchServiceTest {
         );
 
         return request;
-    }
-
-    private static Document document(
-            UUID notebookId
-    ) {
-
-        Document document =
-                new Document();
-
-        document.setId(
-                UUID.randomUUID()
-        );
-
-        document.setNotebookId(
-                notebookId
-        );
-
-        return document;
-    }
-
-    private static Chunk chunk(
-            UUID documentId,
-            String content
-    ) {
-
-        Chunk chunk =
-                new Chunk();
-
-        chunk.setId(
-                UUID.randomUUID()
-        );
-
-        chunk.setDocumentId(
-                documentId
-        );
-
-        chunk.setContent(
-                content
-        );
-
-        return chunk;
-    }
-
-    private static Embedding embedding(
-            UUID chunkId,
-            String vector
-    ) {
-
-        Embedding embedding =
-                new Embedding();
-
-        embedding.setChunkId(
-                chunkId
-        );
-
-        embedding.setVector(
-                vector
-        );
-
-        return embedding;
     }
 }

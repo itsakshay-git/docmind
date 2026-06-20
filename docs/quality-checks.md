@@ -4,7 +4,7 @@ Run these before committing changes that affect the related area.
 
 ## Backend
 
-Backend tests include a Testcontainers PostgreSQL smoke test. Docker Desktop must be running, but the tests do not use your local `docmind` database.
+Backend tests include a Testcontainers PostgreSQL smoke test using `pgvector/pgvector:pg16`. Docker Desktop must be running, but the tests do not use your local `docmind` database.
 
 ```powershell
 cd "D:\my projects\docmind\backend\docmind-api"
@@ -19,12 +19,12 @@ docker compose -f infrastructure/docker/docker-compose.yml up -d
 
 Current backend baseline:
 
-- Tests run: 15
+- Tests run: 28
 - Failures: 0
 - Errors: 0
 - Skipped: 0
 
-The Spring context smoke test starts PostgreSQL with Testcontainers, applies Flyway migrations, validates JPA startup, and confirms the demo user can be persisted.
+The Spring context smoke test starts PostgreSQL with Testcontainers, applies Flyway migrations including the `vector` extension migration, validates JPA startup, confirms the demo user can be persisted, and includes pgvector retrieval coverage.
 
 ## Frontend
 

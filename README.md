@@ -188,7 +188,7 @@ AI: Google Gemini
 - Studio audio and infographic files currently use the filesystem-backed `StudioMediaStorage` adapter.
 - A durable object-storage adapter is planned as the next media hardening step.
 - Chat history is persisted, recent prior turns are used as bounded conversational memory, and chat responses stream progressively in the UI.
-- Embeddings currently use JSON text storage and Java cosine search; `pgvector` is the planned retrieval upgrade.
+- Embeddings use PostgreSQL `pgvector` exact cosine search with legacy JSON text retained for compatibility.
 - Gemini quota can affect embedding, chat, and Studio generation; provider errors are normalized into user-safe messages.
 - YouTube transcript ingestion is best effort; pasted transcript is the reliable demo path.
 - Detailed post-v1 backlog: `docs/next-improvements.md`.

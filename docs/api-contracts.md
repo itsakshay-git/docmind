@@ -91,7 +91,7 @@ Form field:
 file=<pdf>
 ```
 
-Upload extracts text, chunks content, generates Gemini embeddings, and stores vectors as JSON text for the current MVP.
+Upload extracts text, chunks content, generates Gemini embeddings, and stores vectors in PostgreSQL `pgvector` for notebook-scoped retrieval. The legacy JSON text vector is retained for compatibility.
 
 ### Add Website To Notebook
 

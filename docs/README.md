@@ -42,7 +42,7 @@ This folder is the project memory for DocMind. It is intentionally split into pu
 - `roadmap.md`
   Completed work, current direction, and future milestones.
 - `next-improvements.md`
-  Prioritized post-v1 backlog for conversational memory, streaming chat, stronger RAG, `pgvector`, object storage, quota handling, and observability.
+  Prioritized post-v1 backlog for conversational memory, streaming chat hardening, stronger RAG beyond exact `pgvector` search, object storage, quota handling, and observability.
 - `decisions.md`
   Architecture decision record. Use this to explain why core technical choices were made.
 

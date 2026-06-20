@@ -4,7 +4,7 @@ This page is the local environment contract for DocMind. It keeps infrastructure
 
 ## Local Infrastructure
 
-DocMind uses Docker Compose locally for PostgreSQL only.
+DocMind uses Docker Compose locally for PostgreSQL only. The local image is `pgvector/pgvector:pg16` so Flyway can enable the `vector` extension used by RAG retrieval.
 
 ```powershell
 docker compose -f infrastructure/docker/docker-compose.yml up -d

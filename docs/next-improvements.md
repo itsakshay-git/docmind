@@ -6,7 +6,7 @@ This backlog captures the post-v1 improvements for DocMind. V1 is deployed and i
 
 - Chat history is persisted in DocMind-owned `chat_sessions` and `chat_messages` tables.
 - The current notebook chat answer path uses the latest user question, retrieved source chunks, a bounded window of recent prior chat turns, and a streaming chat endpoint for progressive UI rendering.
-- Embeddings are stored as JSON `TEXT`, and similarity search runs in Java memory.
+- Embeddings are written to PostgreSQL `pgvector` as 3072-dimensional Gemini vectors, with the legacy JSON `TEXT` value retained for compatibility. Similarity search now runs in PostgreSQL as exact cosine search.
 - Studio podcast audio and infographic images are saved through a `StudioMediaStorage` abstraction, with the filesystem adapter enabled by default.
 - Actuator health, Prometheus-ready metrics, custom AI/RAG operation metrics, and user-safe AI provider error messages exist, but production dashboards, structured logs, retries, and provider-category dashboards are not yet built.
 
@@ -29,9 +29,9 @@ Spring AI `ChatClient` supports streaming responses through its fluent streaming
 
 ## P1: Retrieval And Source Quality
 
-- Move vector storage from JSON `TEXT` to PostgreSQL `pgvector` through a new Flyway migration.
-- Push similarity search into PostgreSQL while keeping every retrieval path notebook-owner scoped.
-- Decide during implementation whether to use Spring AI PGvector `VectorStore` directly or a narrow custom repository that preserves the existing `documents` and `chunks` ownership model.
+- Keep the custom `pgvector` JDBC repository healthy; it preserves the existing `documents` and `chunks` ownership model instead of adopting Spring AI's default `vector_store` table.
+- Keep every retrieval path notebook-owner scoped while using database-side exact cosine search.
+- Add retrieval regression coverage as more source types and chunk metadata are added.
 - Add chunk metadata needed for better citations, source previews, and re-indexing.
 - Add source preview/snippets in the workspace so citations are inspectable.
 - Add re-indexing flows for source updates or future chunking/model changes.
@@ -40,6 +40,7 @@ Spring AI `ChatClient` supports streaming responses through its fluent streaming
   - Retrieve from notebook chunks using the rewritten query.
   - Keep the final answer grounded only in retrieved notebook context.
 - Later improvements can include hybrid keyword/vector search, reranking, and retrieval evaluation datasets.
+- ANN indexing is intentionally deferred because DocMind currently uses Gemini's 3072-dimensional embeddings. Exact `pgvector` search is the right milestone until corpus size proves an index is needed.
 
 Spring AI PGvector setup requires PostgreSQL vector-related extensions and can initialize/search a vector table, but DocMind should still control ownership filtering and migration policy. Reference: https://docs.spring.io/spring-ai/reference/api/vectordbs/pgvector.html
 

@@ -19,10 +19,10 @@ Date:
 2026-06-02
 
 Decision:
-Use PostgreSQL first, keep `pgvector` as the next retrieval upgrade
+Use PostgreSQL plus custom `pgvector` retrieval
 
 Reason:
-PostgreSQL keeps the MVP deployable and easy to inspect. Embeddings are stored as JSON text for the first deployed version, while `pgvector` remains the planned upgrade for database-native similarity search.
+PostgreSQL keeps the MVP deployable and easy to inspect. DocMind now stores Gemini's 3072-dimensional embeddings in `pgvector` and uses a narrow custom JDBC repository for exact DB-side cosine search, while retaining the legacy JSON text value for compatibility.
 
 ---
 

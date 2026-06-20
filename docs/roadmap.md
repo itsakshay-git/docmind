@@ -10,8 +10,8 @@
 - PDF text extraction with PDFBox.
 - Chunk generation.
 - Gemini embedding generation.
-- Embedding persistence as JSON text.
-- Notebook-scoped semantic search.
+- Embedding persistence with PostgreSQL `pgvector` exact cosine search and legacy JSON text compatibility.
+- Notebook-scoped semantic search in PostgreSQL.
 - Gemini-grounded one-off RAG answers.
 - React, TypeScript, Vite frontend.
 - Dark/light DocMind workspace UI.
@@ -58,10 +58,9 @@ docs/next-improvements.md
 
 ### Better Retrieval
 
-- Move vector storage from JSON text to `pgvector`.
-- Add similarity search in PostgreSQL instead of in-memory Java scanning.
+- Keep exact PostgreSQL `pgvector` search healthy and notebook-owner scoped.
 - Keep notebook ownership checks on every retrieval path.
-- Add conversation-aware query rewriting, chunk metadata, source previews, and re-indexing.
+- Add conversation-aware query rewriting, chunk metadata, source previews, hybrid search, reranking, ANN indexing when justified, and re-indexing.
 
 ### Source Management
 
