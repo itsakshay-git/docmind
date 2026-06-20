@@ -76,5 +76,6 @@ Spring AI PGvector setup requires PostgreSQL vector-related extensions and can i
 - Streaming chat progressively renders tokens and saves one final assistant message with citations.
 - `pgvector` search returns only chunks from notebooks owned by the authenticated user.
 - Quota/rate-limit failures continue to produce helpful messages instead of raw provider stack details.
+- Production pgvector rollout is verified by Neon `vector` extension checks, Render health, source ingestion, chat retrieval, follow-up chat, and one Studio artifact smoke test.
 - Studio media remains available after backend restarts and redeploys once the production object-storage adapter is enabled.
 - Docs, API contracts, and deployment notes are updated in the same PR as each feature.

@@ -36,10 +36,11 @@
 - Backend multi-stage Dockerfile for container deployment.
 - Render and Vercel deployment config templates.
 - Prometheus-ready Actuator metrics endpoint plus custom AI/RAG operation metrics.
+- Pgvector RAG upgrade merged into `main` with exact PostgreSQL cosine search.
 
 ## Current Milestone
 
-Polish the deployed v1 into a stronger portfolio application with better conversational quality, retrieval scale, durable generated media, quota handling, and production observability.
+Polish the deployed v1 into a stronger portfolio application with production pgvector rollout verification, durable generated media, richer source quality, quota handling, and production observability.
 
 Detailed post-v1 backlog:
 

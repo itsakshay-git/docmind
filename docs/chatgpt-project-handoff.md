@@ -1,3 +1,5 @@
+> Historical note: this file is preserved for project history only. It describes an earlier MVP state; current architecture uses PostgreSQL `pgvector` exact search, streaming chat, bounded chat memory, and the newer docs are the source of truth.
+
 # DocMind ChatGPT Project Handoff
 
 Source: `C:\Users\Akshay\Downloads\DocMind Project Handoff Summary.pdf`

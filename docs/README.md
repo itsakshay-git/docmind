@@ -51,7 +51,7 @@ This folder is the project memory for DocMind. It is intentionally split into pu
 These files are useful project history and AI/coding-agent context. They are not the main recruiter-facing story, but they help future contributors or assistants understand how the codebase evolved.
 
 - `chatgpt-project-handoff.md`
-  Historical handoff from the original ChatGPT Project workspace.
+  Historical handoff from the original ChatGPT Project workspace. It is not the current architecture source of truth.
 - `frontend-structure-snapshot.md`
   Snapshot of the frontend structure before/through the safe refactor.
 - `frontend-refactor-rules.md`

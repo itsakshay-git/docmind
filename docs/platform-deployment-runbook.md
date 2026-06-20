@@ -37,6 +37,16 @@ SPRING_DATASOURCE_PASSWORD=<neon-password>
 
 Flyway runs automatically when the backend starts. Do not manually create DocMind tables in Neon.
 
+Before deploying the pgvector-backed backend, confirm Neon has the vector extension available. Run this in the Neon SQL editor:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS vector;
+SELECT extversion FROM pg_extension WHERE extname = 'vector';
+SELECT to_regtype('vector')::text;
+```
+
+Expected result: the extension query returns a version and `to_regtype` returns `vector`. If the SQL fails because extension creation is blocked, enable pgvector from Neon first or use a database role with extension permission before redeploying Render.
+
 ## 2. Render Backend
 
 Recommended first backend deploy: Render Web Service from the backend Dockerfile.
@@ -95,7 +105,7 @@ Render should expose the backend URL after deploy:
 https://<your-render-service>.onrender.com
 ```
 
-Smoke check:
+Smoke check after Render deploy:
 
 ```text
 GET https://<your-render-service>.onrender.com/actuator/health
@@ -108,6 +118,8 @@ Expected:
   "status": "UP"
 }
 ```
+
+If Render fails during Flyway V13 with `extension "vector" is not available`, confirm the Neon pgvector SQL above and trigger a manual Render redeploy.
 
 ## 3. Vercel Frontend
 
@@ -173,11 +185,12 @@ https://<your-vercel-app>.vercel.app
 
 3. Register or log in with the demo account.
 4. Create a notebook.
-5. Add a website source.
+5. Add a website, PDF, or pasted transcript source.
 6. Confirm the source status becomes indexed.
-7. Ask a chat question based on the source.
-8. Generate one Studio artifact.
-9. Delete the test notebook.
+7. Ask a chat question based on the source and confirm the answer cites notebook-owned context.
+8. Ask one follow-up question to confirm bounded chat memory still works.
+9. Generate one Studio artifact.
+10. Delete the test notebook if it was created only for the smoke test.
 
 ## 6. Known MVP Limits
 

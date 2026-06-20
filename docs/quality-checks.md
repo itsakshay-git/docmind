@@ -92,3 +92,25 @@ corepack pnpm build
 ```
 
 The current CI baseline does not require `GEMINI_API_KEY` or a manually configured PostgreSQL service container. Backend integration tests use Testcontainers and GitHub-hosted Docker.
+
+## Production Pgvector Smoke Check
+
+After deploying a pgvector-backed backend to Render with Neon Postgres:
+
+1. In Neon SQL editor, confirm:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS vector;
+SELECT extversion FROM pg_extension WHERE extname = 'vector';
+SELECT to_regtype('vector')::text;
+```
+
+Expected: `to_regtype` returns `vector`.
+
+2. Confirm backend health:
+
+```powershell
+Invoke-RestMethod https://docmind-2fa9.onrender.com/actuator/health
+```
+
+3. Open the Vercel frontend, upload or paste a source, ask a source-grounded chat question, ask one follow-up question, and generate one Studio artifact.
