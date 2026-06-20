@@ -39,10 +39,10 @@ Notebook workspace with source-grounded chat and Studio flashcards:
 - Notebook-scoped source ingestion for PDFs, websites, YouTube transcripts, and pasted transcripts.
 - Text extraction, chunking, Gemini embeddings, and PostgreSQL-backed persistence.
 - Notebook-scoped semantic retrieval with cosine similarity.
-- Grounded chat answers with persisted chat history.
+- Grounded chat answers with persisted notebook chat history.
 - Studio mini apps for flashcards, quiz, briefing, podcast audio/script, and infographic image generation.
 - JWT authentication, profile settings, notebook/source management, and responsive dark/light UI.
-- Local Docker PostgreSQL, Spring Boot Actuator health checks, GitHub Actions CI, Testcontainers, and deployment configs for Render/Vercel.
+- Local Docker PostgreSQL, Spring Boot Actuator health/custom AI metrics, GitHub Actions CI, Testcontainers, and deployment configs for Render/Vercel.
 
 ## System Design
 
@@ -185,7 +185,10 @@ AI: Google Gemini
 
 ## Notes
 
-- Studio audio and infographic files are currently stored on the backend filesystem.
-- Production object storage is planned as a future hardening step.
-- Gemini quota can affect embedding, chat, and Studio generation.
+- Studio audio and infographic files currently use the filesystem-backed `StudioMediaStorage` adapter.
+- A durable object-storage adapter is planned as the next media hardening step.
+- Chat history is persisted, recent prior turns are used as bounded conversational memory, and chat responses stream progressively in the UI.
+- Embeddings currently use JSON text storage and Java cosine search; `pgvector` is the planned retrieval upgrade.
+- Gemini quota can affect embedding, chat, and Studio generation; provider errors are normalized into user-safe messages.
 - YouTube transcript ingestion is best effort; pasted transcript is the reliable demo path.
+- Detailed post-v1 backlog: `docs/next-improvements.md`.

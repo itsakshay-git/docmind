@@ -131,13 +131,14 @@ Failure behavior:
 User asks question
   -> frontend sends notebook-scoped chat request
   -> backend stores user message
-  -> question is embedded with Gemini
+  -> question plus bounded chat memory is embedded with Gemini
   -> candidate notebook chunks are loaded
   -> stored JSON vectors are parsed
   -> cosine similarity ranks chunks
   -> top chunks are sent to Gemini as grounded context
-  -> assistant answer is stored
-  -> frontend renders Markdown/code response
+  -> assistant tokens stream to the frontend
+  -> final assistant answer is stored
+  -> frontend reconciles the persisted Markdown/code response
 ```
 
 Current retrieval design:
@@ -146,12 +147,14 @@ Current retrieval design:
 - Similarity runs in Java memory.
 - Search is restricted to one notebook owned by the authenticated user.
 - Default retrieval count is kept small for predictable latency and cost.
+- Chat history is persisted for display and deletion, and recent prior turns are passed as bounded model memory during notebook chat answer generation.
 
 Future retrieval upgrade:
 
 - Move vectors to PostgreSQL `pgvector`.
 - Push similarity search into the database.
-- Add better chunk metadata, re-indexing, and source previews.
+- Improve conversation-aware query rewriting, chunk metadata, re-indexing, and source previews.
+- Continue hardening streaming chat, cancellation behavior, and user-facing error recovery while preserving the existing non-streaming API fallback.
 
 ## 7. Studio Artifact Flow
 
@@ -175,13 +178,13 @@ Artifact types:
 Persistence:
 
 - Artifact metadata, Markdown, JSON, and source chunk IDs are stored in PostgreSQL.
-- Podcast audio is stored on backend filesystem.
-- Infographic images are stored on backend filesystem.
+- Podcast audio is stored through `StudioMediaStorage`; the default adapter writes to the backend filesystem.
+- Infographic images are stored through `StudioMediaStorage`; the default adapter writes to the backend filesystem.
 
 Production note:
 
-- Filesystem storage is acceptable for the MVP.
-- Durable production storage should move to S3, Cloudflare R2, Supabase Storage, or similar object storage.
+- Filesystem storage is acceptable for local MVP demos and is isolated behind a storage interface.
+- Durable production storage should add an S3, Cloudflare R2, Supabase Storage, or similar `StudioMediaStorage` adapter.
 
 ## 8. Data Model
 
@@ -295,13 +298,15 @@ Current monitoring:
 - Spring Boot Actuator.
 - Public `/actuator/health`.
 - Exposed `info`, `metrics`, and `prometheus` endpoints behind authentication.
+- Custom Micrometer metrics track AI/RAG operation duration, errors, and item counts.
 - Render health check integration.
+- AI provider errors are mapped to user-safe responses, including 429 for quota/rate-limit and 503 for transient provider/network failures.
 
 Future monitoring:
 
 - Grafana dashboard.
 - Structured logs.
-- Request latency/error tracking.
+- Dashboarding and alerting for the custom AI/RAG latency/error metrics.
 
 ## 13. Known Tradeoffs
 
@@ -309,9 +314,10 @@ Current MVP decisions:
 
 - Embeddings are JSON text, not `pgvector`.
 - Java in-memory cosine search is used for retrieval.
-- Studio files use backend filesystem storage.
+- Chat history is persisted, and bounded recent-turn memory is included in notebook chat prompts.
+- Studio files use a filesystem-backed `StudioMediaStorage` adapter.
 - YouTube auto-transcript is best effort.
-- Real-time streaming chat is not implemented yet.
+- Streaming chat now uses a server-sent events endpoint while keeping the non-streaming endpoint as a fallback.
 
 Why these choices are acceptable:
 
@@ -323,10 +329,17 @@ Why these choices are acceptable:
 
 High-value next steps:
 
-- Move embeddings to `pgvector`.
+- Harden bounded conversational memory for follow-up questions.
 - Add streaming assistant responses.
-- Add object storage for Studio media.
+- Move embeddings to `pgvector`.
+- Add conversation-aware retrieval, source previews, and re-indexing.
+- Add a production object-storage adapter for Studio media.
 - Add Brave Search import.
-- Add source preview and re-indexing.
-- Add Prometheus/Grafana or hosted observability.
-- Add rate-limit friendly AI retry and user-facing quota errors.
+- Add Prometheus/Grafana or hosted dashboards for the custom AI/RAG metrics.
+- Add bounded retry/backoff policies and richer AI error metrics.
+
+Detailed backlog:
+
+```text
+docs/next-improvements.md
+```

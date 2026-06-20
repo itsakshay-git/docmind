@@ -21,7 +21,7 @@ For a simple resume-friendly deployment:
 Frontend: Vercel
 Backend: Render
 Database: Neon Postgres
-Files: backend filesystem for MVP, object storage later
+Files: filesystem-backed Studio media adapter for MVP, object storage adapter later
 ```
 
 This keeps setup manageable while still showing a real full-stack deployment story.
@@ -110,14 +110,14 @@ Current Studio files:
 - Podcast audio: `storage/studio-audio`
 - Infographic images: `storage/studio-images`
 
-This is acceptable for local MVP demos. For production, platforms without persistent disks may lose these files on restart/redeploy.
+This filesystem adapter is acceptable for local MVP demos. For production, platforms without persistent disks may lose these files on restart/redeploy unless a persistent disk or object-storage adapter is used.
 
 Production options:
 
 - Render persistent disk for short-term MVP.
 - Cloudflare R2, AWS S3, Supabase Storage, or similar object storage for durable file storage.
 
-Object storage is a future milestone, not part of the current deployment readiness step.
+A production object-storage adapter is a future milestone; the current code path is ready for that swap behind `StudioMediaStorage`.
 
 ## Health Check
 
@@ -144,6 +144,14 @@ The backend also exposes Prometheus-format metrics through Spring Boot Actuator:
 ```text
 GET /actuator/prometheus
 ```
+
+DocMind-specific AI/RAG metrics include:
+
+- `docmind_ai_operation_duration_seconds`
+- `docmind_ai_operation_errors_total`
+- `docmind_ai_operation_items`
+
+Use these for dashboards covering embedding generation, retrieval, chat answer generation, streaming completion, and Studio artifact generation.
 
 Only `/actuator/health` is public. Keep `/actuator/prometheus` protected unless a private Prometheus scraper or monitoring platform needs access through a controlled network/auth strategy.
 

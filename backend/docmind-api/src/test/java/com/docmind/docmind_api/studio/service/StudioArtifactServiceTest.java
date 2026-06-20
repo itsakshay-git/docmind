@@ -1,5 +1,7 @@
 package com.docmind.docmind_api.studio.service;
 
+import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import com.docmind.docmind_api.notebook.entity.Notebook;
 import com.docmind.docmind_api.notebook.repository.NotebookRepository;
 import com.docmind.docmind_api.rag.dto.SemanticSearchRequest;
@@ -15,9 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.test.util.ReflectionTestUtils;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,6 +31,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class StudioArtifactServiceTest {
+
+    private final AiOperationMetrics aiOperationMetrics =
+            new AiOperationMetrics(
+                    new SimpleMeterRegistry()
+            );
 
     private final NotebookRepository notebookRepository =
             mock(NotebookRepository.class);
@@ -50,6 +55,9 @@ class StudioArtifactServiceTest {
     private final InfographicImageRenderer infographicImageRenderer =
             mock(InfographicImageRenderer.class);
 
+    private final StudioMediaStorage studioMediaStorage =
+            mock(StudioMediaStorage.class);
+
     private final StudioArtifactService studioArtifactService =
             new StudioArtifactService(
                     notebookRepository,
@@ -58,7 +66,9 @@ class StudioArtifactServiceTest {
                     chatModel,
                     geminiTtsService,
                     infographicImageRenderer,
-                    new ObjectMapper()
+                    new ObjectMapper(),
+                    studioMediaStorage,
+                    aiOperationMetrics
             );
 
     @Test
@@ -196,6 +206,7 @@ class StudioArtifactServiceTest {
             return artifact;
         });
 
+
         StudioArtifactResponse response =
                 studioArtifactService.generateArtifact(
                         notebookId,
@@ -276,12 +287,6 @@ class StudioArtifactServiceTest {
         UUID notebookId =
                 UUID.randomUUID();
 
-        ReflectionTestUtils.setField(
-                studioArtifactService,
-                "imageStorageDir",
-                "storage/studio-images"
-        );
-
         stubOwnedNotebookWithContext(notebookId);
 
         when(
@@ -322,6 +327,24 @@ class StudioArtifactServiceTest {
             return artifact;
         });
 
+        when(
+                infographicImageRenderer.renderPngBytes(
+                        any(JsonNode.class)
+                )
+        ).thenReturn(
+                new byte[]{1, 2, 3}
+        );
+
+        when(
+                studioMediaStorage.saveImage(
+                        any(UUID.class),
+                        any(byte[].class),
+                        any(String.class)
+                )
+        ).thenReturn(
+                "storage/studio-images/test.png"
+        );
+
         StudioArtifactResponse response =
                 studioArtifactService.generateArtifact(
                         notebookId,
@@ -332,21 +355,17 @@ class StudioArtifactServiceTest {
         assertThat(response.isImageAvailable())
                 .isTrue();
 
-        ArgumentCaptor<Path> pathCaptor =
-                ArgumentCaptor.forClass(
-                        Path.class
-                );
-
         verify(infographicImageRenderer)
-                .renderPng(
-                        any(JsonNode.class),
-                        pathCaptor.capture()
+                .renderPngBytes(
+                        any(JsonNode.class)
                 );
 
-        assertThat(pathCaptor.getValue().toString())
-                .contains("storage")
-                .contains("studio-images")
-                .endsWith(".png");
+        verify(studioMediaStorage)
+                .saveImage(
+                        any(UUID.class),
+                        any(byte[].class),
+                        any(String.class)
+                );
     }
 
     private void stubOwnedNotebookWithContext(

@@ -198,6 +198,8 @@ POST /api/v1/rag/notebooks/{notebookId}/ask
 
 ## Chat History
 
+The current API stores full notebook chat history in DocMind tables. During notebook chat answers, the backend derives bounded prompt memory from recent prior turns so follow-up questions can use conversation context without sending the entire conversation to the model.
+
 ### List Notebook Messages
 
 ```http
@@ -232,6 +234,61 @@ POST /api/v1/chat/notebooks/{notebookId}/messages
 ```
 
 `topK` controls how many retrieved source chunks are used as chat context.
+
+Response stores and returns both sides of the exchange:
+
+```json
+{
+  "userMessage": {
+    "id": "uuid",
+    "role": "USER",
+    "content": "What are the most important ideas?",
+    "sources": [],
+    "createdAt": "2026-06-12T10:30:00"
+  },
+  "assistantMessage": {
+    "id": "uuid",
+    "role": "ASSISTANT",
+    "content": "The document explains...",
+    "sources": [
+      {
+        "chunkId": "uuid",
+        "documentId": "uuid",
+        "score": 0.82
+      }
+    ],
+    "createdAt": "2026-06-12T10:30:04"
+  }
+}
+```
+
+The frontend exposes this as a compact `Context` selector. Balanced mode sends `topK: 5`.
+
+### Stream Notebook Message
+
+```http
+POST /api/v1/chat/notebooks/{notebookId}/messages/stream
+Accept: text/event-stream
+Content-Type: application/json
+```
+
+```json
+{
+  "content": "Compare that with the second idea.",
+  "topK": 5
+}
+```
+
+Event names:
+
+- `userMessage`: persisted user message payload.
+- `token`: JSON payload containing a partial assistant text token.
+- `sources`: retrieved citation payload.
+- `assistantMessage`: persisted final assistant message payload.
+- `error`: user-safe failure message.
+- `done`: stream completion marker.
+
+The existing non-streaming endpoint remains the compatibility path. The streaming endpoint persists the same final assistant message and citations once generation completes.
 
 ### Clear Notebook Messages
 
@@ -293,37 +350,18 @@ Response:
 }
 ```
 
-All artifacts store Markdown and JSON internally. The frontend treats flashcards, quizzes, and briefings as in-app experiences instead of download files. Podcast artifacts attempt Gemini TTS audio generation and expose audio playback/download when `audioAvailable` is `true`. Infographic artifacts render a server-side PNG under `storage/studio-images/`, expose authenticated image preview, and support PNG/JPG download when `imageAvailable` is `true`.
+All artifacts store Markdown and JSON internally. The frontend treats flashcards, quizzes, and briefings as in-app experiences instead of download files. Podcast artifacts attempt Gemini TTS audio generation and expose audio playback/download when `audioAvailable` is `true`. Infographic artifacts render server-side PNG bytes, store them through `StudioMediaStorage` using `storage/studio-images/` by default, expose authenticated image preview, and support PNG/JPG download when `imageAvailable` is `true`.
 
-Response stores and returns both sides of the exchange:
 
-```json
-{
-  "userMessage": {
-    "id": "uuid",
-    "role": "USER",
-    "content": "What are the most important ideas?",
-    "sources": [],
-    "createdAt": "2026-06-12T10:30:00"
-  },
-  "assistantMessage": {
-    "id": "uuid",
-    "role": "ASSISTANT",
-    "content": "The document explains...",
-    "sources": [
-      {
-        "chunkId": "uuid",
-        "documentId": "uuid",
-        "score": 0.82
-      }
-    ],
-    "createdAt": "2026-06-12T10:30:04"
-  }
-}
-```
+## AI Provider Errors
 
-The frontend exposes this as a compact `Context` selector. Balanced mode sends `topK: 5`.
+Gemini-backed endpoints normalize provider failures into user-safe API errors:
 
+- `429 Too Many Requests`: Gemini quota or rate limit was reached.
+- `502 Bad Gateway`: Gemini could not complete the request.
+- `503 Service Unavailable`: Gemini or the network is temporarily unavailable.
+
+The same user-safe messages are used by the streaming chat `error` event.
 ## User Settings
 
 ### Get Profile

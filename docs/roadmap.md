@@ -16,6 +16,9 @@
 - React, TypeScript, Vite frontend.
 - Dark/light DocMind workspace UI.
 - Persistent notebook chat history.
+- Bounded conversational memory for follow-up chat questions.
+- Streaming notebook chat endpoint and progressive frontend rendering.
+- User-safe AI provider error classification for quota, rate-limit, and transient failures.
 - Basic settings page for profile, password, notebooks, and documents.
 - Notebook library hover actions for deleting notebooks.
 - Notebook title editing from library cards.
@@ -32,30 +35,33 @@
 - Testcontainers backend smoke test for PostgreSQL, Flyway, JPA, and app context startup.
 - Backend multi-stage Dockerfile for container deployment.
 - Render and Vercel deployment config templates.
-- Prometheus-ready Actuator metrics endpoint.
+- Prometheus-ready Actuator metrics endpoint plus custom AI/RAG operation metrics.
 
 ## Current Milestone
 
-Prepare DocMind for a clean first deployment without adding cloud-specific coupling.
+Polish the deployed v1 into a stronger portfolio application with better conversational quality, retrieval scale, durable generated media, quota handling, and production observability.
+
+Detailed post-v1 backlog:
+
+```text
+docs/next-improvements.md
+```
 
 ## Next Milestones
 
-### Studio V2
+### Conversational Chat
 
-- Add PDF export for Studio artifacts.
-- Improve infographic rendering templates and add richer downloadable study formats.
+- Keep full persisted chat history in DocMind's `chat_sessions` and `chat_messages` tables.
+- Harden bounded chat memory with regression coverage for follow-up questions.
+- Keep memory notebook-scoped and owner-scoped.
+- Harden streaming chat UX, cancellation behavior, and error recovery while preserving final assistant persistence.
 
 ### Better Retrieval
 
 - Move vector storage from JSON text to `pgvector`.
 - Add similarity search in PostgreSQL instead of in-memory Java scanning.
 - Keep notebook ownership checks on every retrieval path.
-
-### Streaming Answers
-
-- Add a streaming chat endpoint.
-- Render assistant tokens progressively in React.
-- Keep the persisted final message once streaming completes.
+- Add conversation-aware query rewriting, chunk metadata, source previews, and re-indexing.
 
 ### Source Management
 
@@ -66,8 +72,14 @@ Prepare DocMind for a clean first deployment without adding cloud-specific coupl
 
 ### Production Hardening
 
-- Add rate-limit friendly AI retry handling.
+- Add bounded retry/backoff policies for transient AI failures.
 - Add structured logging.
-- Add object storage for Studio audio and infographic files.
-- Add Grafana dashboards or hosted observability after deployment.
+- Add a production object-storage adapter for Studio audio and infographic files.
+- Add Grafana dashboards or hosted observability for the custom AI/RAG metrics after deployment.
 - Add production compose if needed.
+
+### Studio V2
+
+- Add PDF export for Studio artifacts.
+- Improve infographic rendering templates and add richer downloadable study formats.
+- Add regenerate actions for failed podcast audio or image generation.

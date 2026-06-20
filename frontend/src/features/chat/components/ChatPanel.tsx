@@ -1,4 +1,4 @@
-﻿import { Bot, Check, Copy, Send, Trash2, User } from "lucide-react";
+import { Bot, Check, Copy, Send, Trash2, User } from "lucide-react";
 import { ComponentPropsWithoutRef, useEffect, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -29,6 +29,7 @@ export function ChatPanel({
 }: ChatPanelProps) {
   const [content, setContent] = useState("");
   const threadRef = useRef<HTMLDivElement>(null);
+  const hasStreamingMessage = messages.some((message) => message.streaming);
 
   useEffect(() => {
     threadRef.current?.scrollTo({
@@ -111,9 +112,13 @@ export function ChatPanel({
             <div className="chat-avatar">{message.role === "USER" ? <User size={17} /> : <Bot size={17} />}</div>
             <div className="chat-bubble">
               {message.role === "ASSISTANT" ? (
-                <ReactMarkdown components={{ code: CodeBlock }} remarkPlugins={[remarkGfm]}>
-                  {message.content}
-                </ReactMarkdown>
+                message.content ? (
+                  <ReactMarkdown components={{ code: CodeBlock }} remarkPlugins={[remarkGfm]}>
+                    {message.content}
+                  </ReactMarkdown>
+                ) : (
+                  <span className="chat-bubble--loading">Thinking...</span>
+                )
               ) : (
                 message.content
               )}
@@ -131,7 +136,7 @@ export function ChatPanel({
           </article>
         ) : null}
 
-        {isBusy ? (
+        {isBusy && !hasStreamingMessage ? (
           <article className="chat-message chat-message--assistant">
             <div className="chat-avatar">
               <Bot size={17} />

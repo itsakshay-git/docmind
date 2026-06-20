@@ -5,6 +5,7 @@ import com.docmind.docmind_api.chat.dto.ChatMessageRequest;
 import com.docmind.docmind_api.chat.dto.ChatMessageResponse;
 import com.docmind.docmind_api.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 import java.util.UUID;
@@ -44,6 +46,23 @@ public class ChatController {
     ) {
 
         return chatService.sendMessage(
+                notebookId,
+                request,
+                authentication.getName()
+        );
+    }
+
+    @PostMapping(
+            value = "/notebooks/{notebookId}/messages/stream",
+            produces = MediaType.TEXT_EVENT_STREAM_VALUE
+    )
+    public SseEmitter streamMessage(
+            @PathVariable UUID notebookId,
+            @RequestBody ChatMessageRequest request,
+            Authentication authentication
+    ) {
+
+        return chatService.streamMessage(
                 notebookId,
                 request,
                 authentication.getName()

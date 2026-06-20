@@ -55,37 +55,24 @@ public class GlobalExceptionHandler {
             HttpServletRequest request
     ) {
 
-        HttpStatus status =
-                isAiProviderError(
+        AiProviderError providerError =
+                AiProviderErrorClassifier.classify(
                         exception
-                )
-                        ? HttpStatus.BAD_GATEWAY
-                        : HttpStatus.BAD_REQUEST;
+                );
+
+        if (providerError.providerError()) {
+            return error(
+                    providerError.status(),
+                    providerError.userMessage(),
+                    request
+            );
+        }
 
         return error(
-                status,
+                HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
                 request
         );
-    }
-
-    private boolean isAiProviderError(
-            RuntimeException exception
-    ) {
-
-        String message =
-                exception.getMessage();
-
-        if (message == null) {
-            return false;
-        }
-
-        String normalized =
-                message.toLowerCase();
-
-        return normalized.contains("generate content")
-                || normalized.contains("quota")
-                || normalized.contains("embedding");
     }
 
     private ResponseEntity<ApiErrorResponse> error(

@@ -1,5 +1,6 @@
 package com.docmind.docmind_api.studio.service;
 
+import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
 import com.docmind.docmind_api.notebook.repository.NotebookRepository;
 import com.docmind.docmind_api.rag.dto.SemanticSearchRequest;
 import com.docmind.docmind_api.rag.dto.SemanticSearchResult;
@@ -12,14 +13,10 @@ import com.docmind.docmind_api.studio.repository.StudioArtifactRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,12 +34,8 @@ public class StudioArtifactService {
     private final GeminiTtsService geminiTtsService;
     private final InfographicImageRenderer infographicImageRenderer;
     private final ObjectMapper objectMapper;
-
-    @Value("${docmind.studio.audio-storage-dir}")
-    private String audioStorageDir;
-
-    @Value("${docmind.studio.image-storage-dir}")
-    private String imageStorageDir;
+    private final StudioMediaStorage studioMediaStorage;
+    private final AiOperationMetrics aiOperationMetrics;
 
     @Transactional(readOnly = true)
     public List<StudioArtifactResponse> listArtifacts(
@@ -81,6 +74,25 @@ public class StudioArtifactService {
 
     @Transactional
     public StudioArtifactResponse generateArtifact(
+            UUID notebookId,
+            GenerateStudioArtifactRequest request,
+            String ownerEmail
+    ) {
+
+        return aiOperationMetrics.record(
+                "studio.generate",
+                artifactTypeVariant(
+                        request
+                ),
+                () -> generateArtifactObserved(
+                        notebookId,
+                        request,
+                        ownerEmail
+                )
+        );
+    }
+
+    private StudioArtifactResponse generateArtifactObserved(
             UUID notebookId,
             GenerateStudioArtifactRequest request,
             String ownerEmail
@@ -157,11 +169,32 @@ public class StudioArtifactService {
             );
         }
 
-        return toResponse(
+        StudioArtifact saved =
                 studioArtifactRepository.save(
                         artifact
-                )
+                );
+
+        aiOperationMetrics.recordItems(
+                "studio.generate",
+                type.name(),
+                "context_chunks",
+                context.size()
         );
+
+        return toResponse(
+                saved
+        );
+    }
+
+    private String artifactTypeVariant(
+            GenerateStudioArtifactRequest request
+    ) {
+
+        if (request == null || request.getType() == null) {
+            return "unknown";
+        }
+
+        return request.getType().name();
     }
 
     @Transactional
@@ -656,26 +689,12 @@ public class StudioArtifactService {
                             artifact.getJsonContent()
                     );
 
-            Files.createDirectories(
-                    Paths.get(audioStorageDir)
-            );
-
-            Path audioPath =
-                    Paths.get(
-                            audioStorageDir,
-                            artifact.getNotebookId()
-                                    + "-"
-                                    + UUID.randomUUID()
-                                    + ".wav"
-                    );
-
-            Files.write(
-                    audioPath,
-                    audio
-            );
-
             artifact.setAudioFilePath(
-                    audioPath.toString()
+                    studioMediaStorage.saveAudio(
+                            artifact.getNotebookId(),
+                            audio,
+                            "wav"
+                    )
             );
 
             artifact.setAudioMimeType(
@@ -697,14 +716,9 @@ public class StudioArtifactService {
             return;
         }
 
-        try {
-            Files.deleteIfExists(
-                    Path.of(
-                            artifact.getAudioFilePath()
-                    )
-            );
-        } catch (Exception ignored) {
-        }
+        studioMediaStorage.delete(
+                artifact.getAudioFilePath()
+        );
     }
 
     private void generateInfographicImage(
@@ -712,22 +726,14 @@ public class StudioArtifactService {
             JsonNode data
     ) {
 
-        Path imagePath =
-                Paths.get(
-                        imageStorageDir,
-                        artifact.getNotebookId()
-                                + "-"
-                                + UUID.randomUUID()
-                                + ".png"
-                );
-
-        infographicImageRenderer.renderPng(
-                data,
-                imagePath
-        );
-
         artifact.setImageFilePath(
-                imagePath.toString()
+                studioMediaStorage.saveImage(
+                        artifact.getNotebookId(),
+                        infographicImageRenderer.renderPngBytes(
+                                data
+                        ),
+                        "png"
+                )
         );
 
         artifact.setImageMimeType(
@@ -743,14 +749,9 @@ public class StudioArtifactService {
             return;
         }
 
-        try {
-            Files.deleteIfExists(
-                    Path.of(
-                            artifact.getImageFilePath()
-                    )
-            );
-        } catch (Exception ignored) {
-        }
+        studioMediaStorage.delete(
+                artifact.getImageFilePath()
+        );
     }
 
     private List<String> parseSourceChunkIds(

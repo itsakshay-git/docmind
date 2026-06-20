@@ -1,5 +1,6 @@
 package com.docmind.docmind_api.rag.service;
 
+import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
 import com.docmind.docmind_api.document.entity.Document;
 import com.docmind.docmind_api.document.repository.DocumentRepository;
 import com.docmind.docmind_api.notebook.repository.NotebookRepository;
@@ -35,8 +36,25 @@ public class RagSearchService {
     private final EmbeddingRepository embeddingRepository;
     private final EmbeddingModel embeddingModel;
     private final ObjectMapper objectMapper;
+    private final AiOperationMetrics aiOperationMetrics;
 
     public List<SemanticSearchResult> search(
+            UUID notebookId,
+            SemanticSearchRequest request,
+            String ownerEmail
+    ) {
+
+        return aiOperationMetrics.record(
+                "rag.search",
+                () -> searchObserved(
+                        notebookId,
+                        request,
+                        ownerEmail
+                )
+        );
+    }
+
+    private List<SemanticSearchResult> searchObserved(
             UUID notebookId,
             SemanticSearchRequest request,
             String ownerEmail
@@ -55,6 +73,9 @@ public class RagSearchService {
                 );
 
         if (documents.isEmpty()) {
+            recordResultCount(
+                    0
+            );
             return List.of();
         }
 
@@ -69,6 +90,9 @@ public class RagSearchService {
                 );
 
         if (chunks.isEmpty()) {
+            recordResultCount(
+                    0
+            );
             return List.of();
         }
 
@@ -89,6 +113,9 @@ public class RagSearchService {
                 );
 
         if (embeddings.isEmpty()) {
+            recordResultCount(
+                    0
+            );
             return List.of();
         }
 
@@ -102,21 +129,39 @@ public class RagSearchService {
                         request.getTopK()
                 );
 
-        return embeddings.stream()
-                .map(embedding -> toResult(
-                        embedding,
-                        chunksById,
-                        questionVector
-                ))
-                .filter(result -> result != null)
-                .sorted(
-                        Comparator.comparing(
-                                        SemanticSearchResult::getScore
-                                )
-                                .reversed()
-                )
-                .limit(limit)
-                .toList();
+        List<SemanticSearchResult> results =
+                embeddings.stream()
+                        .map(embedding -> toResult(
+                                embedding,
+                                chunksById,
+                                questionVector
+                        ))
+                        .filter(result -> result != null)
+                        .sorted(
+                                Comparator.comparing(
+                                                SemanticSearchResult::getScore
+                                        )
+                                        .reversed()
+                        )
+                        .limit(limit)
+                        .toList();
+
+        recordResultCount(
+                results.size()
+        );
+
+        return results;
+    }
+
+    private void recordResultCount(
+            int resultCount
+    ) {
+
+        aiOperationMetrics.recordItems(
+                "rag.search",
+                "results",
+                resultCount
+        );
     }
 
     private SemanticSearchResult toResult(

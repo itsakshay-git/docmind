@@ -1,7 +1,10 @@
 package com.docmind.docmind_api.rag.service;
 
+import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import com.docmind.docmind_api.rag.dto.RagAskRequest;
 import com.docmind.docmind_api.rag.dto.RagAskResponse;
+import com.docmind.docmind_api.rag.dto.RagConversationMessage;
 import com.docmind.docmind_api.rag.dto.SemanticSearchRequest;
 import com.docmind.docmind_api.rag.dto.SemanticSearchResult;
 import org.junit.jupiter.api.Test;
@@ -20,6 +23,11 @@ import static org.mockito.Mockito.when;
 
 class RagAnswerServiceTest {
 
+    private final AiOperationMetrics aiOperationMetrics =
+            new AiOperationMetrics(
+                    new SimpleMeterRegistry()
+            );
+
     private final RagSearchService ragSearchService =
             mock(RagSearchService.class);
 
@@ -29,7 +37,8 @@ class RagAnswerServiceTest {
     private final RagAnswerService ragAnswerService =
             new RagAnswerService(
                     ragSearchService,
-                    chatModel
+                    chatModel,
+                    aiOperationMetrics
             );
 
     @Test
@@ -98,7 +107,9 @@ class RagAnswerServiceTest {
 
         assertThat(promptCaptor.getValue())
                 .contains(
-                        "using only the context",
+                        "using only the notebook context",
+                        "Recent conversation:",
+                        "No prior messages in this chat.",
                         "fenced Markdown code blocks",
                         "Do not include internal IDs",
                         "Variable names can contain letters and digits.",
@@ -109,6 +120,106 @@ class RagAnswerServiceTest {
                 .doesNotContain(
                         "chunk-1",
                         "document-1"
+                );
+    }
+
+    @Test
+    void includesConversationMemoryInSearchAndPromptForFollowUps() {
+        UUID notebookId =
+                UUID.randomUUID();
+
+        RagAskRequest request =
+                request(
+                        "Explain the second one.",
+                        5
+                );
+
+        request.setConversationMemory(
+                List.of(
+                        new RagConversationMessage(
+                                "USER",
+                                "List the main Java naming rules."
+                        ),
+                        new RagConversationMessage(
+                                "ASSISTANT",
+                                "First, use letters. Second, avoid reserved keywords."
+                        )
+                )
+        );
+
+        when(
+                ragSearchService.search(
+                        any(UUID.class),
+                        any(SemanticSearchRequest.class),
+                        any(String.class)
+                )
+        ).thenReturn(
+                List.of(
+                        new SemanticSearchResult(
+                                "chunk-2",
+                                "document-1",
+                                "Reserved keywords cannot be used as Java variable names.",
+                                0.88
+                        )
+                )
+        );
+
+        when(
+                chatModel.call(
+                        any(String.class)
+                )
+        ).thenReturn(
+                "The second rule means you cannot use reserved keywords as variable names."
+        );
+
+        RagAskResponse response =
+                ragAnswerService.ask(
+                        notebookId,
+                        request,
+                        "user@example.com"
+                );
+
+        assertThat(response.getAnswer())
+                .contains("reserved keywords");
+
+        ArgumentCaptor<SemanticSearchRequest> searchCaptor =
+                ArgumentCaptor.forClass(
+                        SemanticSearchRequest.class
+                );
+
+        verify(ragSearchService)
+                .search(
+                        any(UUID.class),
+                        searchCaptor.capture(),
+                        any(String.class)
+                );
+
+        assertThat(searchCaptor.getValue().getQuestion())
+                .contains(
+                        "Recent conversation:",
+                        "USER: List the main Java naming rules.",
+                        "ASSISTANT: First, use letters. Second, avoid reserved keywords.",
+                        "Current question:",
+                        "Explain the second one."
+                );
+
+        ArgumentCaptor<String> promptCaptor =
+                ArgumentCaptor.forClass(
+                        String.class
+                );
+
+        verify(chatModel)
+                .call(
+                        promptCaptor.capture()
+                );
+
+        assertThat(promptCaptor.getValue())
+                .contains(
+                        "Use the recent conversation only to understand follow-up wording",
+                        "USER: List the main Java naming rules.",
+                        "ASSISTANT: First, use letters. Second, avoid reserved keywords.",
+                        "Reserved keywords cannot be used as Java variable names.",
+                        "Explain the second one."
                 );
     }
 

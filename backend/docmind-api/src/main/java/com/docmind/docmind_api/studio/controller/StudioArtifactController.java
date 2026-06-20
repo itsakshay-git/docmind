@@ -4,9 +4,9 @@ import com.docmind.docmind_api.studio.dto.GenerateStudioArtifactRequest;
 import com.docmind.docmind_api.studio.dto.StudioArtifactResponse;
 import com.docmind.docmind_api.studio.entity.StudioArtifact;
 import com.docmind.docmind_api.studio.service.StudioArtifactService;
+import com.docmind.docmind_api.studio.service.StudioMediaStorage;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -25,6 +25,7 @@ import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.Locale;
@@ -36,6 +37,7 @@ import java.util.UUID;
 public class StudioArtifactController {
 
     private final StudioArtifactService studioArtifactService;
+    private final StudioMediaStorage studioMediaStorage;
 
     @GetMapping("/notebooks/{notebookId}/artifacts")
     public List<StudioArtifactResponse> listArtifacts(
@@ -140,8 +142,10 @@ public class StudioArtifactController {
                                     .toString()
                     )
                     .body(
-                            new FileSystemResource(
-                                    artifact.getAudioFilePath()
+                            new ByteArrayResource(
+                                    studioMediaStorage.read(
+                                            artifact.getAudioFilePath()
+                                    )
                             )
                     );
         }
@@ -213,7 +217,7 @@ public class StudioArtifactController {
     }
 
     @GetMapping("/artifacts/{artifactId}/audio")
-    public ResponseEntity<Resource> getArtifactAudio(
+    public ResponseEntity<ByteArrayResource> getArtifactAudio(
             @PathVariable UUID artifactId,
             Authentication authentication
     ) {
@@ -237,14 +241,16 @@ public class StudioArtifactController {
                                 : artifact.getAudioMimeType()
                 ))
                 .body(
-                        new FileSystemResource(
-                                artifact.getAudioFilePath()
-                        )
+                        new ByteArrayResource(
+                                    studioMediaStorage.read(
+                                            artifact.getAudioFilePath()
+                                    )
+                            )
                 );
     }
 
     @GetMapping("/artifacts/{artifactId}/image")
-    public ResponseEntity<Resource> getArtifactImage(
+    public ResponseEntity<ByteArrayResource> getArtifactImage(
             @PathVariable UUID artifactId,
             Authentication authentication
     ) {
@@ -268,13 +274,15 @@ public class StudioArtifactController {
                                 : artifact.getImageMimeType()
                 ))
                 .body(
-                        new FileSystemResource(
-                                artifact.getImageFilePath()
-                        )
+                        new ByteArrayResource(
+                                    studioMediaStorage.read(
+                                            artifact.getImageFilePath()
+                                    )
+                            )
                 );
     }
 
-    private ResponseEntity<Resource> imageDownload(
+    private ResponseEntity<ByteArrayResource> imageDownload(
             StudioArtifact artifact,
             String extension,
             MediaType mediaType
@@ -301,9 +309,11 @@ public class StudioArtifactController {
                                 .toString()
                 )
                 .body(
-                        new FileSystemResource(
-                                artifact.getImageFilePath()
-                        )
+                        new ByteArrayResource(
+                                    studioMediaStorage.read(
+                                            artifact.getImageFilePath()
+                                    )
+                            )
                 );
     }
 
@@ -320,9 +330,11 @@ public class StudioArtifactController {
         try {
             BufferedImage png =
                     ImageIO.read(
-                            new FileSystemResource(
-                                    artifact.getImageFilePath()
-                            ).getFile()
+                            new ByteArrayInputStream(
+                                    studioMediaStorage.read(
+                                            artifact.getImageFilePath()
+                                    )
+                            )
                     );
 
             BufferedImage jpg =

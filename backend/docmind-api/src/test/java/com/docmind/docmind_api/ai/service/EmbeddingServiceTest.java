@@ -1,5 +1,7 @@
 package com.docmind.docmind_api.ai.service;
 
+import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import com.docmind.docmind_api.rag.entity.Chunk;
 import com.docmind.docmind_api.rag.entity.Embedding;
 import com.docmind.docmind_api.rag.repository.EmbeddingRepository;
@@ -21,6 +23,11 @@ import static org.mockito.Mockito.when;
 
 class EmbeddingServiceTest {
 
+    private final AiOperationMetrics aiOperationMetrics =
+            new AiOperationMetrics(
+                    new SimpleMeterRegistry()
+            );
+
     private final EmbeddingModel embeddingModel =
             mock(EmbeddingModel.class);
 
@@ -31,7 +38,8 @@ class EmbeddingServiceTest {
             new EmbeddingService(
                     embeddingModel,
                     embeddingRepository,
-                    new ObjectMapper()
+                    new ObjectMapper(),
+                    aiOperationMetrics
             );
 
     @Test

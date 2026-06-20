@@ -79,6 +79,7 @@ Use new Flyway migrations only. Do not edit old migrations after they have run l
 | updated_at | TIMESTAMP | Audit |
 
 There is currently one default chat session per notebook and owner.
+These tables are the source of truth for full chat history. Bounded chat memory is derived from recent messages rather than replacing this history store.
 
 ## chat_messages
 
@@ -114,5 +115,6 @@ There is currently one default chat session per notebook and owner.
 
 ## Future
 
-Replace JSON vector storage with PostgreSQL `pgvector` when retrieval performance becomes the next milestone.
-Podcast audio is saved as a generated WAV file when Gemini TTS succeeds. Infographic PNG files are saved under `storage/studio-images/` and converted to JPG on download when requested.
+Replace JSON vector storage with PostgreSQL `pgvector` through a new Flyway migration when retrieval performance becomes the next milestone. Do not edit old migrations. The implementation should keep notebook-owner filtering on every search path and decide whether Spring AI PGvector or a narrow custom repository best fits the existing `documents` and `chunks` ownership model.
+Podcast audio is saved as a generated WAV file through `StudioMediaStorage` when Gemini TTS succeeds. Infographic PNG bytes are saved through `StudioMediaStorage` using `storage/studio-images/` by default and converted to JPG on download when requested.
+Future Studio media storage should add a durable object-storage adapter while keeping authenticated preview/download APIs stable.

@@ -10,6 +10,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -32,6 +33,25 @@ public class InfographicImageRenderer {
                     outputPath.getParent()
             );
 
+            Files.write(
+                    outputPath,
+                    renderPngBytes(
+                            data
+                    )
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    "Failed to render infographic image",
+                    e
+            );
+        }
+    }
+
+    public byte[] renderPngBytes(
+            JsonNode data
+    ) {
+
+        try {
             BufferedImage image =
                     new BufferedImage(
                             WIDTH,
@@ -52,11 +72,16 @@ public class InfographicImageRenderer {
             paintSections(graphics, data.path("sections"));
             graphics.dispose();
 
+            ByteArrayOutputStream output =
+                    new ByteArrayOutputStream();
+
             ImageIO.write(
                     image,
                     "png",
-                    outputPath.toFile()
+                    output
             );
+
+            return output.toByteArray();
         } catch (Exception e) {
             throw new RuntimeException(
                     "Failed to render infographic image",

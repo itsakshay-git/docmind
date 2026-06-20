@@ -1,5 +1,7 @@
 package com.docmind.docmind_api.rag.service;
 
+import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import com.docmind.docmind_api.document.entity.Document;
 import com.docmind.docmind_api.document.repository.DocumentRepository;
 import com.docmind.docmind_api.notebook.entity.Notebook;
@@ -28,6 +30,11 @@ import static org.mockito.ArgumentMatchers.anyList;
 
 class RagSearchServiceTest {
 
+    private final AiOperationMetrics aiOperationMetrics =
+            new AiOperationMetrics(
+                    new SimpleMeterRegistry()
+            );
+
     private final NotebookRepository notebookRepository =
             mock(NotebookRepository.class);
 
@@ -50,7 +57,8 @@ class RagSearchServiceTest {
                     chunkRepository,
                     embeddingRepository,
                     embeddingModel,
-                    new ObjectMapper()
+                    new ObjectMapper(),
+                    aiOperationMetrics
             );
 
     @Test

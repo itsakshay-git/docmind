@@ -1,6 +1,6 @@
 import { tokenStorage } from "../lib/tokenStorage";
 
-const API_BASE_URL = import.meta.env.VITE_DOCMIND_API_URL ?? "http://localhost:8081";
+export const API_BASE_URL = import.meta.env.VITE_DOCMIND_API_URL ?? "http://localhost:8081";
 
 export class ApiError extends Error {
   readonly status: number;

@@ -1,5 +1,6 @@
 package com.docmind.docmind_api.ai.service;
 
+import com.docmind.docmind_api.common.metrics.AiOperationMetrics;
 import com.docmind.docmind_api.rag.entity.Chunk;
 import com.docmind.docmind_api.rag.entity.Embedding;
 import com.docmind.docmind_api.rag.repository.EmbeddingRepository;
@@ -19,6 +20,7 @@ public class EmbeddingService {
     private final EmbeddingModel embeddingModel;
     private final EmbeddingRepository embeddingRepository;
     private final ObjectMapper objectMapper;
+    private final AiOperationMetrics aiOperationMetrics;
 
     public void generateAndSaveEmbeddings(
             List<Chunk> chunks
@@ -27,6 +29,18 @@ public class EmbeddingService {
         if (chunks == null || chunks.isEmpty()) {
             return;
         }
+
+        aiOperationMetrics.record(
+                "embedding.generate",
+                () -> generateAndSaveEmbeddingsObserved(
+                        chunks
+                )
+        );
+    }
+
+    private void generateAndSaveEmbeddingsObserved(
+            List<Chunk> chunks
+    ) {
 
         try {
 
@@ -90,6 +104,12 @@ public class EmbeddingService {
 
             embeddingRepository.saveAll(
                     embeddings
+            );
+
+            aiOperationMetrics.recordItems(
+                    "embedding.generate",
+                    "chunks",
+                    chunks.size()
             );
 
         } catch (Exception e) {

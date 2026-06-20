@@ -181,8 +181,8 @@ https://<your-vercel-app>.vercel.app
 
 ## 6. Known MVP Limits
 
-- Studio audio and image files are stored on the backend filesystem.
+- Studio audio and image files use the filesystem-backed `StudioMediaStorage` adapter by default.
 - Some free hosting plans may sleep, causing the first request to be slow.
 - Gemini API quota can block chat, embedding, or Studio generation if exhausted.
 - YouTube auto-transcript remains best effort; pasted transcript is more reliable.
-- Object storage, structured production logs, and Prometheus/Grafana are later milestones.
+- Object storage, structured production logs, and Prometheus/Grafana dashboards are later milestones; custom AI/RAG metrics are already emitted through Actuator/Prometheus.

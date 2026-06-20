@@ -110,8 +110,8 @@
 
   <rect class="panel2" x="790" y="865" width="660" height="125" rx="14"/>
   <text class="text h2" x="820" y="908">MVP Tradeoffs</text>
-  <text class="text xs" x="820" y="946">JSON TEXT vectors, in-memory similarity, backend filesystem for Studio media</text>
-  <text class="muted xs" x="820" y="976">Next: pgvector, object storage, streaming chat, Prometheus/Grafana</text>
+  <text class="text xs" x="820" y="946">JSON TEXT vectors, in-memory similarity, filesystem Studio media adapter</text>
+  <text class="muted xs" x="820" y="976">Next: pgvector, object-storage adapter, retry/backoff, Prometheus/Grafana</text>
 
   <path class="line" d="M365 285 C420 285, 445 285, 500 285"/>
   <text class="muted xs" x="390" y="265">HTTPS API + JWT</text>

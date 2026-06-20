@@ -67,7 +67,7 @@ DOCMIND_STUDIO_AUDIO_STORAGE_DIR
 DOCMIND_STUDIO_IMAGE_STORAGE_DIR
 ```
 
-Studio audio and image files are stored on the backend filesystem for the MVP. Production deployment should move these files to object storage or another durable storage service.
+Studio audio and image files use a filesystem-backed `StudioMediaStorage` adapter for local development. Production deployment should add an object-storage adapter or another durable storage service.
 
 Local defaults are already configured for PostgreSQL at `localhost:5433` and frontend origins at `localhost` / `127.0.0.1`.
 

@@ -9,6 +9,7 @@ export type ChatMessage = {
   sources: RagSource[];
   createdAt: string;
   optimistic?: boolean;
+  streaming?: boolean;
 };
 
 export type ChatExchangeResponse = {
