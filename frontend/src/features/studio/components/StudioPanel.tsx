@@ -1,4 +1,4 @@
-﻿import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, AudioLines, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { studioApi } from "../api/studioApi";
 import { useStudioArtifacts } from "../hooks/useStudioArtifacts";
@@ -100,7 +100,7 @@ export function StudioPanel({ notebookId }: StudioPanelProps) {
           {generateMutation.error ? <p className="settings-error">{generateMutation.error.message}</p> : null}
 
           <button
-            className="button button--primary"
+            className="button button--primary studio-generate-button"
             disabled={generateMutation.isPending}
             onClick={() => {
               generateMutation.mutate(
@@ -116,6 +116,7 @@ export function StudioPanel({ notebookId }: StudioPanelProps) {
             }}
             type="button"
           >
+            {generateMutation.isPending ? <Loader2 className="studio-spinner" size={15} /> : null}
             {generateMutation.isPending ? "Generating..." : `Generate ${activeArtifactType.title}`}
           </button>
         </div>
@@ -157,14 +158,54 @@ export function StudioPanel({ notebookId }: StudioPanelProps) {
         <div className="studio-artifact-list">
           {artifactsQuery.isLoading ? <p>Loading artifacts...</p> : null}
           {!artifactsQuery.isLoading && artifacts.length === 0 ? <p>No artifacts yet.</p> : null}
-          {artifacts.map((artifact) => (
-            <button key={artifact.id} onClick={() => setOpenedArtifactId(artifact.id)} type="button">
-              <strong>{artifact.title}</strong>
-              <span>{artifact.type.replaceAll("_", " ").toLowerCase()}</span>
-            </button>
-          ))}
+          {artifacts.map((artifact) => {
+            const MediaIcon = mediaIconFor(artifact);
+
+            return (
+              <button key={artifact.id} onClick={() => setOpenedArtifactId(artifact.id)} type="button">
+                <span className="studio-artifact-list__row">
+                  <strong>{artifact.title}</strong>
+                  <span className="studio-artifact-list__type">{formatArtifactType(artifact.type)}</span>
+                </span>
+                <span className="studio-artifact-list__meta">
+                  <span>{artifact.sourceChunkIds.length} sources</span>
+                  <span>
+                    <MediaIcon size={12} /> {mediaLabelFor(artifact)}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>
   );
+}
+
+function formatArtifactType(type: StudioArtifactType) {
+  return type.replaceAll("_", " ").toLowerCase();
+}
+
+function mediaLabelFor(artifact: StudioArtifact) {
+  if (artifact.audioAvailable) {
+    return "audio";
+  }
+
+  if (artifact.imageAvailable) {
+    return "image";
+  }
+
+  return "text";
+}
+
+function mediaIconFor(artifact: StudioArtifact) {
+  if (artifact.audioAvailable) {
+    return AudioLines;
+  }
+
+  if (artifact.imageAvailable) {
+    return ImageIcon;
+  }
+
+  return FileText;
 }

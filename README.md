@@ -38,9 +38,9 @@ Notebook workspace with source-grounded chat and Studio flashcards:
 
 - Notebook-scoped source ingestion for PDFs, websites, YouTube transcripts, and pasted transcripts.
 - Text extraction, chunking, Gemini embeddings, and PostgreSQL-backed persistence.
-- Notebook-scoped semantic retrieval with cosine similarity.
+- Notebook-scoped semantic retrieval with PostgreSQL `pgvector` exact cosine search.
 - Grounded chat answers with persisted notebook chat history.
-- Studio mini apps for flashcards, quiz, briefing, podcast audio/script, and infographic image generation.
+- Studio mini apps for flashcards, quiz, briefing, podcast audio/script, and R2-backed media generation.
 - JWT authentication, profile settings, notebook/source management, and responsive dark/light UI.
 - Local Docker PostgreSQL, Spring Boot Actuator health/custom AI metrics, GitHub Actions CI, Testcontainers, and deployment configs for Render/Vercel.
 
@@ -185,10 +185,11 @@ AI: Google Gemini
 
 ## Notes
 
-- Studio audio and infographic files use `StudioMediaStorage`; filesystem is the local default, and Cloudflare R2 is available for durable production media.
-- Enable `DOCMIND_STUDIO_STORAGE_PROVIDER=r2` plus R2 credentials in production to make Studio media survive restarts/redeploys.
+- Studio audio and infographic files use `StudioMediaStorage`; filesystem is the local default, and production uses Cloudflare R2 for durable media.
+- Production R2 storage has been smoke-tested with write/read/delete verification and real Studio image preview.
 - Chat history is persisted, recent prior turns are used as bounded conversational memory, and chat responses stream progressively in the UI.
 - Embeddings use PostgreSQL `pgvector` exact cosine search with legacy JSON text retained for compatibility.
 - Gemini quota can affect embedding, chat, and Studio generation; provider errors are normalized into user-safe messages.
 - YouTube transcript ingestion is best effort; pasted transcript is the reliable demo path.
 - Detailed post-v1 backlog: `docs/next-improvements.md`.
+

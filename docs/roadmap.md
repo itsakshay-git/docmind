@@ -41,7 +41,7 @@
 
 ## Current Milestone
 
-Polish the deployed v1 into a stronger portfolio application with production pgvector rollout verification, durable generated media, richer source quality, quota handling, and production observability.
+Wind down the deployed v1 into a portfolio-ready project: keep the core demo stable, polish the frontend, preserve production pgvector/R2 verification, and leave deeper retrieval/observability work as future backlog.
 
 Detailed post-v1 backlog:
 
@@ -75,7 +75,7 @@ docs/next-improvements.md
 
 - Add bounded retry/backoff policies for transient AI failures.
 - Add structured logging.
-- Enable Cloudflare R2 Studio media storage in production and smoke-test media after redeploys.
+- Keep the R2 storage smoke test in the production runbook and periodically verify media after redeploys.
 - Add Grafana dashboards or hosted observability for the custom AI/RAG metrics after deployment.
 - Add production compose if needed.
 
@@ -84,3 +84,4 @@ docs/next-improvements.md
 - Add PDF export for Studio artifacts.
 - Improve infographic rendering templates and add richer downloadable study formats.
 - Add regenerate actions for failed podcast audio or image generation.
+

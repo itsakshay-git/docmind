@@ -592,3 +592,54 @@
 :root[data-theme="light"] .flashcard.flipped {
   filter: brightness(0.96);
 }
+
+.studio-generate-button {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.studio-spinner {
+  animation: studio-spin 820ms linear infinite;
+}
+
+.studio-artifact-list__row,
+.studio-artifact-list__meta {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.studio-artifact-list__row strong {
+  flex: 1;
+}
+
+.studio-artifact-list__type {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  flex: 0 0 auto;
+  max-width: 42%;
+  padding: 3px 8px;
+}
+
+.studio-artifact-list__meta {
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.studio-artifact-list__meta span {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
+  min-width: 0;
+}
+
+@keyframes studio-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

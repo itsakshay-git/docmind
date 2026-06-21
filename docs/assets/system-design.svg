@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1050" viewBox="0 0 1600 1050" role="img" aria-labelledby="title desc">
   <title id="title">DocMind System Design</title>
-  <desc id="desc">Architecture diagram showing Vercel frontend, Render Spring Boot backend, Neon PostgreSQL, Gemini AI services, source ingestion, retrieval, chat, and Studio artifact generation.</desc>
+  <desc id="desc">Architecture diagram showing Vercel frontend, Render Spring Boot backend, Neon PostgreSQL pgvector search, Cloudflare R2 Studio media, Gemini AI services, source ingestion, retrieval, chat, and Studio artifact generation.</desc>
   <defs>
     <style>
       .bg { fill: #0f141b; }
@@ -34,7 +34,7 @@
   <rect class="bg" x="0" y="0" width="1600" height="1050"/>
 
   <text class="text title" x="60" y="70">DocMind System Design</text>
-  <text class="muted small" x="60" y="108">Notebook-scoped source ingestion, RAG chat, and Studio artifact generation</text>
+  <text class="muted small" x="60" y="108">Notebook-scoped ingestion, pgvector RAG chat, and durable Studio media</text>
 
   <rect class="panel frontend" x="55" y="155" width="310" height="260" rx="14"/>
   <text class="text h2" x="85" y="198">Vercel Frontend</text>
@@ -73,7 +73,7 @@
   <text class="text xs" x="1120" y="275">users, notebooks, documents</text>
   <text class="text xs" x="1120" y="310">chunks, embeddings vector(3072)</text>
   <text class="text xs" x="1120" y="345">chat sessions, chat messages</text>
-  <text class="text xs" x="1120" y="380">studio artifacts + file paths</text>
+  <text class="text xs" x="1120" y="380">studio artifacts + R2 object keys</text>
 
   <rect class="panel ai" x="1090" y="520" width="360" height="230" rx="14"/>
   <text class="text h2" x="1120" y="563">Google Gemini</text>
@@ -99,9 +99,9 @@
   <rect class="panel2" x="500" y="625" width="455" height="220" rx="14"/>
   <text class="text h2" x="530" y="668">RAG Runtime</text>
   <text class="text xs" x="530" y="710">1. Embed question</text>
-  <text class="text xs" x="530" y="745">2. Load notebook chunks</text>
-  <text class="text xs" x="530" y="780">3. Cosine rank vectors in Java</text>
-  <text class="text xs" x="530" y="815">4. Gemini answers with retrieved context</text>
+  <text class="text xs" x="530" y="745">2. Query notebook pgvector rows</text>
+  <text class="text xs" x="530" y="780">3. Exact cosine rank in PostgreSQL</text>
+  <text class="text xs" x="530" y="815">4. Stream grounded Gemini answer</text>
 
   <rect class="panel2" x="55" y="865" width="670" height="125" rx="14"/>
   <text class="text h2" x="85" y="908">CI / Quality</text>
@@ -110,8 +110,8 @@
 
   <rect class="panel2" x="790" y="865" width="660" height="125" rx="14"/>
   <text class="text h2" x="820" y="908">MVP Tradeoffs</text>
-  <text class="text xs" x="820" y="946">pgvector exact search, bounded chat memory, filesystem Studio media adapter</text>
-  <text class="muted xs" x="820" y="976">Next: ANN/hybrid retrieval, R2 production smoke, retry/backoff, Prometheus/Grafana</text>
+  <text class="text xs" x="820" y="946">pgvector exact search, bounded chat memory, R2 Studio media</text>
+  <text class="muted xs" x="820" y="976">Next: ANN/hybrid retrieval, regenerate media, retry/backoff, dashboards</text>
 
   <path class="line" d="M365 285 C420 285, 445 285, 500 285"/>
   <text class="muted xs" x="390" y="265">HTTPS API + JWT</text>
@@ -131,3 +131,4 @@
   <rect class="badge" x="60" y="122" width="164" height="34" rx="17"/>
   <text class="text xs" x="80" y="145">Deployed MVP</text>
 </svg>
+
