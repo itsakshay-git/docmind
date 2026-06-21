@@ -2,9 +2,11 @@ package com.docmind.docmind_api.studio.controller;
 
 import com.docmind.docmind_api.studio.dto.GenerateStudioArtifactRequest;
 import com.docmind.docmind_api.studio.dto.StudioArtifactResponse;
+import com.docmind.docmind_api.studio.dto.StudioStorageSmokeTestResponse;
 import com.docmind.docmind_api.studio.entity.StudioArtifact;
 import com.docmind.docmind_api.studio.service.StudioArtifactService;
 import com.docmind.docmind_api.studio.service.StudioMediaStorage;
+import com.docmind.docmind_api.studio.service.StudioStorageSmokeTestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ContentDisposition;
@@ -38,6 +40,7 @@ public class StudioArtifactController {
 
     private final StudioArtifactService studioArtifactService;
     private final StudioMediaStorage studioMediaStorage;
+    private final StudioStorageSmokeTestService studioStorageSmokeTestService;
 
     @GetMapping("/notebooks/{notebookId}/artifacts")
     public List<StudioArtifactResponse> listArtifacts(
@@ -75,6 +78,12 @@ public class StudioArtifactController {
                 request,
                 authentication.getName()
         );
+    }
+
+    @PostMapping("/storage/smoke-test")
+    public StudioStorageSmokeTestResponse smokeTestStorage() {
+
+        return studioStorageSmokeTestService.run();
     }
 
     @DeleteMapping("/artifacts/{artifactId}")
@@ -401,3 +410,4 @@ public class StudioArtifactController {
                 + extension;
     }
 }
+

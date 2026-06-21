@@ -201,15 +201,25 @@ https://<your-vercel-app>.vercel.app
 6. Confirm the source status becomes indexed.
 7. Ask a chat question based on the source and confirm the answer cites notebook-owned context.
 8. Ask one follow-up question to confirm bounded chat memory still works.
-9. Generate one Studio podcast or infographic artifact.
-10. Preview/download the generated media.
-11. Trigger a backend redeploy or restart, then preview/download the same media again to confirm durable R2 storage.
-12. Delete the test notebook if it was created only for the smoke test.
+9. Run the authenticated Studio storage smoke test before Studio generation, especially when Gemini quota is exhausted:
+
+```text
+POST https://<your-render-service>.onrender.com/api/v1/studio/storage/smoke-test
+Authorization: Bearer <access-token>
+```
+
+10. Confirm the smoke test reports write/read/delete success for the active storage provider and `fallbackUsed: false`. If `fallbackUsed` is `true`, R2 is still failing and the object was handled by local fallback storage.
+11. Generate one Studio podcast or infographic artifact.
+12. Preview/download the generated media.
+13. Trigger a backend redeploy or restart, then preview/download the same media again to confirm durable R2 storage.
+14. Delete the test notebook if it was created only for the smoke test.
 
 ## 6. Known MVP Limits
 
 - Studio audio and image files use the filesystem-backed `StudioMediaStorage` adapter locally by default; production can use Cloudflare R2 by setting `DOCMIND_STUDIO_STORAGE_PROVIDER=r2` and the R2 credentials.
 - Some free hosting plans may sleep, causing the first request to be slow.
-- Gemini API quota can block chat, embedding, or Studio generation if exhausted.
+- Gemini API quota can block chat, embedding, or Studio generation if exhausted. The Studio storage smoke test does not call Gemini and can still verify R2/storage health.
 - YouTube auto-transcript remains best effort; pasted transcript is more reliable.
 - Object storage, structured production logs, and Prometheus/Grafana dashboards are later milestones; custom AI/RAG metrics are already emitted through Actuator/Prometheus.
+
+
