@@ -303,10 +303,9 @@
 }
 
 .chat-message--assistant .chat-bubble {
-  background: transparent;
-  border-color: transparent;
-  padding-left: 2px;
-  padding-right: 2px;
+  background: #181d25;
+  border-color: #303744;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
 .chat-message--user .chat-bubble {
