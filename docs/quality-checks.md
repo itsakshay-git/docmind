@@ -19,7 +19,7 @@ docker compose -f infrastructure/docker/docker-compose.yml up -d
 
 Current backend baseline:
 
-- Tests run: 28
+- Tests run: 35
 - Failures: 0
 - Errors: 0
 - Skipped: 0

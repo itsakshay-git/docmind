@@ -1,22 +1,18 @@
 package com.docmind.docmind_api.studio.service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.UUID;
 
-@Service
 public class FileSystemStudioMediaStorage implements StudioMediaStorage {
 
     private final String audioStorageDir;
     private final String imageStorageDir;
 
     public FileSystemStudioMediaStorage(
-            @Value("${docmind.studio.audio-storage-dir}") String audioStorageDir,
-            @Value("${docmind.studio.image-storage-dir}") String imageStorageDir
+            String audioStorageDir,
+            String imageStorageDir
     ) {
         this.audioStorageDir =
                 audioStorageDir;

@@ -21,7 +21,7 @@ For a simple resume-friendly deployment:
 Frontend: Vercel
 Backend: Render
 Database: Neon Postgres
-Files: filesystem-backed Studio media adapter for MVP, object storage adapter later
+Files: filesystem-backed Studio media locally, Cloudflare R2 adapter for durable production Studio media
 ```
 
 This keeps setup manageable while still showing a real full-stack deployment story.
@@ -117,17 +117,21 @@ Expected: `to_regtype` returns `vector`.
 
 Current Studio files:
 
-- Podcast audio: `storage/studio-audio`
-- Infographic images: `storage/studio-images`
+- Local default: filesystem storage under `storage/studio-audio` and `storage/studio-images`.
+- Production durable option: Cloudflare R2 through the same `StudioMediaStorage` interface.
 
-This filesystem adapter is acceptable for local MVP demos. For production, platforms without persistent disks may lose these files on restart/redeploy unless a persistent disk or object-storage adapter is used.
+To enable R2 in production, configure Render with:
 
-Production options:
+```text
+DOCMIND_STUDIO_STORAGE_PROVIDER=r2
+DOCMIND_R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+DOCMIND_R2_BUCKET=<bucket-name>
+DOCMIND_R2_ACCESS_KEY_ID=<access-key-id>
+DOCMIND_R2_SECRET_ACCESS_KEY=<secret-access-key>
+DOCMIND_R2_PUBLIC_BASE_URL=<optional-public-base-url>
+```
 
-- Render persistent disk for short-term MVP.
-- Cloudflare R2, AWS S3, Supabase Storage, or similar object storage for durable file storage.
-
-A production object-storage adapter is a future milestone; the current code path is ready for that swap behind `StudioMediaStorage`.
+DocMind keeps authenticated backend preview/download endpoints as the frontend contract. Existing Studio media path columns store either local filesystem paths or R2 object keys.
 
 ## Health Check
 

@@ -77,8 +77,8 @@ Streaming flow:
 3. Backend reuses notebook-scoped semantic retrieval to gather source chunks.
 4. Gemini generates a Markdown preview and structured JSON payload.
 5. Backend stores the artifact in `studio_artifacts`.
-6. Podcast artifacts also attempt Gemini TTS with two configured host voices and save WAV audio through `StudioMediaStorage`; the default adapter writes under `storage/studio-audio`.
-7. Infographic artifacts render PNG bytes server-side with `BufferedImage` / `Graphics2D` and save them through `StudioMediaStorage`; the default adapter writes under `storage/studio-images`.
+6. Podcast artifacts also attempt Gemini TTS with two configured host voices and save WAV audio through `StudioMediaStorage`; filesystem is the local default and Cloudflare R2 is available for production.
+7. Infographic artifacts render PNG bytes server-side with `BufferedImage` / `Graphics2D` and save them through `StudioMediaStorage`; filesystem is the local default and Cloudflare R2 is available for production.
 8. Frontend opens artifacts as mini apps with state, playback/download where relevant, and delete.
 
 Studio supports flashcards, quiz, briefing, podcast audio/script, and generated infographic images. Deleting a Studio artifact also removes related audio/image media through the storage adapter when present.

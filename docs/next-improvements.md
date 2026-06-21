@@ -7,7 +7,7 @@ This backlog captures the post-v1 improvements for DocMind. V1 is deployed and i
 - Chat history is persisted in DocMind-owned `chat_sessions` and `chat_messages` tables.
 - The current notebook chat answer path uses the latest user question, retrieved source chunks, a bounded window of recent prior chat turns, and a streaming chat endpoint for progressive UI rendering.
 - Embeddings are written to PostgreSQL `pgvector` as 3072-dimensional Gemini vectors, with the legacy JSON `TEXT` value retained for compatibility. Similarity search now runs in PostgreSQL as exact cosine search.
-- Studio podcast audio and infographic images are saved through a `StudioMediaStorage` abstraction, with the filesystem adapter enabled by default.
+- Studio podcast audio and infographic images are saved through a `StudioMediaStorage` abstraction. Filesystem storage remains the local default, and Cloudflare R2 is implemented for durable production storage.
 - Actuator health, Prometheus-ready metrics, custom AI/RAG operation metrics, and user-safe AI provider error messages exist, but production dashboards, structured logs, retries, and provider-category dashboards are not yet built.
 
 Spring AI distinguishes chat history from chat memory. DocMind keeps full chat history in its own Spring Data tables and derives bounded prompt memory from recent notebook-owned turns. Reference: https://docs.spring.io/spring-ai/reference/api/chat-memory.html
@@ -50,10 +50,10 @@ Spring AI PGvector setup requires PostgreSQL vector-related extensions and can i
   - Add bounded retries only where safe, such as transient provider failures.
   - Avoid retry storms for quota exhaustion.
   - Show actionable frontend errors for chat, embedding, and Studio generation failures.
-- Add a durable object-storage adapter for Studio media:
+- Enable and harden the Cloudflare R2 Studio media adapter in production:
   - Keep the current filesystem-backed `StudioMediaStorage` adapter for local development.
-  - Support S3, Cloudflare R2, Supabase Storage, or a similar provider through the same interface.
-  - Store durable object keys/URLs instead of backend-local file paths in production.
+  - Configure Render with R2 endpoint, bucket, and access keys.
+  - Store durable object keys in the existing Studio media path fields.
   - Keep authenticated download and preview endpoints as the stable frontend contract.
 - Continue improving observability:
   - Keep custom Micrometer metrics for embedding generation, RAG search, chat answer generation, streaming completion, and Studio generation healthy.
@@ -77,5 +77,5 @@ Spring AI PGvector setup requires PostgreSQL vector-related extensions and can i
 - `pgvector` search returns only chunks from notebooks owned by the authenticated user.
 - Quota/rate-limit failures continue to produce helpful messages instead of raw provider stack details.
 - Production pgvector rollout is verified by Neon `vector` extension checks, Render health, source ingestion, chat retrieval, follow-up chat, and one Studio artifact smoke test.
-- Studio media remains available after backend restarts and redeploys once the production object-storage adapter is enabled.
+- Studio media remains available after backend restarts and redeploys once the Cloudflare R2 adapter is enabled in production.
 - Docs, API contracts, and deployment notes are updated in the same PR as each feature.

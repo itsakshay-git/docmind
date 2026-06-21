@@ -37,6 +37,7 @@
 - Render and Vercel deployment config templates.
 - Prometheus-ready Actuator metrics endpoint plus custom AI/RAG operation metrics.
 - Pgvector RAG upgrade merged into `main` with exact PostgreSQL cosine search.
+- Cloudflare R2 Studio media adapter for durable production audio/image storage.
 
 ## Current Milestone
 
@@ -74,7 +75,7 @@ docs/next-improvements.md
 
 - Add bounded retry/backoff policies for transient AI failures.
 - Add structured logging.
-- Add a production object-storage adapter for Studio audio and infographic files.
+- Enable Cloudflare R2 Studio media storage in production and smoke-test media after redeploys.
 - Add Grafana dashboards or hosted observability for the custom AI/RAG metrics after deployment.
 - Add production compose if needed.
 

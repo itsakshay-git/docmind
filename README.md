@@ -185,8 +185,8 @@ AI: Google Gemini
 
 ## Notes
 
-- Studio audio and infographic files currently use the filesystem-backed `StudioMediaStorage` adapter.
-- A durable object-storage adapter is planned as the next media hardening step.
+- Studio audio and infographic files use `StudioMediaStorage`; filesystem is the local default, and Cloudflare R2 is available for durable production media.
+- Enable `DOCMIND_STUDIO_STORAGE_PROVIDER=r2` plus R2 credentials in production to make Studio media survive restarts/redeploys.
 - Chat history is persisted, recent prior turns are used as bounded conversational memory, and chat responses stream progressively in the UI.
 - Embeddings use PostgreSQL `pgvector` exact cosine search with legacy JSON text retained for compatibility.
 - Gemini quota can affect embedding, chat, and Studio generation; provider errors are normalized into user-safe messages.

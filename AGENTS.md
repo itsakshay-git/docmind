@@ -46,7 +46,7 @@ DocMind is deployed as a portfolio-ready MVP:
 
 Near-term work should focus on polish and production hardening:
 
-- Object storage for Studio audio/image files.
+- Cloudflare R2 object storage is implemented for Studio audio/image files; future work should enable and smoke-test it in production.
 - `pgvector` is implemented for exact database-native similarity search; future retrieval work should focus on ANN indexing when justified, hybrid search, reranking, source previews, and re-indexing.
 - Streaming chat is implemented; future work should harden cancellation, retries, and recovery behavior.
 - Gemini quota/rate-limit handling is implemented at a user-safe baseline; future work should add dashboards, structured logs, and safe bounded retries.

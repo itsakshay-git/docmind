@@ -350,7 +350,7 @@ Response:
 }
 ```
 
-All artifacts store Markdown and JSON internally. The frontend treats flashcards, quizzes, and briefings as in-app experiences instead of download files. Podcast artifacts attempt Gemini TTS audio generation and expose audio playback/download when `audioAvailable` is `true`. Infographic artifacts render server-side PNG bytes, store them through `StudioMediaStorage` using `storage/studio-images/` by default, expose authenticated image preview, and support PNG/JPG download when `imageAvailable` is `true`.
+All artifacts store Markdown and JSON internally. The frontend treats flashcards, quizzes, and briefings as in-app experiences instead of download files. Podcast artifacts attempt Gemini TTS audio generation and expose audio playback/download when `audioAvailable` is `true`. Infographic artifacts render server-side PNG bytes, store them through `StudioMediaStorage` using filesystem locally or Cloudflare R2 in production, expose authenticated image preview, and support PNG/JPG download when `imageAvailable` is `true`.
 
 
 ## AI Provider Errors

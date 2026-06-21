@@ -368,6 +368,55 @@ class StudioArtifactServiceTest {
                 );
     }
 
+    @Test
+    void deletesArtifactMediaFromStorage() {
+        UUID artifactId =
+                UUID.randomUUID();
+
+        StudioArtifact artifact =
+                new StudioArtifact();
+
+        artifact.setId(
+                artifactId
+        );
+        artifact.setOwnerEmail(
+                "user@example.com"
+        );
+        artifact.setAudioFilePath(
+                "studio-audio/example.wav"
+        );
+        artifact.setImageFilePath(
+                "studio-images/example.png"
+        );
+
+        when(
+                studioArtifactRepository.findByIdAndOwnerEmail(
+                        artifactId,
+                        "user@example.com"
+                )
+        ).thenReturn(
+                Optional.of(artifact)
+        );
+
+        studioArtifactService.deleteArtifact(
+                artifactId,
+                "user@example.com"
+        );
+
+        verify(studioMediaStorage)
+                .delete(
+                        "studio-audio/example.wav"
+                );
+        verify(studioMediaStorage)
+                .delete(
+                        "studio-images/example.png"
+                );
+        verify(studioArtifactRepository)
+                .delete(
+                        artifact
+                );
+    }
+
     private void stubOwnedNotebookWithContext(
             UUID notebookId
     ) {

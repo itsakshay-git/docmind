@@ -95,8 +95,20 @@ Optional Studio variables:
 DOCMIND_STUDIO_TTS_MODEL=gemini-3.1-flash-tts-preview
 DOCMIND_STUDIO_TTS_HOST_A_VOICE=Charon
 DOCMIND_STUDIO_TTS_HOST_B_VOICE=Aoede
+DOCMIND_STUDIO_STORAGE_PROVIDER=filesystem
 DOCMIND_STUDIO_AUDIO_STORAGE_DIR=storage/studio-audio
 DOCMIND_STUDIO_IMAGE_STORAGE_DIR=storage/studio-images
+```
+
+Cloudflare R2 production media variables:
+
+```text
+DOCMIND_STUDIO_STORAGE_PROVIDER=r2
+DOCMIND_R2_ENDPOINT=https://<account-id>.r2.cloudflarestorage.com
+DOCMIND_R2_BUCKET=<bucket-name>
+DOCMIND_R2_ACCESS_KEY_ID=<access-key-id>
+DOCMIND_R2_SECRET_ACCESS_KEY=<secret-access-key>
+DOCMIND_R2_PUBLIC_BASE_URL=<optional-public-base-url>
 ```
 
 Render should expose the backend URL after deploy:
@@ -189,12 +201,14 @@ https://<your-vercel-app>.vercel.app
 6. Confirm the source status becomes indexed.
 7. Ask a chat question based on the source and confirm the answer cites notebook-owned context.
 8. Ask one follow-up question to confirm bounded chat memory still works.
-9. Generate one Studio artifact.
-10. Delete the test notebook if it was created only for the smoke test.
+9. Generate one Studio podcast or infographic artifact.
+10. Preview/download the generated media.
+11. Trigger a backend redeploy or restart, then preview/download the same media again to confirm durable R2 storage.
+12. Delete the test notebook if it was created only for the smoke test.
 
 ## 6. Known MVP Limits
 
-- Studio audio and image files use the filesystem-backed `StudioMediaStorage` adapter by default.
+- Studio audio and image files use the filesystem-backed `StudioMediaStorage` adapter locally by default; production can use Cloudflare R2 by setting `DOCMIND_STUDIO_STORAGE_PROVIDER=r2` and the R2 credentials.
 - Some free hosting plans may sleep, causing the first request to be slow.
 - Gemini API quota can block chat, embedding, or Studio generation if exhausted.
 - YouTube auto-transcript remains best effort; pasted transcript is more reliable.

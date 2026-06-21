@@ -100,4 +100,4 @@ Source upload
 
 Studio now supports flashcards, quizzes, briefings, podcast audio/script, and infographic images.
 
-The retrieval infrastructure now uses PostgreSQL `pgvector` exact search while keeping legacy JSON vector text for compatibility. Prometheus, Grafana, Kubernetes, object storage, ANN indexing, hybrid search, and reranking are later milestones.
+The retrieval infrastructure now uses PostgreSQL `pgvector` exact search while keeping legacy JSON vector text for compatibility. Cloudflare R2 Studio media storage is implemented behind `StudioMediaStorage`; Prometheus, Grafana, Kubernetes, ANN indexing, hybrid search, and reranking are later milestones.

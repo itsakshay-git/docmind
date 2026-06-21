@@ -176,13 +176,13 @@ Artifact types:
 Persistence:
 
 - Artifact metadata, Markdown, JSON, and source chunk IDs are stored in PostgreSQL.
-- Podcast audio is stored through `StudioMediaStorage`; the default adapter writes to the backend filesystem.
-- Infographic images are stored through `StudioMediaStorage`; the default adapter writes to the backend filesystem.
+- Podcast audio is stored through `StudioMediaStorage`; filesystem is the local default and Cloudflare R2 is available for production.
+- Infographic images are stored through `StudioMediaStorage`; filesystem is the local default and Cloudflare R2 is available for production.
 
 Production note:
 
 - Filesystem storage is acceptable for local MVP demos and is isolated behind a storage interface.
-- Durable production storage should add an S3, Cloudflare R2, Supabase Storage, or similar `StudioMediaStorage` adapter.
+- Durable production storage uses the Cloudflare R2 `StudioMediaStorage` adapter when `DOCMIND_STUDIO_STORAGE_PROVIDER=r2` is configured.
 
 ## 8. Data Model
 
@@ -312,7 +312,7 @@ Current MVP decisions:
 
 - Embeddings use exact PostgreSQL `pgvector` search. ANN indexing is deferred because current Gemini embeddings are 3072-dimensional and the corpus is still MVP-sized.
 - Chat history is persisted, and bounded recent-turn memory is included in notebook chat prompts.
-- Studio files use a filesystem-backed `StudioMediaStorage` adapter.
+- Studio files use `StudioMediaStorage`; filesystem is the local default and Cloudflare R2 is available for production.
 - YouTube auto-transcript is best effort.
 - Streaming chat now uses a server-sent events endpoint while keeping the non-streaming endpoint as a fallback.
 
@@ -329,7 +329,7 @@ High-value next steps:
 - Harden bounded conversational memory for follow-up questions.
 - Harden streaming assistant responses and cancellation behavior.
 - Add conversation-aware retrieval, source previews, hybrid search, reranking, and re-indexing.
-- Add a production object-storage adapter for Studio media.
+- Enable and smoke-test Cloudflare R2 Studio media storage in production.
 - Add Brave Search import.
 - Add Prometheus/Grafana or hosted dashboards for the custom AI/RAG metrics.
 - Add bounded retry/backoff policies and richer AI error metrics.

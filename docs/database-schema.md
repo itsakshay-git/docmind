@@ -119,4 +119,4 @@ These tables are the source of truth for full chat history. Bounded chat memory 
 Embeddings now include PostgreSQL `pgvector` storage through a new Flyway migration while retaining the legacy JSON text vector for compatibility and Hibernate validation. Retrieval uses a narrow custom JDBC repository so notebook-owner filtering stays tied to DocMind's existing `documents` and `chunks` ownership model.
 Future retrieval work should evaluate ANN indexing, hybrid keyword/vector search, reranking, and re-indexing flows without editing old migrations.
 Podcast audio is saved as a generated WAV file through `StudioMediaStorage` when Gemini TTS succeeds. Infographic PNG bytes are saved through `StudioMediaStorage` using `storage/studio-images/` by default and converted to JPG on download when requested.
-Future Studio media storage should add a durable object-storage adapter while keeping authenticated preview/download APIs stable.
+Studio media path columns store local filesystem paths by default or Cloudflare R2 object keys when the R2 adapter is enabled; authenticated preview/download APIs stay stable.
