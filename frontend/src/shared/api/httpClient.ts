@@ -42,6 +42,11 @@ export async function httpClient<T>(path: string, options: HttpOptions = {}): Pr
         ? payload.message
         : String(payload || `Request failed with status ${response.status}`);
 
+    if (response.status === 401 && !options.skipAuth) {
+      tokenStorage.expireSession();
+      throw new ApiError(message || "Your session expired. Please sign in again.", response.status);
+    }
+
     throw new ApiError(message, response.status);
   }
 

@@ -13,6 +13,8 @@ import com.docmind.docmind_api.studio.repository.StudioArtifactRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,9 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class StudioArtifactService {
+
+    private static final Logger log =
+            LoggerFactory.getLogger(StudioArtifactService.class);
 
     private static final int STUDIO_TOP_K = 12;
 
@@ -701,6 +706,12 @@ public class StudioArtifactService {
                     "audio/wav"
             );
         } catch (Exception e) {
+            log.warn(
+                    "Podcast audio generation failed for notebook {}. Saving script without audio.",
+                    artifact.getNotebookId(),
+                    e
+            );
+
             artifact.setMarkdownContent(
                     artifact.getMarkdownContent()
                             + "\n\n> Podcast audio could not be generated right now. The script was saved and can be regenerated later."

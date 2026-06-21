@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -13,6 +14,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.time.Instant;
 import java.util.List;
 
 @Configuration
@@ -44,6 +46,30 @@ public class SecurityConfig {
                 .cors(cors -> {
                 })
                 .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(401);
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            response.getWriter()
+                                    .write(authErrorJson(
+                                            401,
+                                            "Unauthorized",
+                                            "Your session expired. Please sign in again.",
+                                            request.getRequestURI()
+                                    ));
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(403);
+                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+                            response.getWriter()
+                                    .write(authErrorJson(
+                                            403,
+                                            "Forbidden",
+                                            "You do not have permission to access this resource.",
+                                            request.getRequestURI()
+                                    ));
+                        })
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 HttpMethod.OPTIONS,
@@ -102,5 +128,23 @@ public class SecurityConfig {
         );
 
         return source;
+    }
+
+    private String authErrorJson(
+            int status,
+            String error,
+            String message,
+            String path
+    ) {
+
+        return """
+                {"timestamp":"%s","status":%d,"error":"%s","message":"%s","path":"%s"}
+                """.formatted(
+                Instant.now(),
+                status,
+                error,
+                message,
+                path
+        ).trim();
     }
 }

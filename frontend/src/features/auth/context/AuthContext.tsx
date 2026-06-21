@@ -1,5 +1,5 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
-import { tokenStorage } from "../../../shared/lib/tokenStorage";
+import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { AUTH_SESSION_EXPIRED_EVENT, tokenStorage } from "../../../shared/lib/tokenStorage";
 
 type AuthContextValue = {
   isAuthenticated: boolean;
@@ -11,6 +11,16 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState(() => tokenStorage.get());
+
+  useEffect(() => {
+    function handleSessionExpired() {
+      setToken("");
+    }
+
+    window.addEventListener(AUTH_SESSION_EXPIRED_EVENT, handleSessionExpired);
+
+    return () => window.removeEventListener(AUTH_SESSION_EXPIRED_EVENT, handleSessionExpired);
+  }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({
