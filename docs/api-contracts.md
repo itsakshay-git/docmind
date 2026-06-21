@@ -353,7 +353,7 @@ Response:
 
 All artifacts store Markdown and JSON internally. The frontend treats flashcards, quizzes, and briefings as in-app experiences instead of download files. Podcast artifacts attempt Gemini TTS audio generation and expose audio playback/download when `audioAvailable` is `true`. Infographic artifacts render server-side PNG bytes, store them through `StudioMediaStorage` using filesystem locally or Cloudflare R2 in production, expose authenticated image preview, and support PNG/JPG download when `imageAvailable` is `true`.
 
-The authenticated storage smoke test writes, reads, and deletes a tiny diagnostic object through the active `StudioMediaStorage` provider without calling Gemini or creating a Studio artifact. Use it to verify R2 production storage when Gemini quota is exhausted. The response includes provider name, write/read/delete status, `fallbackUsed`, storage key prefix, and a sanitized root-cause message on failure. If `fallbackUsed` is `true`, the primary R2 write failed and the object was handled by local fallback storage.
+The authenticated storage smoke test writes, reads, and deletes a tiny diagnostic object through the active `StudioMediaStorage` provider without calling Gemini or creating a Studio artifact. Use it to verify R2 production storage when Gemini quota is exhausted. The response includes provider name, write/read/delete status, `fallbackUsed`, storage key prefix, and a sanitized root-cause message on failure. If `fallbackUsed` is `true`, the primary R2 write failed, the object was handled by local fallback storage, and `rootCause` reports the sanitized primary storage failure when available.
 
 
 ## AI Provider Errors
@@ -397,4 +397,5 @@ PUT /api/v1/users/me/password
   "newPassword": "new-password"
 }
 ```
+
 

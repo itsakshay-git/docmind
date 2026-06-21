@@ -35,6 +35,7 @@ public class R2StudioMediaStorage implements StudioMediaStorage {
 
     private final S3Client s3Client;
     private final String bucket;
+    private volatile String lastSaveFailureSummary;
 
     public R2StudioMediaStorage(
             S3Client s3Client,
@@ -44,6 +45,11 @@ public class R2StudioMediaStorage implements StudioMediaStorage {
                 s3Client;
         this.bucket =
                 bucket;
+    }
+
+    public String lastSaveFailureSummary() {
+
+        return lastSaveFailureSummary;
     }
 
     @Override
@@ -177,13 +183,19 @@ public class R2StudioMediaStorage implements StudioMediaStorage {
                     RequestBody.fromBytes(bytes)
             );
 
+            lastSaveFailureSummary =
+                    null;
+
             return key;
         } catch (Exception e) {
+            lastSaveFailureSummary =
+                    rootCauseSummary(e);
+
             log.warn(
                     "Failed to save Studio media to R2 bucket {} key {}. rootCause=\"{}\". Falling back to local filesystem storage for this artifact.",
                     bucket,
                     key,
-                    rootCauseSummary(e),
+                    lastSaveFailureSummary,
                     e
             );
 
@@ -325,12 +337,30 @@ public class R2StudioMediaStorage implements StudioMediaStorage {
                     + " code="
                     + errorCode
                     + " message="
-                    + errorMessage;
+                    + sanitize(
+                            errorMessage
+                    );
         }
 
         return current.getClass().getSimpleName()
                 + ": "
-                + current.getMessage();
+                + sanitize(
+                        current.getMessage()
+                );
+    }
+
+    private String sanitize(
+            String message
+    ) {
+
+        if (message == null || message.isBlank()) {
+            return "No detail message";
+        }
+
+        return message.replaceAll(
+                "(?i)(secret|key|token|credential)[^\\s,;]*",
+                "$1-redacted"
+        );
     }
 
     private String contentType(

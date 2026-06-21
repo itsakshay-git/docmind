@@ -65,7 +65,7 @@ public class StudioStorageSmokeTestService {
                             fallbackUsed
                     ),
                     fallbackUsed
-                            ? "Primary storage write failed; adapter returned local fallback key."
+                            ? fallbackRootCause()
                             : null
             );
         } catch (Exception e) {
@@ -119,6 +119,16 @@ public class StudioStorageSmokeTestService {
 
         return storageKey != null
                 && storageKey.startsWith("local-fallback:");
+    }
+
+    private String fallbackRootCause() {
+
+        if (studioMediaStorage instanceof R2StudioMediaStorage r2Storage
+                && r2Storage.lastSaveFailureSummary() != null) {
+            return r2Storage.lastSaveFailureSummary();
+        }
+
+        return "Primary storage write failed; adapter returned local fallback key.";
     }
 
     private String messageFor(
@@ -205,4 +215,5 @@ public class StudioStorageSmokeTestService {
                 + message.replaceAll("(?i)(secret|key|token|credential)[^\\s,;]*", "$1-redacted");
     }
 }
+
 

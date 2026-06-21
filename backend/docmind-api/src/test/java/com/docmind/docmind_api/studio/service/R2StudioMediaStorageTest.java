@@ -75,6 +75,8 @@ class R2StudioMediaStorageTest {
                 .isEqualTo(key);
         assertThat(requestCaptor.getValue().contentType())
                 .isEqualTo("audio/wav");
+        assertThat(storage.lastSaveFailureSummary())
+                .isNull();
     }
 
     @Test
@@ -125,6 +127,9 @@ class R2StudioMediaStorageTest {
 
         assertThat(key)
                 .startsWith("local-fallback:");
+        assertThat(storage.lastSaveFailureSummary())
+                .contains("RuntimeException")
+                .contains("r2 unavailable");
         assertThat(storage.read(key))
                 .containsExactly(10, 11, 12);
 
@@ -202,3 +207,4 @@ class R2StudioMediaStorageTest {
                 .isEqualTo("studio-audio/example.wav");
     }
 }
+
