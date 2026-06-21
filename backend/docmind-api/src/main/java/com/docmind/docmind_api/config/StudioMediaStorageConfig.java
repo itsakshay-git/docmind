@@ -70,8 +70,8 @@ public class StudioMediaStorageConfig {
                 .region(
                         Region.of("auto")
                 )
-                .httpClientBuilder(
-                        UrlConnectionHttpClient.builder()
+                .httpClient(
+                        UrlConnectionHttpClient.create()
                 )
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
