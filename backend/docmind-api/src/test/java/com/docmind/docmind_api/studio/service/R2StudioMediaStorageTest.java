@@ -16,6 +16,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -101,6 +102,35 @@ class R2StudioMediaStorageTest {
         assertThat(key)
                 .startsWith("studio-images/" + notebookId + "-")
                 .endsWith(".png");
+    }
+
+    @Test
+    void fallsBackToLocalStorageWhenR2SaveFails() {
+        doThrow(
+                new RuntimeException(
+                        "r2 unavailable"
+                )
+        ).when(s3Client)
+                .putObject(
+                        any(PutObjectRequest.class),
+                        any(RequestBody.class)
+                );
+
+        String key =
+                storage.saveImage(
+                        UUID.randomUUID(),
+                        new byte[]{10, 11, 12},
+                        "png"
+                );
+
+        assertThat(key)
+                .startsWith("local-fallback:");
+        assertThat(storage.read(key))
+                .containsExactly(10, 11, 12);
+
+        storage.delete(
+                key
+        );
     }
 
     @Test

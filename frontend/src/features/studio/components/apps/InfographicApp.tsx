@@ -1,4 +1,4 @@
-﻿import { X } from "lucide-react";
+import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -20,6 +20,8 @@ export function InfographicApp({ artifact }: { artifact: StudioArtifact }) {
   useEffect(() => {
     let currentUrl = "";
 
+    setImageError("");
+
     if (!artifact.imageAvailable) {
       setImageUrl("");
       return undefined;
@@ -31,7 +33,7 @@ export function InfographicApp({ artifact }: { artifact: StudioArtifact }) {
         currentUrl = url;
         setImageUrl(url);
       })
-      .catch((error) => setImageError(error instanceof Error ? error.message : "Image failed to load"));
+      .catch(() => setImageError("The infographic image could not be loaded. The saved outline is still available below."));
 
     return () => {
       if (currentUrl) {
@@ -60,7 +62,7 @@ export function InfographicApp({ artifact }: { artifact: StudioArtifact }) {
     <article className="studio-mini-app infographic-app">
       <div>
         <h3>{data.title ?? artifact.title}</h3>
-        <p>{artifact.imageAvailable ? "Generated visual summary" : "Image was not generated."}</p>
+        <p>{artifact.imageAvailable ? "Generated visual summary" : "Outline saved. Image was not generated."}</p>
       </div>
       {imageError ? <p className="settings-error">{imageError}</p> : null}
       {imageUrl ? (
@@ -87,7 +89,7 @@ export function InfographicApp({ artifact }: { artifact: StudioArtifact }) {
           </div>
         </div>
       ) : null}
-      {!imageUrl && !imageError ? (
+      {!imageUrl ? (
         <div className="studio-preview-body">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{artifact.markdownContent}</ReactMarkdown>
         </div>
