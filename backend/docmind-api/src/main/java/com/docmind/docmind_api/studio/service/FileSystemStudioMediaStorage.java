@@ -63,7 +63,7 @@ public class FileSystemStudioMediaStorage implements StudioMediaStorage {
             );
         } catch (Exception e) {
             throw new RuntimeException(
-                    "Failed to read Studio media",
+                    "Failed to read Studio media from filesystem path '%s'".formatted(storageKey),
                     e
             );
         }
@@ -120,7 +120,7 @@ public class FileSystemStudioMediaStorage implements StudioMediaStorage {
             return path.toString();
         } catch (Exception e) {
             throw new RuntimeException(
-                    "Failed to save Studio media",
+                    "Failed to save Studio media to filesystem directory '%s'".formatted(directory),
                     e
             );
         }

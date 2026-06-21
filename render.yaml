@@ -27,7 +27,7 @@ services:
       - key: DOCMIND_DEMO_FULL_NAME
         value: Recruiter Demo
       - key: DOCMIND_STUDIO_STORAGE_PROVIDER
-        sync: false
+        value: r2
       - key: DOCMIND_R2_ENDPOINT
         sync: false
       - key: DOCMIND_R2_BUCKET
