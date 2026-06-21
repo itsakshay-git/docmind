@@ -2,6 +2,7 @@ package com.docmind.docmind_api.studio.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import software.amazon.awssdk.awscore.exception.AwsServiceException;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -140,9 +141,10 @@ public class R2StudioMediaStorage implements StudioMediaStorage {
             );
         } catch (Exception e) {
             log.warn(
-                    "Failed to delete Studio media from R2 bucket {} key {}",
+                    "Failed to delete Studio media from R2 bucket {} key {}. rootCause=\"{}\"",
                     bucket,
                     storageKey,
+                    rootCauseSummary(e),
                     e
             );
         }
@@ -178,9 +180,10 @@ public class R2StudioMediaStorage implements StudioMediaStorage {
             return key;
         } catch (Exception e) {
             log.warn(
-                    "Failed to save Studio media to R2 bucket {} key {}. Falling back to local filesystem storage for this artifact.",
+                    "Failed to save Studio media to R2 bucket {} key {}. rootCause=\"{}\". Falling back to local filesystem storage for this artifact.",
                     bucket,
                     key,
+                    rootCauseSummary(e),
                     e
             );
 
@@ -291,6 +294,43 @@ public class R2StudioMediaStorage implements StudioMediaStorage {
         return storageKey.substring(
                 LOCAL_FALLBACK_PREFIX.length()
         );
+    }
+
+    private String rootCauseSummary(
+            Exception exception
+    ) {
+
+        Throwable current =
+                exception;
+
+        while (current.getCause() != null) {
+            current =
+                    current.getCause();
+        }
+
+        if (current instanceof AwsServiceException awsException) {
+            String errorCode =
+                    awsException.awsErrorDetails() == null
+                            ? "unknown"
+                            : awsException.awsErrorDetails().errorCode();
+
+            String errorMessage =
+                    awsException.awsErrorDetails() == null
+                            ? awsException.getMessage()
+                            : awsException.awsErrorDetails().errorMessage();
+
+            return awsException.getClass().getSimpleName()
+                    + " status="
+                    + awsException.statusCode()
+                    + " code="
+                    + errorCode
+                    + " message="
+                    + errorMessage;
+        }
+
+        return current.getClass().getSimpleName()
+                + ": "
+                + current.getMessage();
     }
 
     private String contentType(

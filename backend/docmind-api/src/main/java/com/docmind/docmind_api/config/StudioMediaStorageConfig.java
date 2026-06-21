@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.http.urlconnection.UrlConnectionHttpClient;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
@@ -64,16 +65,19 @@ public class StudioMediaStorageConfig {
 
         return S3Client.builder()
                 .endpointOverride(
-                        URI.create(endpoint)
+                        URI.create(endpoint.trim())
                 )
                 .region(
                         Region.of("auto")
                 )
+                .httpClientBuilder(
+                        UrlConnectionHttpClient.builder()
+                )
                 .credentialsProvider(
                         StaticCredentialsProvider.create(
                                 AwsBasicCredentials.create(
-                                        accessKeyId,
-                                        secretAccessKey
+                                        accessKeyId.trim(),
+                                        secretAccessKey.trim()
                                 )
                         )
                 )
