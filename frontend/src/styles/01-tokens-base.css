@@ -116,6 +116,47 @@
   background: #f7f9fb;
 }
 
+:root[data-theme="light"] .source-dropzone,
+:root[data-theme="light"] .source-row {
+  background: #f8fafc;
+  border-color: #d7dee9;
+}
+
+:root[data-theme="light"] .source-row__icon,
+:root[data-theme="light"] .source-dropzone__intro > span,
+:root[data-theme="light"] .source-file-picker,
+:root[data-theme="light"] .source-panel-heading small {
+  background: #eef2f7;
+  border-color: #d1d9e5;
+}
+
+:root[data-theme="light"] .source-mode-tabs {
+  background: #eef2f7;
+  border-color: #d1d9e5;
+}
+
+:root[data-theme="light"] .source-mode-tabs button.active {
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(25, 30, 38, 0.06);
+}
+
+:root[data-theme="light"] .source-status--processed {
+  background: #e8f5ee;
+  border-color: #bee2cd;
+  color: #216b3c;
+}
+
+:root[data-theme="light"] .source-status--processing,
+:root[data-theme="light"] .source-status--uploaded {
+  background: #eef2f7;
+  border-color: #d1d9e5;
+}
+
+:root[data-theme="light"] .source-status--failed {
+  background: #fff0f0;
+  border-color: #f0c1c1;
+}
+
 :root[data-theme="light"] .chat-thread {
   background: #ffffff;
 }

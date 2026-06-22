@@ -66,20 +66,69 @@
   padding: 24px;
 }
 
+.source-panel-heading small {
+  align-items: center;
+  background: var(--panel-raised);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 750;
+  min-height: 24px;
+  padding: 0 8px;
+}
+
 .source-dropzone {
-  border: 1px dashed #394150;
-  border-radius: 10px;
+  background: var(--panel-raised);
+  border: 1px solid var(--line);
+  border-radius: 12px;
   color: var(--muted);
   display: grid;
-  gap: 11px;
-  justify-items: start;
-  padding: 16px;
+  gap: 12px;
+  padding: 13px;
+}
+
+.source-dropzone__intro {
+  align-items: start;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.source-dropzone__intro > span {
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.source-dropzone strong {
+  color: var(--ink);
+  display: block;
+  font-size: 13px;
+  line-height: 1.35;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.source-dropzone p {
+  font-size: 12px;
+  line-height: 1.45;
+  margin: 3px 0 0;
 }
 
 .source-mode-tabs {
   background: #11141a;
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 12px;
   display: grid;
   gap: 4px;
   grid-template-columns: repeat(3, 1fr);
@@ -92,52 +141,90 @@
 }
 
 .source-mode-tabs button {
+  align-items: center;
   background: transparent;
   border: 0;
-  border-radius: 7px;
+  border-radius: 9px;
   color: var(--muted);
   cursor: pointer;
+  display: inline-flex;
   font-size: 12px;
-  font-weight: 700;
-  min-height: 32px;
+  font-weight: 750;
+  gap: 6px;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 8px;
+}
+
+.source-mode-tabs button:hover {
+  color: var(--ink);
 }
 
 .source-mode-tabs button.active {
   background: var(--panel-soft);
   color: var(--ink);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.03);
 }
 
-.source-dropzone strong {
+.source-file-picker {
+  align-items: center;
+  background: var(--panel);
+  border: 1px dashed #465061;
+  border-radius: 10px;
   color: var(--ink);
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+  font-weight: 750;
+  justify-content: center;
+  min-height: 40px;
+  padding: 0 12px;
 }
 
-.source-dropzone p {
-  margin: 0;
+.source-file-picker:hover {
+  background: var(--panel-soft);
+  border-color: var(--muted);
+}
+
+.source-file-picker input {
+  display: none;
 }
 
 .source-list {
   display: grid;
-  gap: 10px;
+  gap: 9px;
 }
 
 .source-row {
   align-items: center;
   background: var(--panel-raised);
   border: 1px solid var(--line);
-  border-radius: 9px;
+  border-radius: 11px;
   display: grid;
   gap: 10px;
   grid-template-columns: auto minmax(0, 1fr) auto;
   padding: 10px;
 }
 
-.source-row > svg {
-  color: var(--muted);
+.source-row:hover {
+  border-color: #3a4453;
 }
 
-.source-row div {
+.source-row__icon {
+  align-items: center;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  width: 34px;
+}
+
+.source-row__body {
   display: grid;
-  gap: 4px;
+  gap: 5px;
   min-width: 0;
 }
 
@@ -149,17 +236,55 @@
   white-space: nowrap;
 }
 
-.source-row span,
-.source-row small {
+.source-row strong {
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.source-row__meta {
+  align-items: center;
   color: var(--muted);
+  display: flex;
   font-size: 11px;
   font-weight: 700;
+  gap: 7px;
+  min-width: 0;
+}
+
+.source-status {
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  min-height: 22px;
+  padding: 0 7px;
+}
+
+.source-status--processed {
+  background: rgba(117, 186, 143, 0.13);
+  border-color: rgba(117, 186, 143, 0.32);
+  color: #9ed8b1;
+}
+
+.source-status--processing,
+.source-status--uploaded {
+  background: rgba(148, 163, 184, 0.13);
+  border-color: rgba(148, 163, 184, 0.28);
+}
+
+.source-status--failed {
+  background: rgba(242, 184, 181, 0.13);
+  border-color: rgba(242, 184, 181, 0.34);
+  color: var(--danger);
 }
 
 .source-row small {
   color: var(--danger);
+  font-size: 11px;
+  font-weight: 700;
 }
-
 .workspace-content-grid {
   display: grid;
   gap: 18px;

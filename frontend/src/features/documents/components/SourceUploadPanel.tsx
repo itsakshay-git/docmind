@@ -1,4 +1,4 @@
-import { FileUp, Link, Upload, Youtube } from "lucide-react";
+import { FileText, FileUp, Globe2, Link, Upload, Youtube } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../../../shared/components/Button";
 
@@ -11,6 +11,12 @@ type SourceUploadPanelProps = {
   onAddYouTubeTranscript: (url: string, title: string, transcript: string) => void;
   onUpload: (file: File) => void;
 };
+
+const sourceModes = [
+  { id: "PDF", label: "PDF", Icon: FileText },
+  { id: "WEB_URL", label: "Web", Icon: Globe2 },
+  { id: "YOUTUBE", label: "Video", Icon: Youtube },
+] as const;
 
 export function SourceUploadPanel({
   isUploading,
@@ -54,71 +60,100 @@ export function SourceUploadPanel({
 
   return (
     <section className="source-upload-panel">
-      <div className="panel-heading">
+      <div className="panel-heading source-panel-heading">
         <span>
-          <FileUp size={17} /> Sources
+          <FileUp size={17} /> Add source
         </span>
+        <small>{modeLabel(mode)}</small>
       </div>
-      <div className="source-mode-tabs">
-        <button className={mode === "PDF" ? "active" : ""} onClick={() => setMode("PDF")} type="button">
-          PDF
-        </button>
-        <button className={mode === "WEB_URL" ? "active" : ""} onClick={() => setMode("WEB_URL")} type="button">
-          Website
-        </button>
-        <button className={mode === "YOUTUBE" ? "active" : ""} onClick={() => setMode("YOUTUBE")} type="button">
-          YouTube
-        </button>
+      <div className="source-mode-tabs" role="tablist" aria-label="Source type">
+        {sourceModes.map(({ id, label, Icon }) => (
+          <button
+            aria-selected={mode === id}
+            className={mode === id ? "active" : ""}
+            key={id}
+            onClick={() => setMode(id)}
+            role="tab"
+            type="button"
+          >
+            <Icon size={14} /> {label}
+          </button>
+        ))}
       </div>
       <form className="source-dropzone" onSubmit={submit}>
         {mode === "PDF" ? (
           <>
-            <Upload size={22} />
-            <strong>{file ? file.name : "Upload a PDF source"}</strong>
-            <p>Extract, chunk, embed, and connect the PDF to chat.</p>
-            <input
-              type="file"
-              accept="application/pdf"
-              onChange={(event) => setFile(event.target.files?.[0] ?? null)}
-            />
+            <div className="source-dropzone__intro">
+              <span>
+                <Upload size={18} />
+              </span>
+              <div>
+                <strong>{file ? file.name : "Upload a PDF"}</strong>
+                <p>{file ? "Ready to index this file." : "Best for notes, slides, and reference PDFs."}</p>
+              </div>
+            </div>
+            <label className="source-file-picker">
+              <input
+                type="file"
+                accept="application/pdf"
+                onChange={(event) => setFile(event.target.files?.[0] ?? null)}
+              />
+              <span>{file ? "Change file" : "Choose PDF"}</span>
+            </label>
             <Button disabled={!file || isUploading} icon={<Upload size={16} />} type="submit">
-              {isUploading ? "Processing" : "Add PDF"}
+              {isUploading ? "Indexing" : "Add PDF"}
             </Button>
           </>
         ) : null}
 
         {mode === "WEB_URL" ? (
           <>
-            <Link size={22} />
-            <strong>Add website</strong>
-            <p>Import readable page text from a URL.</p>
+            <div className="source-dropzone__intro">
+              <span>
+                <Link size={18} />
+              </span>
+              <div>
+                <strong>Add a website</strong>
+                <p>Imports readable article or documentation text.</p>
+              </div>
+            </div>
             <input
               placeholder="https://example.com/article"
               value={url}
               onChange={(event) => setUrl(event.target.value)}
             />
             <Button disabled={!url.trim() || isUploading} icon={<Link size={16} />} type="submit">
-              {isUploading ? "Processing" : "Add website"}
+              {isUploading ? "Indexing" : "Add website"}
             </Button>
           </>
         ) : null}
 
         {mode === "YOUTUBE" ? (
           <>
-            <Youtube size={22} />
-            <strong>Add YouTube transcript</strong>
-            <p>Paste a transcript for reliable ingestion, or try auto-fetch when captions are public.</p>
-            <div className="source-mode-tabs source-mode-tabs--compact">
+            <div className="source-dropzone__intro">
+              <span>
+                <Youtube size={18} />
+              </span>
+              <div>
+                <strong>Add a transcript</strong>
+                <p>Paste transcript text for the most reliable demo path.</p>
+              </div>
+            </div>
+            <div className="source-mode-tabs source-mode-tabs--compact" role="tablist" aria-label="Transcript mode">
               <button
+                aria-selected={youtubeMode === "MANUAL"}
                 className={youtubeMode === "MANUAL" ? "active" : ""}
                 onClick={() => setYouTubeMode("MANUAL")}
+                role="tab"
                 type="button"
               >
                 Paste
               </button>
               <button
+                aria-selected={youtubeMode === "AUTO"}
                 className={youtubeMode === "AUTO" ? "active" : ""}
                 onClick={() => setYouTubeMode("AUTO")}
+                role="tab"
                 type="button"
               >
                 Auto
@@ -143,12 +178,12 @@ export function SourceUploadPanel({
                   onChange={(event) => setTranscript(event.target.value)}
                 />
                 <Button disabled={!transcript.trim() || isUploading} icon={<Youtube size={16} />} type="submit">
-                  {isUploading ? "Processing" : "Add transcript"}
+                  {isUploading ? "Indexing" : "Add transcript"}
                 </Button>
               </>
             ) : (
               <Button disabled={!url.trim() || isUploading} icon={<Youtube size={16} />} type="submit">
-                {isUploading ? "Processing" : "Try auto transcript"}
+                {isUploading ? "Indexing" : "Try auto transcript"}
               </Button>
             )}
           </>
@@ -156,4 +191,16 @@ export function SourceUploadPanel({
       </form>
     </section>
   );
+}
+
+function modeLabel(mode: SourceMode) {
+  if (mode === "WEB_URL") {
+    return "URL";
+  }
+
+  if (mode === "YOUTUBE") {
+    return "Transcript";
+  }
+
+  return "File";
 }

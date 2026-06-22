@@ -336,6 +336,26 @@
     padding: 12px;
   }
 
+  .source-mode-tabs button {
+    gap: 4px;
+    padding: 0 6px;
+  }
+
+  .source-row {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    padding: 9px;
+  }
+
+  .source-row__meta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .source-status {
+    max-width: 100%;
+  }
+
   .notebooks-shellbar {
     padding: 18px;
   }
