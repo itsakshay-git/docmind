@@ -19,9 +19,8 @@
 
 .studio-entry-card {
   align-items: center;
-  background: linear-gradient(180deg, var(--panel-raised), rgba(30, 36, 45, 0.92));
+  background: linear-gradient(180deg, rgba(96, 111, 132, 0.08), rgba(30, 36, 45, 0.92)), var(--panel-raised);
   border: 1px solid var(--line);
-  border-left: 3px solid #64748b;
   border-radius: 10px;
   color: var(--ink);
   cursor: pointer;
@@ -169,9 +168,8 @@
 }
 
 .studio-artifact-list button {
-  background: linear-gradient(180deg, var(--panel-raised), rgba(30, 36, 45, 0.92));
+  background: var(--panel-raised);
   border: 1px solid var(--line);
-  border-left: 3px solid #64748b;
   border-radius: 9px;
   color: var(--ink);
   cursor: pointer;
@@ -646,28 +644,23 @@
   }
 }
 
-.studio-entry-card:nth-child(2),
-.studio-artifact-list button:nth-child(2n) {
-  border-left-color: #5f7f76;
+.studio-entry-card:nth-child(2) {
+  background: linear-gradient(180deg, rgba(79, 116, 105, 0.1), rgba(30, 36, 45, 0.92)), var(--panel-raised);
 }
 
-.studio-entry-card:nth-child(3),
-.studio-artifact-list button:nth-child(3n) {
-  border-left-color: #7c735f;
+.studio-entry-card:nth-child(3) {
+  background: linear-gradient(180deg, rgba(126, 113, 84, 0.1), rgba(30, 36, 45, 0.92)), var(--panel-raised);
 }
 
-.studio-entry-card:nth-child(4),
-.studio-artifact-list button:nth-child(4n) {
-  border-left-color: #6f6f90;
+.studio-entry-card:nth-child(4) {
+  background: linear-gradient(180deg, rgba(98, 103, 142, 0.1), rgba(30, 36, 45, 0.92)), var(--panel-raised);
 }
 
-.studio-entry-card:nth-child(5),
-.studio-artifact-list button:nth-child(5n) {
-  border-left-color: #806a72;
+.studio-entry-card:nth-child(5) {
+  background: linear-gradient(180deg, rgba(128, 96, 105, 0.1), rgba(30, 36, 45, 0.92)), var(--panel-raised);
 }
 
 :root[data-theme="light"] .studio-entry-card,
-:root[data-theme="light"] .studio-artifact-list button,
 :root[data-theme="light"] .studio-preview,
 :root[data-theme="light"] .studio-mini-app,
 :root[data-theme="light"] .studio-generate-detail {
@@ -689,4 +682,29 @@
   background: #273241;
   border-color: #273241;
   color: #ffffff;
+}
+
+:root[data-theme="light"] .studio-entry-card:nth-child(1) {
+  background: linear-gradient(180deg, rgba(96, 111, 132, 0.08), rgba(255, 255, 255, 0.86)), #ffffff;
+}
+
+:root[data-theme="light"] .studio-entry-card:nth-child(2) {
+  background: linear-gradient(180deg, rgba(79, 116, 105, 0.09), rgba(255, 255, 255, 0.86)), #ffffff;
+}
+
+:root[data-theme="light"] .studio-entry-card:nth-child(3) {
+  background: linear-gradient(180deg, rgba(126, 113, 84, 0.09), rgba(255, 255, 255, 0.86)), #ffffff;
+}
+
+:root[data-theme="light"] .studio-entry-card:nth-child(4) {
+  background: linear-gradient(180deg, rgba(98, 103, 142, 0.09), rgba(255, 255, 255, 0.86)), #ffffff;
+}
+
+:root[data-theme="light"] .studio-entry-card:nth-child(5) {
+  background: linear-gradient(180deg, rgba(128, 96, 105, 0.09), rgba(255, 255, 255, 0.86)), #ffffff;
+}
+
+:root[data-theme="light"] .studio-artifact-list button {
+  background: #f7f9fb;
+  border-color: #dce3ec;
 }
