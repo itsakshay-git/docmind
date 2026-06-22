@@ -90,7 +90,7 @@ Studio supports flashcards, quiz, briefing, podcast audio/script, and generated 
 - Keep Gemini access server-side only.
 - Use constructor injection with Lombok `@RequiredArgsConstructor`.
 - Keep frontend-facing DTOs explicit.
-- Run the backend test baseline from `docs/quality-checks.md` before committing backend changes.
+- Run the backend test baseline from `docs/current/quality-checks.md` before committing backend changes.
 
 ## Monitoring
 
@@ -111,9 +111,9 @@ Current instrumented operations include embedding generation, RAG search, non-st
 
 Only `GET /actuator/health` is public. It is intended for local health checks and future deployment probes. Other exposed actuator endpoints remain behind normal security, and sensitive actuator endpoints are not exposed.
 
-Local infrastructure and environment variables are documented in `docs/local-development.md`.
+Local infrastructure and environment variables are documented in `docs/current/local-development.md`.
 
-Deployment readiness, including production datasource and CORS environment variables, is documented in `docs/deployment-readiness.md`.
+Deployment readiness, including production datasource and CORS environment variables, is documented in `docs/current/deployment-readiness.md`.
 
 ## Management APIs
 

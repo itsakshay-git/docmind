@@ -168,7 +168,7 @@ GET /actuator/prometheus
 
 This makes the backend Prometheus-ready without running Prometheus or Grafana locally yet.
 
-Deployment preparation is documented in `docs/deployment-readiness.md`.
+Deployment preparation is documented in `docs/current/deployment-readiness.md`.
 
 ## Local Dev Checklist
 

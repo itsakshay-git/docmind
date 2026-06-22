@@ -14,7 +14,7 @@ type WorkspaceSidebarProps = {
   onAddWebUrl: (url: string) => void;
   onAddYouTubeTranscript: (url: string, title: string, transcript: string) => void;
   onAddYouTubeUrl: (url: string) => void;
-  onDeleteSource: (documentId: string) => void;
+  onDeleteSource: (documentId: string, documentTitle: string) => void;
   onUploadPdf: (file: File) => void;
 };
 

@@ -55,7 +55,7 @@ docs/README.md
 Open the detailed design file:
 
 ```text
-docs/system-design.md
+docs/current/system-design.md
 ```
 
 Open the architecture diagram:
@@ -171,7 +171,7 @@ corepack pnpm build
 Deployment runbook:
 
 ```text
-docs/platform-deployment-runbook.md
+docs/current/platform-deployment-runbook.md
 ```
 
 Current deployed shape:
@@ -191,5 +191,6 @@ AI: Google Gemini
 - Embeddings use PostgreSQL `pgvector` exact cosine search with legacy JSON text retained for compatibility.
 - Gemini quota can affect embedding, chat, and Studio generation; provider errors are normalized into user-safe messages.
 - YouTube transcript ingestion is best effort; pasted transcript is the reliable demo path.
-- Detailed post-v1 backlog: `docs/next-improvements.md`.
+- Detailed post-v1 backlog: `docs/current/next-improvements.md`.
+- Future enterprise track: Redis for real caching/rate-limit/session needs and Kafka for asynchronous document-processing workflows, not as resume-only additions.
 

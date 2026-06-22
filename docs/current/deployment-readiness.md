@@ -2,9 +2,9 @@
 
 This document prepares DocMind for deployment without deploying it yet.
 
-For step-by-step Vercel, Render, and Neon setup, see `docs/platform-deployment-runbook.md`.
+For step-by-step Vercel, Render, and Neon setup, see `docs/current/platform-deployment-runbook.md`.
 
-For the full deployed architecture, see `docs/system-design.md`.
+For the full deployed architecture, see `docs/current/system-design.md`.
 
 Current deployed endpoints:
 

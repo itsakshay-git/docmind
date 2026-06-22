@@ -7,7 +7,7 @@ The current MVP is a modular monolith backend plus a Vite React frontend.
 For the detailed deployed system design, see:
 
 ```text
-docs/system-design.md
+docs/current/system-design.md
 ```
 
 ## Current Capabilities
@@ -46,7 +46,7 @@ Main modules:
 More detail:
 
 ```text
-docs/backend-architecture.md
+docs/current/backend-architecture.md
 ```
 
 ## Frontend
@@ -68,7 +68,7 @@ Main areas:
 More detail:
 
 ```text
-docs/frontend-architecture.md
+docs/current/frontend-architecture.md
 ```
 
 ## Local Infrastructure
@@ -78,8 +78,8 @@ Local development uses Docker Compose for PostgreSQL only. The backend exposes a
 More detail:
 
 ```text
-docs/local-development.md
-docs/deployment-readiness.md
+docs/current/local-development.md
+docs/current/deployment-readiness.md
 ```
 
 ## Upload-To-Answer Flow

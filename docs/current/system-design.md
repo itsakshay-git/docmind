@@ -8,7 +8,7 @@ Diagram:
 docs/assets/system-design.svg
 ```
 
-![DocMind system design](assets/system-design.svg)
+![DocMind system design](../assets/system-design.svg)
 
 ## 1. Product Goal
 
@@ -337,6 +337,6 @@ High-value next steps:
 Detailed backlog:
 
 ```text
-docs/next-improvements.md
+docs/current/next-improvements.md
 ```
 

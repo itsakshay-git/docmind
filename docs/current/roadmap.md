@@ -46,7 +46,7 @@ Wind down the deployed v1 into a portfolio-ready project: keep the core demo sta
 Detailed post-v1 backlog:
 
 ```text
-docs/next-improvements.md
+docs/current/next-improvements.md
 ```
 
 ## Next Milestones
@@ -85,3 +85,8 @@ docs/next-improvements.md
 - Improve infographic rendering templates and add richer downloadable study formats.
 - Add regenerate actions for failed podcast audio or image generation.
 
+### DocMind Enterprise Track
+
+- Add Redis only for real product needs: AI rate limiting, embedding/status caching, short-lived session/workflow state, or safe repeated-response caching.
+- Add Kafka only when ingestion needs asynchronous, event-driven processing across upload, extraction, chunking, embedding, indexing, and notification workers.
+- Keep this as a future senior-level architecture upgrade after the portfolio MVP remains stable and easy to demo.

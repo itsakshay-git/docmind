@@ -56,6 +56,26 @@
   background: #edf0f4;
 }
 
+:root[data-theme="light"] .button--danger {
+  background: #a23b3b;
+  color: #ffffff;
+}
+
+:root[data-theme="light"] .button--danger:hover {
+  background: #842f2f;
+}
+
+:root[data-theme="light"] .confirm-dialog {
+  background: #ffffff;
+  border-color: #d8dee8;
+  box-shadow: 0 28px 80px rgba(25, 30, 38, 0.18);
+}
+
+:root[data-theme="light"] .confirm-dialog__icon {
+  background: #fff0f0;
+  border-color: #f0c1c1;
+}
+
 :root[data-theme="light"] .library-tab,
 :root[data-theme="light"] .library-search,
 :root[data-theme="light"] .sort-button,
@@ -80,11 +100,10 @@
 }
 
 :root[data-theme="light"] .notebook-card-cover {
-  background: linear-gradient(145deg, #19212d, #465466);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    0 10px 24px rgba(25, 30, 38, 0.18);
-  color: #ffffff;
+  background: #eef2f7;
+  border: 1px solid #d3dbe7;
+  box-shadow: none;
+  color: #243041;
 }
 
 :root[data-theme="light"] .workspace-sidebar {
@@ -362,6 +381,77 @@ textarea {
 .button--secondary:hover,
 .button--ghost:hover {
   background: #2a303b;
+}
+
+.button--danger {
+  background: #8f3a3a;
+  color: #ffffff;
+}
+
+.button--danger:hover {
+  background: #a94747;
+}
+
+.confirm-dialog-backdrop {
+  align-items: center;
+  background: rgba(7, 10, 14, 0.62);
+  display: flex;
+  inset: 0;
+  justify-content: center;
+  padding: 18px;
+  position: fixed;
+  z-index: 100;
+}
+
+.confirm-dialog {
+  background: linear-gradient(180deg, var(--panel-raised), var(--panel));
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.42);
+  display: grid;
+  gap: 14px;
+  max-width: 430px;
+  padding: 18px;
+  width: 100%;
+}
+
+.confirm-dialog__icon {
+  align-items: center;
+  background: rgba(242, 184, 181, 0.12);
+  border: 1px solid rgba(242, 184, 181, 0.28);
+  border-radius: 999px;
+  color: var(--danger);
+  display: inline-flex;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.confirm-dialog__body {
+  display: grid;
+  gap: 6px;
+}
+
+.confirm-dialog h2,
+.confirm-dialog p {
+  margin: 0;
+}
+
+.confirm-dialog h2 {
+  font-size: 18px;
+  line-height: 1.3;
+}
+
+.confirm-dialog p {
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.confirm-dialog__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
 }
 
 .icon-button {

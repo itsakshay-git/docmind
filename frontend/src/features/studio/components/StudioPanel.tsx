@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight, AudioLines, FileText, Image as ImageIcon, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { studioApi } from "../api/studioApi";
+import { ConfirmDialog } from "../../../shared/components/ConfirmDialog";
 import { useStudioArtifacts } from "../hooks/useStudioArtifacts";
 import { artifactTypes } from "../model/artifactTypes";
 import type { StudioArtifact, StudioArtifactType } from "../../../shared/types";
@@ -15,6 +16,7 @@ export function StudioPanel({ notebookId }: StudioPanelProps) {
   const [instruction, setInstruction] = useState("");
   const [openedArtifactId, setOpenedArtifactId] = useState("");
   const [downloadError, setDownloadError] = useState("");
+  const [artifactToDelete, setArtifactToDelete] = useState<StudioArtifact | null>(null);
   const {
     artifacts,
     artifactsQuery,
@@ -35,14 +37,17 @@ export function StudioPanel({ notebookId }: StudioPanelProps) {
     }
   }
 
-  function deleteArtifact(artifact: StudioArtifact) {
-    if (window.confirm(`Delete "${artifact.title}"?`)) {
-      deleteMutation.mutate(artifact.id, {
-        onSuccess() {
-          setOpenedArtifactId("");
-        },
-      });
+  function deleteArtifact() {
+    if (!artifactToDelete) {
+      return;
     }
+
+    deleteMutation.mutate(artifactToDelete.id, {
+      onSuccess() {
+        setArtifactToDelete(null);
+        setOpenedArtifactId("");
+      },
+    });
   }
 
   if (openedArtifact) {
@@ -53,8 +58,17 @@ export function StudioPanel({ notebookId }: StudioPanelProps) {
           downloadError={downloadError}
           isDeleting={deleteMutation.isPending}
           onBack={() => setOpenedArtifactId("")}
-          onDelete={() => deleteArtifact(openedArtifact)}
+          onDelete={() => setArtifactToDelete(openedArtifact)}
           onDownload={(format) => download(openedArtifact, format)}
+        />
+        <ConfirmDialog
+          confirmLabel="Delete artifact"
+          description={`This will permanently delete "${artifactToDelete?.title ?? "this artifact"}" and its saved media.`}
+          isOpen={Boolean(artifactToDelete)}
+          isPending={deleteMutation.isPending}
+          title="Delete artifact?"
+          onCancel={() => setArtifactToDelete(null)}
+          onConfirm={deleteArtifact}
         />
       </section>
     );

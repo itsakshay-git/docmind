@@ -1,3 +1,150 @@
+@media (min-width: 821px) and (max-width: 1180px) {
+  .workspace-page {
+    align-content: start;
+    display: grid;
+    gap: 12px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+    padding: 14px 14px 82px;
+  }
+
+  .workspace-mobile-topbar {
+    align-items: center;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    display: flex;
+    min-height: 44px;
+    padding: 0 14px;
+  }
+
+  .workspace-mobile-tabs {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    bottom: 14px;
+    box-shadow: var(--shadow);
+    display: grid;
+    gap: 6px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    left: 50%;
+    max-width: 560px;
+    padding: 6px;
+    position: fixed;
+    transform: translateX(-50%);
+    width: calc(100% - 28px);
+    z-index: 30;
+  }
+
+  .workspace-mobile-tabs button {
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 750;
+    min-height: 40px;
+  }
+
+  .workspace-mobile-tabs button.active {
+    background: var(--panel-soft);
+    color: var(--ink);
+  }
+
+  .workspace-mobile-section {
+    display: none;
+  }
+
+  .workspace-mobile-section.active {
+    display: grid;
+    height: calc(100dvh - 154px);
+    min-height: 0;
+    overflow: auto;
+  }
+
+  .workspace-sidebar.workspace-mobile-section.active {
+    display: grid;
+  }
+
+  .workspace-main {
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .workspace-content-grid {
+    display: block;
+    height: 100%;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  .workspace-sidebar {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    gap: 14px;
+    padding: 16px;
+  }
+
+  .workspace-sidebar .back-link,
+  .workspace-sidebar .sidebar-block {
+    display: none;
+  }
+
+  .chat-panel {
+    height: 100%;
+    min-width: 0;
+    overflow: hidden;
+    padding: 16px;
+  }
+
+  .studio-panel {
+    height: auto;
+    max-height: none;
+    min-width: 0;
+    overflow: visible;
+    padding: 16px;
+  }
+
+  .workspace-mobile-section--chat.active {
+    overflow: hidden;
+  }
+
+  .workspace-mobile-section--studio.active,
+  .studio-panel {
+    overflow-x: hidden;
+  }
+
+  .chat-thread {
+    min-width: 0;
+    overflow: auto;
+  }
+
+  .chat-toolbar {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    min-width: 0;
+  }
+
+  .studio-artifact-section,
+  .studio-generator,
+  .studio-entry-card,
+  .studio-entry-card > span,
+  .studio-artifact-list,
+  .studio-artifact-list button {
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .source-upload-panel,
+  .source-list-panel {
+    padding: 16px;
+  }
+}
 @media (max-width: 820px) {
   .workspace-page {
     height: auto;
@@ -320,11 +467,6 @@
   .studio-artifact-list button {
     min-width: 0;
     max-width: 100%;
-  }
-
-  .studio-artifact-list {
-    max-height: 132px;
-    overflow: auto;
   }
 
   .studio-artifact-list button {

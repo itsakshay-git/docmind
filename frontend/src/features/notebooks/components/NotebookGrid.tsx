@@ -14,7 +14,7 @@ type NotebookGridProps = {
   emptyDescription: string;
   emptyTitle: string;
   onCreate: () => void;
-  onDelete: (notebookId: string) => void;
+  onDelete: (notebookId: string, notebookTitle: string) => void;
   onRename: (notebookId: string, nextTitle: string) => void;
   onTitleChange: (title: string) => void;
 };

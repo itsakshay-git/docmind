@@ -63,7 +63,7 @@ The notebook workspace route is a container page. Workspace layout, mobile tabs,
 
 TanStack Query is the server-state layer. Feature hooks own query keys, mutations, and cache invalidation. AuthContext owns the JWT session. Local component state is used for view-only state such as selected tabs, open artifact, search text, form drafts, and flashcard/quiz progress.
 
-Current query keys are documented in `docs/frontend-structure-snapshot.md`.
+Current query keys are documented in `docs/archive/frontend-structure-snapshot.md`.
 
 Styles are imported through `src/styles/index.css`. The split is organizational only; selectors remain global and should be renamed only with matching component updates and verification.
 
@@ -71,7 +71,7 @@ Backend-facing DTOs live in `src/shared/types` and are split by feature. New cod
 
 ## Quality Checks
 
-Run before committing frontend changes. See also `docs/quality-checks.md`.
+Run before committing frontend changes. See also `docs/current/quality-checks.md`.
 
 ```powershell
 cd "D:\my projects\docmind\frontend"

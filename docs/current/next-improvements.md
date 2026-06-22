@@ -50,7 +50,11 @@ Spring AI PGvector setup requires PostgreSQL vector-related extensions and can i
   - Add bounded retries only where safe, such as transient provider failures.
   - Avoid retry storms for quota exhaustion.
   - Show actionable frontend errors for chat, embedding, and Studio generation failures.
-- Keep Cloudflare R2 Studio media durable in production:`r`n  - Keep the current filesystem-backed `StudioMediaStorage` adapter for local development.`r`n  - Keep Render R2 endpoint, bucket, and access keys documented and smoke-tested.`r`n  - Store durable object keys in the existing Studio media path fields.`r`n  - Keep authenticated download and preview endpoints as the stable frontend contract.
+- Keep Cloudflare R2 Studio media durable in production:
+  - Keep the current filesystem-backed `StudioMediaStorage` adapter for local development.
+  - Keep Render R2 endpoint, bucket, and access keys documented and smoke-tested.
+  - Store durable object keys in the existing Studio media path fields.
+  - Keep authenticated download and preview endpoints as the stable frontend contract.
 - Continue improving observability:
   - Keep custom Micrometer metrics for embedding generation, RAG search, chat answer generation, streaming completion, and Studio generation healthy.
   - Add structured request and AI-operation logs.
@@ -65,6 +69,48 @@ Spring AI PGvector setup requires PostgreSQL vector-related extensions and can i
 - Add richer downloadable study formats where they help demos and learning workflows.
 - Add Brave Search import behind `BRAVE_SEARCH_API_KEY`.
 - Improve source management with source detail views, failed-ingestion guidance, and clearer status messaging.
+
+
+## Future Enterprise Architecture Track
+
+DocMind should not add Kafka or Redis just to list them on a resume. They become valuable only when the product needs asynchronous processing, distributed caching, throttling, or real-time status updates. A future "DocMind Enterprise" track can introduce them around real production problems.
+
+### Redis Use Cases
+
+- Cache expensive embedding results for repeated chunks or re-indexing workflows.
+- Cache short-lived chat/RAG responses only when the prompt, notebook revision, user, and retrieval inputs are identical.
+- Add distributed rate limiting for Gemini chat, embedding, TTS, and image calls.
+- Store short-lived workflow/session state if DocMind later runs multiple backend instances.
+- Cache source-processing status for fast workspace updates without repeatedly querying heavier tables.
+
+### Kafka Use Cases
+
+- Publish a `DocumentUploaded` event after source upload or paste.
+- Split ingestion into asynchronous stages: text extraction, chunking, embedding, indexing, and notification.
+- Add retry/dead-letter handling for failed extraction, embedding, or indexing jobs.
+- Emit progress events so the frontend can show durable processing status.
+- Keep notebook ownership and idempotency keys in each event so duplicate processing does not create duplicate chunks or embeddings.
+
+### Example Enterprise Flow
+
+```text
+PDF Uploaded
+  -> Kafka DocumentUploaded event
+  -> Text Extraction Service
+  -> Chunking Service
+  -> Embedding Service
+  -> Indexing Service
+  -> Notification / Status Service
+```
+
+### Resume Value
+
+- Event-driven document processing with Spring Boot workers.
+- Asynchronous ingestion that keeps upload requests fast.
+- Redis-backed rate limiting and caching for AI cost control.
+- Message-driven architecture with retries, dead-letter handling, and idempotent consumers.
+
+This is a future senior-level upgrade path. It should stay out of the current portfolio MVP until the deployed v1 demo is stable, documented, and easy to explain.
 
 ## Acceptance Criteria For Future Work
 

@@ -6,7 +6,7 @@ import { EmptyState } from "../../../shared/components/EmptyState";
 type SourceListPanelProps = {
   documents: DocumentSource[];
   isDeleting: boolean;
-  onDelete: (documentId: string) => void;
+  onDelete: (documentId: string, documentTitle: string) => void;
 };
 
 type SourceMeta = {
@@ -50,7 +50,7 @@ export function SourceListPanel({ documents, isDeleting, onDelete }: SourceListP
                   aria-label={`Delete ${document.fileName}`}
                   className="icon-button icon-button--subtle"
                   disabled={isDeleting}
-                  onClick={() => onDelete(document.id)}
+                  onClick={() => onDelete(document.id, document.fileName)}
                   type="button"
                 >
                   <Trash2 size={15} />

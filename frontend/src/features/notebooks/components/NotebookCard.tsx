@@ -1,4 +1,4 @@
-﻿import { BookOpen, Check, Pencil, Trash2, X } from "lucide-react";
+import { BookOpen, Check, Pencil, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import type { Notebook } from "../../../shared/types";
@@ -7,7 +7,7 @@ type NotebookCardProps = {
   isUpdating: boolean;
   isDeleting: boolean;
   notebook: Notebook;
-  onDelete: (notebookId: string) => void;
+  onDelete: (notebookId: string, notebookTitle: string) => void;
   onRename: (notebookId: string, title: string) => void;
 };
 
@@ -30,10 +30,7 @@ export function NotebookCard({ isDeleting, isUpdating, notebook, onDelete, onRen
   function deleteNotebook(event: React.MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
     event.stopPropagation();
-
-    if (window.confirm(`Delete "${notebook.title}" and all its sources/chat history?`)) {
-      onDelete(notebook.id);
-    }
+    onDelete(notebook.id, notebook.title);
   }
 
   function startEditing(event: React.MouseEvent<HTMLButtonElement>) {

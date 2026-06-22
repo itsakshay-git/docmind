@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../features/auth/context/AuthContext";
+import { ConfirmDialog } from "../shared/components/ConfirmDialog";
 import { NotebookGrid } from "../features/notebooks/components/NotebookGrid";
 import { NotebookLibraryHeader } from "../features/notebooks/components/NotebookLibraryHeader";
 import { NotebookLibraryToolbar } from "../features/notebooks/components/NotebookLibraryToolbar";
@@ -24,6 +25,7 @@ export function NotebooksPage() {
   const [editingNotebookId, setEditingNotebookId] = useState("");
   const [editingTitle, setEditingTitle] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [notebookToDelete, setNotebookToDelete] = useState<{ id: string; title: string } | null>(null);
 
   const notebooksQuery = useNotebooks();
   const createMutation = useCreateNotebook();
@@ -98,10 +100,20 @@ export function NotebooksPage() {
     }
   }
 
-  function deleteNotebook(notebookId: string, notebookTitle: string) {
-    if (window.confirm(`Delete "${notebookTitle}" and all its sources/chat history?`)) {
-      deleteMutation.mutate(notebookId);
+  function requestNotebookDelete(notebookId: string, notebookTitle: string) {
+    setNotebookToDelete({ id: notebookId, title: notebookTitle });
+  }
+
+  function deleteNotebook() {
+    if (!notebookToDelete) {
+      return;
     }
+
+    deleteMutation.mutate(notebookToDelete.id, {
+      onSuccess() {
+        setNotebookToDelete(null);
+      },
+    });
   }
 
   const notebooks = useMemo(() => notebooksQuery.data ?? [], [notebooksQuery.data]);
@@ -127,7 +139,6 @@ export function NotebooksPage() {
         onMobileMenuToggle={() => setIsMobileMenuOpen((current) => !current)}
         onSignOut={auth.signOut}
       />
-
       <div className="notebook-library-content">
         <NotebookLibraryToolbar
           isCreating={createMutation.isPending}
@@ -152,7 +163,7 @@ export function NotebooksPage() {
             isUpdating={updateTitleMutation.isPending}
             notebooks={visibleNotebooks}
             onCancelRename={cancelListRename}
-            onDelete={deleteNotebook}
+            onDelete={requestNotebookDelete}
             onEditingTitleChange={setEditingTitle}
             onRenameKeyDown={handleListRenameKeyDown}
             onSaveRename={saveListRename}
@@ -174,12 +185,21 @@ export function NotebooksPage() {
             notebooks={notebooks.length ? visibleNotebooks : []}
             title={title}
             onCreate={createNotebook}
-            onDelete={(notebookId) => deleteMutation.mutate(notebookId)}
+            onDelete={requestNotebookDelete}
             onRename={(notebookId, nextTitle) => updateTitleMutation.mutate({ notebookId, nextTitle })}
             onTitleChange={setTitle}
           />
         )}
       </div>
+      <ConfirmDialog
+        confirmLabel="Delete notebook"
+        description={`This will permanently delete "${notebookToDelete?.title ?? "this notebook"}" with its sources and chat history.`}
+        isOpen={Boolean(notebookToDelete)}
+        isPending={deleteMutation.isPending}
+        title="Delete notebook?"
+        onCancel={() => setNotebookToDelete(null)}
+        onConfirm={deleteNotebook}
+      />{" "}
     </main>
   );
 }

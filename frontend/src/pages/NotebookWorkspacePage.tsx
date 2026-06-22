@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNotebookChat } from "../features/chat/hooks/useNotebookChat";
+import { ConfirmDialog } from "../shared/components/ConfirmDialog";
 import { useNotebookDocuments, useSourceMutations } from "../features/documents/hooks/useNotebookDocuments";
 import { useNotebooks } from "../features/notebooks/hooks/useNotebooks";
 import { WorkspaceMain } from "../features/workspace/components/WorkspaceMain";
@@ -13,6 +14,8 @@ export function NotebookWorkspacePage() {
   const { notebookId = "" } = useParams();
   const [chatTopK, setChatTopK] = useState(5);
   const [activeMobileSection, setActiveMobileSection] = useState<WorkspaceMobileSection>("chat");
+  const [sourceToDelete, setSourceToDelete] = useState<{ id: string; title: string } | null>(null);
+  const [isClearChatDialogOpen, setIsClearChatDialogOpen] = useState(false);
 
   const notebooksQuery = useNotebooks();
   const notebookDocumentsQuery = useNotebookDocuments(notebookId);
@@ -43,7 +46,6 @@ export function NotebookWorkspacePage() {
     <main className="workspace-page">
       <WorkspaceMobileTopbar />
       <WorkspaceMobileTabs activeSection={activeMobileSection} onSectionChange={setActiveMobileSection} />
-
       <WorkspaceSidebar
         activeMobileSection={activeMobileSection}
         documents={notebookDocumentsQuery.data ?? []}
@@ -55,10 +57,9 @@ export function NotebookWorkspacePage() {
           addYouTubeTranscriptMutation.mutate({ url, title, transcript })
         }
         onAddYouTubeUrl={(url) => addYouTubeUrlMutation.mutate(url)}
-        onDeleteSource={(documentId) => deleteDocumentMutation.mutate(documentId)}
+        onDeleteSource={(documentId, documentTitle) => setSourceToDelete({ id: documentId, title: documentTitle })}
         onUploadPdf={(file) => uploadMutation.mutate(file)}
       />
-
       <WorkspaceMain
         activeMobileSection={activeMobileSection}
         chatErrorMessage={messagesQuery.error instanceof Error ? messagesQuery.error.message : undefined}
@@ -68,14 +69,44 @@ export function NotebookWorkspacePage() {
         isChatLoading={messagesQuery.isLoading}
         messages={messages}
         notebookId={notebookId}
-        onChatClear={() => {
-          if (window.confirm("Clear this notebook chat history?")) {
-            clearChatMutation.mutate();
-          }
-        }}
+        onChatClear={() => setIsClearChatDialogOpen(true)}
         onChatSend={(content, topK) => sendMessageMutation.mutate({ content, topK })}
         onChatTopKChange={setChatTopK}
       />
+      <ConfirmDialog
+        confirmLabel="Delete source"
+        description={`This will remove "${sourceToDelete?.title ?? "this source"}" and its indexed chunks from the notebook.`}
+        isOpen={Boolean(sourceToDelete)}
+        isPending={deleteDocumentMutation.isPending}
+        title="Delete source?"
+        onCancel={() => setSourceToDelete(null)}
+        onConfirm={() => {
+          if (!sourceToDelete) {
+            return;
+          }
+
+          deleteDocumentMutation.mutate(sourceToDelete.id, {
+            onSuccess() {
+              setSourceToDelete(null);
+            },
+          });
+        }}
+      />
+      <ConfirmDialog
+        confirmLabel="Clear chat"
+        description="This will delete the saved chat history for this notebook. Your sources will stay indexed."
+        isOpen={isClearChatDialogOpen}
+        isPending={clearChatMutation.isPending}
+        title="Clear chat history?"
+        onCancel={() => setIsClearChatDialogOpen(false)}
+        onConfirm={() =>
+          clearChatMutation.mutate(undefined, {
+            onSuccess() {
+              setIsClearChatDialogOpen(false);
+            },
+          })
+        }
+      />{" "}
     </main>
   );
 }

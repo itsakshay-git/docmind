@@ -4,7 +4,7 @@
 
 DocMind is a deployed full-stack document intelligence platform inspired by NotebookLM. The current MVP supports notebook-scoped source ingestion, text extraction, chunking, Gemini embeddings, semantic retrieval, grounded chat, and Studio study artifact generation.
 
-Start with [README.md](README.md), [docs/README.md](docs/README.md), and [docs/system-design.md](docs/system-design.md). Use [docs/chatgpt-project-handoff.md](docs/chatgpt-project-handoff.md) only as historical project context.
+Start with [README.md](README.md), [docs/README.md](docs/README.md), and [docs/current/system-design.md](docs/current/system-design.md). Historical local notes may exist under `docs/archive/`, but they are not the current architecture source of truth.
 
 ## Stack
 
