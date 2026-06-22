@@ -33,7 +33,9 @@ export function InfographicApp({ artifact }: { artifact: StudioArtifact }) {
         currentUrl = url;
         setImageUrl(url);
       })
-      .catch(() => setImageError("The infographic image could not be loaded. The saved outline is still available below."));
+      .catch(() =>
+        setImageError("The infographic image could not be loaded. The saved outline is still available below.")
+      );
 
     return () => {
       if (currentUrl) {
