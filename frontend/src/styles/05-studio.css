@@ -1,4 +1,4 @@
-﻿.studio-grid {
+.studio-grid {
   display: grid;
   gap: 12px;
   min-height: 0;
@@ -19,8 +19,9 @@
 
 .studio-entry-card {
   align-items: center;
-  background: var(--panel-raised);
+  background: linear-gradient(180deg, var(--panel-raised), rgba(30, 36, 45, 0.92));
   border: 1px solid var(--line);
+  border-left: 3px solid #64748b;
   border-radius: 10px;
   color: var(--ink);
   cursor: pointer;
@@ -37,8 +38,8 @@
 }
 
 .studio-entry-card:hover {
-  background: var(--panel-soft);
-  border-color: var(--accent-strong);
+  background: linear-gradient(180deg, var(--panel-soft), var(--panel-raised));
+  border-color: #465467;
   transform: translateY(-1px);
 }
 
@@ -83,9 +84,9 @@
 }
 
 .studio-entry-card:hover .studio-entry-card__action {
-  background: var(--accent);
-  border-color: var(--accent-strong);
-  color: #fff;
+  background: #d8e0ea;
+  border-color: #e8edf3;
+  color: #11151b;
   transform: translateX(2px);
 }
 
@@ -95,7 +96,7 @@
 }
 
 .studio-generate-detail {
-  background: var(--panel-raised);
+  background: linear-gradient(180deg, var(--panel-raised), rgba(30, 36, 45, 0.92));
   border: 1px solid var(--line);
   border-radius: 10px;
   display: grid;
@@ -168,8 +169,9 @@
 }
 
 .studio-artifact-list button {
-  background: var(--panel-raised);
+  background: linear-gradient(180deg, var(--panel-raised), rgba(30, 36, 45, 0.92));
   border: 1px solid var(--line);
+  border-left: 3px solid #64748b;
   border-radius: 9px;
   color: var(--ink);
   cursor: pointer;
@@ -182,7 +184,7 @@
 
 .studio-artifact-list button:hover,
 .studio-artifact-list button.active {
-  border-color: var(--accent-strong);
+  border-color: #59677a;
 }
 
 .studio-artifact-list strong {
@@ -204,7 +206,7 @@
 }
 
 .studio-preview {
-  background: var(--panel-raised);
+  background: linear-gradient(180deg, var(--panel-raised), rgba(30, 36, 45, 0.92));
   border: 1px solid var(--line);
   border-radius: 10px;
   display: grid;
@@ -285,7 +287,7 @@
 }
 
 .studio-mini-app {
-  background: var(--panel-raised);
+  background: linear-gradient(180deg, var(--panel-raised), rgba(30, 36, 45, 0.92));
   border: 1px solid var(--line);
   border-radius: 10px;
   display: grid;
@@ -467,7 +469,7 @@
 }
 
 .quiz-options button {
-  background: var(--panel-raised);
+  background: linear-gradient(180deg, var(--panel-raised), rgba(30, 36, 45, 0.92));
   border: 1px solid var(--line);
   border-radius: 9px;
   color: var(--ink);
@@ -477,7 +479,7 @@
 }
 
 .quiz-options button.selected {
-  border-color: var(--accent-strong);
+  border-color: #59677a;
 }
 
 .quiz-options button.correct {
@@ -536,8 +538,8 @@
 
 .infographic-modal {
   align-items: center;
-  background: rgba(7, 10, 14, 0.78);
-  backdrop-filter: blur(10px);
+  background: rgba(7, 10, 14, 0.68);
+  backdrop-filter: blur(4px);
   display: flex;
   inset: 0;
   justify-content: center;
@@ -547,7 +549,7 @@
 }
 
 .infographic-modal__content {
-  background: var(--panel-raised);
+  background: linear-gradient(180deg, var(--panel-raised), rgba(30, 36, 45, 0.92));
   border: 1px solid var(--line);
   border-radius: 12px;
   box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
@@ -642,4 +644,49 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.studio-entry-card:nth-child(2),
+.studio-artifact-list button:nth-child(2n) {
+  border-left-color: #5f7f76;
+}
+
+.studio-entry-card:nth-child(3),
+.studio-artifact-list button:nth-child(3n) {
+  border-left-color: #7c735f;
+}
+
+.studio-entry-card:nth-child(4),
+.studio-artifact-list button:nth-child(4n) {
+  border-left-color: #6f6f90;
+}
+
+.studio-entry-card:nth-child(5),
+.studio-artifact-list button:nth-child(5n) {
+  border-left-color: #806a72;
+}
+
+:root[data-theme="light"] .studio-entry-card,
+:root[data-theme="light"] .studio-artifact-list button,
+:root[data-theme="light"] .studio-preview,
+:root[data-theme="light"] .studio-mini-app,
+:root[data-theme="light"] .studio-generate-detail {
+  background: linear-gradient(180deg, #ffffff, #f7f9fb);
+  border-color: #dce3ec;
+}
+
+:root[data-theme="light"] .studio-entry-card:hover,
+:root[data-theme="light"] .studio-artifact-list button:hover,
+:root[data-theme="light"] .studio-artifact-list button.active {
+  border-color: #b8c4d3;
+}
+
+:root[data-theme="light"] .studio-entry-card__action {
+  background: #eef2f7;
+}
+
+:root[data-theme="light"] .studio-entry-card:hover .studio-entry-card__action {
+  background: #273241;
+  border-color: #273241;
+  color: #ffffff;
 }

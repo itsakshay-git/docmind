@@ -1,11 +1,11 @@
-﻿.login-page {
+.login-page {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(360px, 460px);
   min-height: 100vh;
 }
 
 .login-hero {
-  background: linear-gradient(145deg, #050507 0%, #0a0710 52%, #050506 100%);
+  background: linear-gradient(145deg, #0b0f14 0%, #11131b 52%, #0c1015 100%);
   display: grid;
   align-content: stretch;
   gap: 24px;
@@ -17,21 +17,21 @@
 .login-hero::before {
   animation: loginLightDrift 18s ease-in-out infinite alternate;
   background:
-    linear-gradient(120deg, transparent 0%, rgba(164, 116, 255, 0.13) 30%, transparent 58%),
-    linear-gradient(215deg, transparent 12%, rgba(89, 49, 160, 0.12) 45%, transparent 72%),
-    repeating-linear-gradient(105deg, rgba(166, 116, 255, 0.035) 0 1px, transparent 1px 34px);
+    linear-gradient(120deg, transparent 0%, rgba(129, 148, 170, 0.1) 30%, transparent 58%),
+    linear-gradient(215deg, transparent 12%, rgba(74, 91, 116, 0.1) 45%, transparent 72%),
+    repeating-linear-gradient(105deg, rgba(176, 190, 210, 0.026) 0 1px, transparent 1px 34px);
   content: "";
-  filter: blur(22px);
+  filter: blur(12px);
   inset: -22%;
-  opacity: 0.9;
+  opacity: 0.68;
   position: absolute;
   transform: translate3d(-2%, -1%, 0) rotate(-4deg);
 }
 
 .login-hero::after {
   background:
-    radial-gradient(circle at 28% 24%, rgba(150, 100, 255, 0.12), transparent 26%),
-    linear-gradient(180deg, rgba(102, 61, 180, 0.055), transparent 45%);
+    radial-gradient(circle at 28% 24%, rgba(138, 160, 190, 0.1), transparent 26%),
+    linear-gradient(180deg, rgba(91, 107, 132, 0.06), transparent 45%);
   content: "";
   inset: 0;
   pointer-events: none;
@@ -39,13 +39,13 @@
 }
 
 .login-hero-glass {
-  backdrop-filter: blur(24px) saturate(1.22);
-  background: linear-gradient(145deg, rgba(20, 13, 31, 0.74), rgba(4, 4, 6, 0.58));
+  backdrop-filter: blur(8px) saturate(1.04);
+  background: linear-gradient(145deg, rgba(17, 21, 28, 0.9), rgba(10, 13, 18, 0.82));
   border: 0;
   border-radius: 0;
   box-shadow:
-    inset -1px 0 0 rgba(159, 112, 255, 0.14),
-    inset 0 1px 0 rgba(159, 112, 255, 0.08);
+    inset -1px 0 0 rgba(148, 163, 184, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   align-content: center;
   display: grid;
   gap: 24px;
